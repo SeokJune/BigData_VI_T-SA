@@ -11,7 +11,7 @@
  - RAM :
  - CPU :
  - GPU :
-
+2. Tools
 * Ubuntu
 
 * Python
