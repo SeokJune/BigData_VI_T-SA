@@ -11,15 +11,21 @@
   * RAM :  
   * CPU :  
   * GPU :  
-2. Tools  
-  1. Ubuntu  
-    * ?  
-  2. Python  
-  3. MariaDB  
-  4. Hadoop  
-  5. OpenJDK  
-  6. Eclipse  
-  7. Twitter API  
+#### Tools  
+  * Ubuntu  
+    - ?  
+  * Python  
+    - ?  
+  * MariaDB  
+    - ?  
+  * Hadoop  
+    - ?  
+  * OpenJDK  
+    - ?  
+  * Eclipse  
+    - ?  
+  * Twitter API  
+    - ?  
 ## T-SA Program Flowchart
 <p align="center"> 
 <img src="https://github.com/SeokJune/BigData_VI_T-SA/blob/master/etc/T-SA%20Program%20Flowchart.jpg?raw=true">
