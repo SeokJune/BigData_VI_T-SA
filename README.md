@@ -21,6 +21,14 @@
   6. Eclipse
   7. Twitter API
   
+1. 아키텍쳐
+  1. MSA
+  2. SOA
+2. Java
+  1. Java 8
+    * 스트림
+    * 람다
+  2. 자바 성능
 ## T-SA Program Flowchart
 <p align="center"> 
 <img src="https://github.com/SeokJune/BigData_VI_T-SA/blob/master/etc/T-SA%20Program%20Flowchart.jpg?raw=true">
