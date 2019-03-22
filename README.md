@@ -7,25 +7,23 @@
 
 ## Development Environment
 #### OS  
-  * Window 10  
+  * Ubuntu 18.04.2 LTS  
   * RAM :  
   * CPU :  
   * GPU :  
 #### Tools  
-  * Ubuntu  
-    - ?  
   * Python  
-    - ?  
+    -- version : 
   * MariaDB  
-    - ?  
+    -- ?  
   * Hadoop  
-    - ?  
+    -- ?  
   * OpenJDK  
-    - ?  
+    -- ?  
   * Eclipse  
-    - ?  
+    -- ?  
   * Twitter API  
-    - ?  
+    -- ?  
 ## T-SA Program Flowchart
 <p align="center"> 
 <img src="https://github.com/SeokJune/BigData_VI_T-SA/blob/master/etc/T-SA%20Program%20Flowchart.jpg?raw=true">
