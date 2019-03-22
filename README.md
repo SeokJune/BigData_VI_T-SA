@@ -6,12 +6,11 @@
 3. 사이버 권리 침해 예방
 
 ## Development Environment
-- OS : 
-&nbsp;&nbsp;&nbsp;&nbsp;- Ram : 
-&nbsp;&nbsp;&nbsp;&nbsp;- CPU : 
-&nbsp;&nbsp;&nbsp;&nbsp;- GPU :
-
-
+1. OS
+&nbsp;&nbsp;&nbsp;&nbsp; - Window 10
+&nbsp;&nbsp;&nbsp;&nbsp; - RAM :
+&nbsp;&nbsp;&nbsp;&nbsp; - CPU :
+&nbsp;&nbsp;&nbsp;&nbsp; - GPU :
 
 * Ubuntu
 
