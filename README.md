@@ -7,10 +7,10 @@
 
 ## Development Environment
 1. OS
-&nbsp;&nbsp;&nbsp;&nbsp; - Window 10
-&nbsp;&nbsp;&nbsp;&nbsp; - RAM :
-&nbsp;&nbsp;&nbsp;&nbsp; - CPU :
-&nbsp;&nbsp;&nbsp;&nbsp; - GPU :
+  - Window 10
+  - RAM :
+  - CPU :
+  - GPU :
 
 * Ubuntu
 
