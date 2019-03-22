@@ -8,12 +8,12 @@
 3. 사이버 권리 침해 예방
 
 ## Development Environment
-#### OS  
+### OS  
   * Ubuntu 18.04.2 LTS  
   * RAM :  
   * CPU :  
   * GPU :  
-#### Tools  
+### Tools  
   * **Python**  
     - version : 3.7.2
   * **MariaDB**  
