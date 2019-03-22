@@ -7,9 +7,12 @@
 
 ## Development Environment
 - OS : 
-- Ram : 
-- CPU : 
-- GPU : 
+&nbsp;&nbsp;&nbsp;&nbsp;- Ram : 
+&nbsp;&nbsp;&nbsp;&nbsp;- CPU : 
+&nbsp;&nbsp;&nbsp;&nbsp;- GPU :
+
+
+
 * Ubuntu
 
 * Python
