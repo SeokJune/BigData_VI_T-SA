@@ -7,26 +7,20 @@
 
 ## Development Environment
 1. OS
- - Window 10
- - RAM :
- - CPU :
- - GPU :
+  1. Window 10
+  2. RAM :
+  3. CPU :
+  4. GPU :
 2. Tools
-* Ubuntu
-
-* Python
-
-* MariaDB
-
-* Hadoop
-
-* OpenJDK
-
-* Eclipse
-
-* Twitter API
-
-
+  1. Ubuntu
+    * ?
+  2. Python
+  3. MariaDB
+  4. Hadoop
+  5. OpenJDK
+  6. Eclipse
+  7. Twitter API
+  
 ## T-SA Program Flowchart
 <p align="center"> 
 <img src="https://github.com/SeokJune/BigData_VI_T-SA/blob/master/etc/T-SA%20Program%20Flowchart.jpg?raw=true">
