@@ -1,5 +1,5 @@
-# T_SA : Twitter keyword Search API based Tweet Analysis {: .text-center }
-## (트위터 키워드 검색 API기반 트윗 분석) {: .text-center }
+<center> # T_SA : Twitter keyword Search API based Tweet Analysis </center> 
+<center> ## (트위터 키워드 검색 API기반 트윗 분석)  </center> 
 
 
 ## Introduction
