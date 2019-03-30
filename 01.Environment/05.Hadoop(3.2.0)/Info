@@ -1,1 +1,13 @@
+1. bashrc파일 (하둡 실행 시 환경 변수 설정)
+home 디렉토리에서 작업 시도.
+파일의 내용만 붙여 넣으면 됩니다.
 
+$ sudo gedit ~/.bashrc 
+
+2. hadoop 환경 변수 수정 파일 목록 (hadoop-env.sh, hdfs-site.xml, mapred-site.xml, yarn-site.xml, core-site.xml)
+hadoop 설치 장소에서 /etc/hadoop/ 에서 수정 해야 됩니다.
+
+hadoop-env.sh (자바 설치 경로 설정)
+
+자바 경로 확인 방법
+$ sudo update-alternatives --config java
