@@ -5,7 +5,6 @@
 ## Introduction
 1. 트위터에서 특정 키워드가 포함된 트윗 리스트 제공
 2. 트위터에서 특정 대상의 키워드 사용횟수 제공
-3. 사이버 권리 침해 예방
 
 ## Development Environment
 ### OS  
@@ -13,17 +12,18 @@
   * RAM :  
   * CPU :  
   * GPU :  
-### Tools  
+### Tools  2018-12(4.10)
   * **Python**  
     - version : 3.7.2
   * **MariaDB**  
-    - version : 10.3.13-GA
+    - version : 
   * **Hadoop**  
-    - version : 1.2.1
+    - version : 3.2.0
   * **OpenJDK**  
-    - version : 10.0.2
+    - version : 1.8.0_191
   * **Eclipse**  
-    - version : 2018-12(4.10)
+    - Eclipse IDE for Enterprise Java Developers
+    - version : 2019-03 (4.11.0)
   * **Twitter API**  
     - version : 5.0
 ## T-SA Program Flowchart
