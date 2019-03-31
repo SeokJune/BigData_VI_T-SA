@@ -26,6 +26,8 @@
     - version : 2019-03 (4.11.0)
   * **Twitter API**  
     - version : 5.0
+  * **Sqoop2**  
+    - version : 1.99.6
 ## T-SA Program Flowchart
 <p align="center"> 
 <img src="https://github.com/SeokJune/BigData_VI_T-SA/blob/master/etc/T-SA%20Program%20Flowchart.jpg?raw=true">
