@@ -1,5 +1,7 @@
 /*
-* Author : Bae In Gyu
+* Title     : DB.py
+              (MariaDB , Python 의 연동 , 테이블조회)
+* Author    : Bae In Gyu
 * Create_at : 2019-04-02 
 */
 
