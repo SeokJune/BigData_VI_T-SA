@@ -1,0 +1,18 @@
+Sqoop2 (1.99.6) 환경 수정 파일
+
+1. bashrc 파일 경우. 내용을 복사해서 ~/.bashrc에 복사 붙여넣기
+기존 Hadoop 환경변수 설정 부분, JDK 환경변수 설정 부분
+** Sqoop2에 대한 환경 변수 추가.
+
+2. Hadoop (/etc/hadoop) Sqoop과 연동 하기 위한 파일 수정.
+* core-site.xml
+* container-executor.cfg
+
+3. Sqoop2 (/home/<계정명>/sqoop)에서 Hadoop과 연동하기 위한 파일 수정.
+* catalina.properties (1.99.6 버전 이상 카탈리나 수정 시, 하둡과 자동 연동)
+* sqoop.properties 
+
+*** bashrc 파일로 인해 ls, mv, sudo 명령어가 실행이 안될 경우 ***
+* 차례대로 실행
+$ PATH="$PATH:/usr/local/bin:/usr/bin:/bin"
+$ export PATH
