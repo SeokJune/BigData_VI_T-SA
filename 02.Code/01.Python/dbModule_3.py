@@ -15,6 +15,7 @@ class dbModule_3 :
 
 	
 	'''
+	 Modifier: Bae In Gyu 
  	Modify on: 2019-04-04
  	클래스 생성자 추가(MariaDB와 연결시 기존에는 파라미터를 dbModule_3.py에서 수정해야했던걸 dbMain_3.py에서 수정하게변경)
 	'''
@@ -35,6 +36,7 @@ class dbModule_3 :
 
        
 	'''
+	 Modifier: Bae In Gyu
 	Modify on: 2019-04-04
 	MariaDB연결종료 함수 추가 
 	'''
@@ -51,6 +53,7 @@ class dbModule_3 :
 
 
 	'''
+	 Modifier: Bae In Gyu
 	Modify on: 2019-04-04
 	조회한 데이터를 return하여 dbMain_3.py에서 출력되게 변경
 	MariaDB와 연결시 dbMain_3.py에서 수정하게 변경하면서 생긴 에러 해결
@@ -79,6 +82,7 @@ class dbModule_3 :
 
 
 	'''
+	 Modifier: Bae In Gyu
 	Modify on: 2019-04-04
 	MariaDB와 연결시 dbMain_3.py에서 수정하게 변경하면서 생긴 에러 해결
 	'''	
