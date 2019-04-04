@@ -23,10 +23,10 @@
 </property>
 <property>
 <name>dfs.namenode.name.dir</name>
-<value>/home/yunhyuck/Hadoop3_data/NameNode</value>
+<value>/home/vi/Hadoop3_data/NameNode</value>
 </property>
 <property>
 <name>dfs.datanode.data.dir</name>
-<value>/home/yunhyuck/Hadoop3_data/DataNode</value>
+<value>/home/vi/Hadoop3_data/DataNode</value>
 </property>
 </configuration>
