@@ -19,11 +19,11 @@
 
 # Set Hadoop-specific environment variables here.
 
-#Set path to where bin/hadoop is available
-export HADOOP_COMMON_HOME=/home/yunhyuck/hadoop
+# Set path to where bin/hadoop is available
+  export HADOOP_COMMON_HOME=/home/vi/hadoop
 
-#Set path to where hadoop-*-core.jar is available
-export HADOOP_MAPRED_HOME=/home/yunhyuck/hadoop
+# Set path to where hadoop-*-core.jar is available
+  export HADOOP_MAPRED_HOME=/home/vi/hadoop
 
 #set the path to where bin/hbase is available
 #export HBASE_HOME=
@@ -33,4 +33,3 @@ export HADOOP_MAPRED_HOME=/home/yunhyuck/hadoop
 
 #Set the path for where zookeper config dir is
 #export ZOOCFGDIR=
-
