@@ -115,21 +115,20 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-# OPEN JDK
+# OPENJDK
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
 export CLASS_PATH=$JAVA_HOME/lib:$CLASS_PATH
 
-# SQOOP1
-export SQOOP_HOME=/home/yunhyuck/sqoop1/sqoop-1.4.7
-export PATH=$PATH:$SQOOP_HOME/bin
-
-# HADOOP3
-export HADOOP_HOME=/home/yunhyuck/hadoop
+# Hadoop3
+export HADOOP_HOME=/home/vi/hadoop
 export PATH=$PATH:$HADOOP_HOME/bin
 export PATH=$PATH:$HADOOP_HOME/sbin
 export HADOOP_MAPRED_HOME=${HADOOP_HOME}
 export HADOOP_COMMON_HOME=${HADOOP_HOME}
 export HADOOP_HDFS_HOME=${HADOOP_HOME}
-export HADOOP_YARN_HOME=${HADOOP_HOME}
-export HADOOP_CONF_DIR=/home/yunhyuck/hadoop/etc/hadoop
+export YARN_HOME=${HADOOP_HOME}
+
+# SQOOP1
+export SQOOP_HOME=/home/vi/sqoop
+export PATH=$PATH:$SQOOP_HOME/bin
