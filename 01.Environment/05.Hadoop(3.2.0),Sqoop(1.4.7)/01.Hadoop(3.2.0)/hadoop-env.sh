@@ -34,7 +34,7 @@
 # may want to provide OVERWRITING values on the command line.
 # For example:
 #
-#  JAVA_HOME=/usr/java/testing hdfs dfs -ls
+  export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 #
 # Therefore, the vast majority (BUT NOT ALL!) of these defaults
 # are configured for substitution and not append.  If append
@@ -51,7 +51,7 @@
 
 # The java implementation to use. By default, this environment
 # variable is REQUIRED on ALL platforms except OS X!
- export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+# export JAVA_HOME=
 
 # Location of Hadoop.  By default, Hadoop will attempt to determine
 # this location based upon its execution path.
