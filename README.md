@@ -14,9 +14,9 @@
   * GPU :  
 ### Tools  2018-12(4.10)
   * **Python**  
-    - version : 3.7.2
+    - version : 3.6.7
   * **MariaDB**  
-    - version : 
+    - version : 10.1.38
   * **Hadoop**  
     - version : 3.2.0
   * **OpenJDK**  
@@ -26,8 +26,8 @@
     - version : 2019-03 (4.11.0)
   * **Twitter API**  
     - version : 5.0
-  * **Sqoop2**  
-    - version : 1.99.6
+  * **Sqoop1**  
+    - version : 1.4.7
 ## T-SA Program Flowchart
 <p align="center"> 
 <img src="https://github.com/SeokJune/BigData_VI_T-SA/blob/master/etc/T-SA%20Program%20Flowchart.jpg?raw=true">
