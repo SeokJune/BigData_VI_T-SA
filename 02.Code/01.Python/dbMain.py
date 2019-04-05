@@ -23,8 +23,9 @@ charset = 'utf8'
 
 db = dbModule.dbModule(host,user,pswd,db,charset)        # DB연결시 파라미터수정은 위에 변수에서
 table = input("\n데이터 모두 조회할 테이블명 입력: ")  
-print(db.selectDB(table))
-db.getCodeByCheck(table)				     # 조회한 데이터 출력
+print(db.selectDB(table))                                # 조회한 데이터 출력
+db.getCodeByCheck(table)				                             # 조회한 테이블의 데이터 존재여부파악
 table = input("\n데이터 모두 삭제할 테이블명 입력: ")  
-db.deleteDB(table)
-db.getCodeByCheck(table)				     # 테이블의 데이터 모두 삭제
+db.deleteDB(table)                                       # 테이블의 데이터 모두 삭제
+db.getCodeByCheck(table)				                             # 조회한 테이블의 데이터 존재여부파악
+       
