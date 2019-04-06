@@ -17,7 +17,7 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritabl
     //IntWritable값으로 상수 1을 저장한다.
 	//리듀스에서 IntWritable의 값을 가지고 단어 카운트 할 때 사용.
 	private final static IntWritable one = new IntWritable(1);
-     //출력물에서 나오는 단어를 저장하고자 하는 Text 객체
+        //출력물에서 나오는 단어를 저장하고자 하는 Text 객체
 	private Text word = new Text();
  
      //입력되는 키와 값에 대해 리듀스로 넘어갈 키와 값으로 매핑 	
