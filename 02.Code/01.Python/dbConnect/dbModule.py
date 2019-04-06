@@ -4,7 +4,7 @@
      Title: (MariaDB연결,종료 및 DML 작업)
     Author: Bae In Gyu
  Create_at: 2019-04-02
- 
+ 오늘추가내용 : dml 작업시 try except finally 추가 insert함수 추가 
       
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -23,9 +23,6 @@ class dbModule :
 					self.pswd = pswd       
 					self.db = db        
 					self.charset = charset
-
-
-
 
 
 
@@ -103,24 +100,29 @@ class dbModule :
         커서종료 추가
         '''	
 
-	# 테이블의 데이터 모두조회함수(예외처리추가예정)
+	# 테이블의 데이터 모두조회함수
 	def selectDB(self,table) :
 		  # MariaDB연결 및 Cursor생성
                   self.dbConnect()
                   curs = conn.cursor()
 
-		  # 테이블 조회
-                  sql = "select * from "+table.strip()+";"
-                  curs.execute(sql)
+                  try :
+                   # 테이블 조회
+                   sql = "select * from "+table.strip()+";"
+                   curs.execute(sql)
 
-		  # 테이블 데이터출력	
-                  rows = curs.fetchall()
+		   # 테이블 데이터출력	
+                   rows = curs.fetchall()
 
-                  result = rows
+                   result = rows
+                  except :
+                   print("조회실패")
 		
-		  # Select후 Cursor종료 및 MariaDB연결종료
-                  curs.close()                 
-                  self.dbClose()
+
+                  finally :
+		   # Select후 Cursor종료 및 MariaDB연결종료
+                   curs.close()                 
+                   self.dbClose()
                  		
                   return result
 
@@ -137,28 +139,49 @@ class dbModule :
         커서종료 추가
         '''
 
-	# 테이블의 데이터 모두삭제함수(예외처리추가예정)	
+	# 테이블의 데이터 모두삭제함수	
 	def deleteDB (self,table) :
 		# MariaDB연결 및 Cursor생성
                 self.dbConnect()
                 curs = conn.cursor()
 
-		# Data삭제
-                sql = "delete from "+table.strip()+";"              
-                curs.execute(sql)
-                conn.commit()
+                try :
+		 # Data삭제
+                 sql = "delete from "+table.strip()+";"              
+                 curs.execute(sql)
+                 conn.commit()
 
-		# Connection 닫기
-                curs.close() 
-                self.dbClose()
-
-                print("삭제완료")
+                except :
+                 print("삭제실패")		 
 
 
+                finally :
+                 # Connection 닫기
+                 curs.close() 
+                 self.dbClose()
 
-	# insert 함수 추가 예정
-	#def insertDB (table) :
+                
 
+
+
+	# insert 함수
+	def insertDB (self,table,values) :
+		# MariaDB연결 및 Cursor생성
+                self.dbConnect()
+                curs = conn.cursor()
+                
+                try :
+                 self.values = values 
+                 sql = "insert into "+table.strip()+values
+                 curs.execute(sql)
+                 conn.commit()
+                except :
+                 print("삽입실패")
+
+                finally :
+                 # Connection 닫기
+                 curs.close() 
+                 self.dbClose()
 
 
 
