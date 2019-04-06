@@ -11,7 +11,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-//Mapper 클래스의 generic 타입  <입력키, 입력값, 출력키, 출력값>
+//Mapper 클래스 상속, generic 타입  <입력키, 입력값, 출력키, 출력값> 
 //하둡에서 요구되는 long, int, String에 대응되는 타입으로 변경해서 사용 
 public class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
     //IntWritable값으로 상수 1을 저장한다.
