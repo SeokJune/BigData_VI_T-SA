@@ -3,8 +3,9 @@ Title=Result output using tweepy
 File name=twitterAPI.py
 Writer=Seo JaeIck
 Date of Creation=2019.04.02
-modified=2019.04.08
-수정 내용 : API 별로 받을 수 있는 데이터프레임 생성. 칼럼과 값들을 튜플로 저장
+modified = API 별로 받을 수 있는 데이터프레임 생성. 칼럼과 값들을 튜플로 저장
+	   class 하나로 합침
+
 
 '''
 
@@ -49,9 +50,7 @@ class TwitterClient :
         global user
         user=api.get_user(self.username)
         
-        
-    
-class TweetAnalyzer():
+
     
     #검색에 대한 결과값을 데이터프레임으로 저장
     def result_tweet(self, tweets):
@@ -182,22 +181,21 @@ sinceD="2019-03-20"
 untilD="2019-04-04"
 count=10
 username="realDonaldTrump"
-
-tweet_analyzer=TweetAnalyzer()	    
+    
 s = TwitterClient(ck,cs,at,ats)     # 클래스 생성자
 s.OAuth()                           # 클래스의 TweepyAuth()함수 호출
 
 
 # 키워드 검색 결과 저장(칼럼 전체, 칼럼 값 전체)
 tweets1=s.keySearch(keyword, sinceD, untilD, count)
-df1=tweet_analyzer.result_tweet(tweets1)
+df1=s.result_tweet(tweets1)
 keys1=tuple(df1.keys())
 values1=tuple(df1.values)
 keyValue1=(keys1, values1)
 
 # 사용자 정보 결과 저장(칼럼 전체, 칼럼 값 전체)
 tweets2=s.UserInfo(username)
-df2=tweet_analyzer.result_tweet2(tweets2)
+df2=s.result_tweet2(tweets2)
 keys2=tuple(df2.keys())
 values2=tuple(df2.values)
 keyValue2=(keys2, values2)
@@ -210,7 +208,7 @@ allKeyValue=(keyValue1, keyValue2)
 #print(df2)                 #사용자 이름을 통한 사용자 정보 출력
 #print(keyValue1)           #키워드 검색의 결과    
 #print(keyValue2)           #사용자 정보의 결과
-#print(allKeyValue)         #키워드 검색과 사용자 정보 결과를 합침
+print(allKeyValue)         #키워드 검색과 사용자 정보 결과를 합침
                                 #((키워드 전체 칼럼, 키워드 칼럼의 값),(사용자 정보 전체 칼럼, 사용자 칼럼의 값))
 
 	
