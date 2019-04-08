@@ -1,0 +1,5 @@
+WordCount.java (드라이버 클래스)
+WordCountMapper.java (매퍼 클래스) (단어를 공백단위로 나누어, 출력 형태로 출력)
+WordCountReducer.java (리듀스 클래스) (키값은 그대로 두고, 단어 카운트)
+
+WorCount.jar (hadoop 라이브러리 포함 실행 파일)
