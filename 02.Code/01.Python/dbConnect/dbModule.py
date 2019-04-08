@@ -1,17 +1,15 @@
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
+'''
  dbModule.py
-     Title: (MariaDB연결,종료 및 DML 작업)
-    Author: Bae In Gyu
- Create_at: 2019-04-02
+     Title: MariaDB연결,종료 및 DML 작업
+    Author: Bae InGyu
+ Create_at: 2019.04.02.
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
+'''
 import pymysql
 
 
 class dbModule :
-          # 클래스의 생성자 
+          # 클래스의 생성자
           def __init__(self,host,user,pswd,db,charset) :
                        
                        self.host = host         
