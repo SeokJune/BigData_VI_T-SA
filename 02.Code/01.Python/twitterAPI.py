@@ -1,19 +1,26 @@
-'''
-Title=Result output using tweepy
-File name=twitterAPI.py
-Writer=Seo JaeIck
-Date of Creation=2019.04.02
-modified = API 별로 받을 수 있는 데이터프레임 생성. 칼럼과 값들을 튜플로 저장
-	   class 하나로 합침
-
-
-'''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+twitterAPI.py
+      Title: tweepy API의 기능 실행 및 결과값 저장
+     Author: Seo JaeIck
+  Create on: 2019.04.03
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 import numpy as np
 import tweepy
 import pandas as pd
 from tweepy import OAuthHandler, api
 
+    
+class TwitterAPI :
+    def __init__(self,ck,cs,at,ats):
+        self.consumer_key = ck
+        self.consumer_secret = cs
+        self.access_token = at
+        self.access_token_secret = ats 
+'''
+Modifier: Seo JaeIck
+Modify on: 2019.04.07.
+클래스 이름 변경
 
 class TwitterClient :
     def __init__(self,ck,cs,at,ats):
@@ -21,15 +28,46 @@ class TwitterClient :
         self.consumer_secret = cs
         self.access_token = at
         self.access_token_secret = ats 
+'''
+    #트위피 API 인증''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    def OAuth(self):
+        auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret)
+        auth.set_access_token(self.access_token, self.access_token_secret)
+        api=tweepy.API(auth)
+        
+        return api
+'''
+Modifier: Seo JaeIck
+Modify on: 2019.04.09.
+global 삭제
 
-    #트위피 API 인증
     def OAuth(self):
         auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret)
         auth.set_access_token(self.access_token, self.access_token_secret)
         global api
         api = tweepy.API(auth)
+'''    
+    #단어로 트윗 검색''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    
+    def keySearch(self, keyword, sinceD, untilD, count=5):
+        api=self.OAuth()
+        self.keyword = keyword
+        self.sinceD=sinceD
+        self.untilD=untilD
+        tweets=[]
+        try:
+        	for tweet in tweepy.Cursor(api.search, q = self.keyword, since=sinceD, until=untilD, tweet_moede='extended').items(count):
+        		tweets.append(tweet)      
+                      
+        except tweepy.error.TweepError:
+        	print("트위피 제한에 도달")  
+        	          
+        return tweets
+'''
+Modifier: Seo JaeIck
+Modify on: 2019.04.09.
+api=TwitterAPI.OAuth 추가, 예외 선언
 
-    #단어로 트윗 검색
     def keySearch(self, keyword, sinceD, untilD, count=5):
         self.OAuth()
         self.keyword = keyword
@@ -40,20 +78,33 @@ class TwitterClient :
             tweets.append(tweet)
             
         return tweets
-
+'''               
                    
-    #사용자 이름으로 사용자 정보 검색
+    #사용자 이름으로 사용자 정보 검색''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    def userInfo(self, username):
+        self.OAuth()
+        self.username=username
+        api=TwitterAPI.OAuth(self)         
+        user=api.get_user(self.username)
+        
+        return user
+    
+'''
+Modifier: Seo JaeIck
+Modify on: 2019.04.09.
+global 삭제
+
     def UserInfo(self, username):
         self.OAuth()
         self.username=username
         
         global user
         user=api.get_user(self.username)
-        
-
+'''
     
-    #검색에 대한 결과값을 데이터프레임으로 저장
-    def result_tweet(self, tweets):
+    #검색에 대한 결과값을 데이터프레임으로 저장''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    def keyword_result(self, tweets):
+        self.OAuth()
         df = pd.DataFrame()     
 
         df["id"]   = np.array([tweet.id for tweet in tweets])
@@ -119,10 +170,83 @@ class TwitterClient :
         df['created_at'] = np.array([tweet.created_at for tweet in tweets])
         
         return df
+'''
+Modifier: Seo JaeIck
+Modify on: 2019.04.09.
+self.auth() 추가
+
+   def result_tweet(self, tweets):
+        df = pd.DataFrame()     
+
+        df["id"]   = np.array([tweet.id for tweet in tweets])
+        df["text"] = np.array([tweet.text for tweet in tweets])
+        df['id_str'] = np.array([tweet.id_str for tweet in tweets])
+        df['entities'] = np.array([tweet.entities for tweet in tweets])
+        df['source'] = np.array([tweet.source for tweet in tweets])
+        df['in_reply_to_status_id'] = np.array([tweet.in_reply_to_status_id for tweet in tweets])
+        df['in_reply_to_status_id_str'] = np.array([tweet.in_reply_to_status_id_str for tweet in tweets])
+        df['in_reply_to_user_id'] = np.array([tweet.in_reply_to_user_id for tweet in tweets])
+        df['in_reply_to_user_id_str'] = np.array([tweet.in_reply_to_user_id_str for tweet in tweets])
+        df['in_reply_to_screen_name'] = np.array([tweet.in_reply_to_screen_name for tweet in tweets])
+        df['user_name'] = np.array([tweet.user.name for tweet in tweets])
+        df['user_id'] = np.array([tweet.user.id for tweet in tweets])
+        df['user_id_str'] = np.array([tweet.user.id_str for tweet in tweets])
+        df['screen_name'] = np.array([tweet.user.screen_name for tweet in tweets])
+        df['location'] = np.array([tweet.user.location for tweet in tweets])
+        df['description'] = np.array([tweet.user.description for tweet in tweets])
+        df['url'] = np.array([tweet.user.url for tweet in tweets])
+        df['uesr_entities'] = np.array([tweet.entities for tweet in tweets])
+        df['protected'] = np.array([tweet.user.protected for tweet in tweets])
+        df['followers_count'] = np.array([tweet.user.followers_count for tweet in tweets])
+        df['friends_count'] = np.array([tweet.user.friends_count for tweet in tweets])
+        df['listed_count'] = np.array([tweet.user.listed_count for tweet in tweets])
+        df['user_created'] = np.array([tweet.user.created_at for tweet in tweets])
+        df['favourites_count'] = np.array([tweet.user.favourites_count for tweet in tweets])
+        df['utc_offset'] = np.array([tweet.user.utc_offset for tweet in tweets])
+        df['time_zone'] = np.array([tweet.user.time_zone for tweet in tweets])
+        df['geo_enabled'] = np.array([tweet.user.geo_enabled for tweet in tweets])
+        df['verified'] = np.array([tweet.user.verified for tweet in tweets])
+        df['statuses_count'] = np.array([tweet.user.statuses_count for tweet in tweets])
+        df['user_lang'] = np.array([tweet.user.lang for tweet in tweets])
+        df['contributors_enabled'] = np.array([tweet.user.contributors_enabled for tweet in tweets])
+        df['is_translator'] = np.array([tweet.user.is_translator for tweet in tweets])
+        df['profile_background_color'] = np.array([tweet.user.profile_background_color for tweet in tweets])
+        df['profile_background_image_url'] = np.array([tweet.user.profile_background_image_url for tweet in tweets])
+        df['profile_background_image_url_https'] = np.array([tweet.user.profile_background_image_url_https for tweet in tweets])
+        df['profile_background_tile'] = np.array([tweet.user.profile_background_tile for tweet in tweets])
+        df['profile_image_url'] = np.array([tweet.user.profile_image_url for tweet in tweets])
+        df['profile_image_url_https'] = np.array([tweet.user.profile_image_url_https for tweet in tweets])
+        df['profile_link_color'] = np.array([tweet.user.profile_link_color for tweet in tweets])
+        df['profile_sidebar_border_color'] = np.array([tweet.user.profile_sidebar_border_color for tweet in tweets])
+        df['profile_sidebar_fill_color'] = np.array([tweet.user.profile_sidebar_fill_color for tweet in tweets])
+        df['profile_text_color'] = np.array([tweet.user.profile_text_color for tweet in tweets])
+        df['profile_use_background_image'] = np.array([tweet.user.profile_use_background_image for tweet in tweets])
+        df['has_extended_profile'] = np.array([tweet.user.has_extended_profile for tweet in tweets])
+        df['default_profile'] = np.array([tweet.user.default_profile for tweet in tweets])
+        df['default_profile_image'] = np.array([tweet.user.default_profile_image for tweet in tweets])
+        df['following'] = np.array([tweet.user.following for tweet in tweets])
+        df['follow_request_sent'] = np.array([tweet.user.follow_request_sent for tweet in tweets])
+        df['notifications'] = np.array([tweet.user.notifications for tweet in tweets])
+        df['translator_type'] = np.array([tweet.user.translator_type for tweet in tweets])
+        df['geo'] = np.array([tweet.geo for tweet in tweets])
+        df['coordinates'] = np.array([tweet.coordinates for tweet in tweets])
+        df['place'] = np.array([tweet.place for tweet in tweets])
+        df['contributors'] = np.array([tweet.contributors for tweet in tweets])
+        df['is_quote_status'] = np.array([tweet.is_quote_status for tweet in tweets])
+        df['retweet_count'] = np.array([tweet.retweet_count for tweet in tweets])
+        df['favorite_count'] = np.array([tweet.favorite_count for tweet in tweets])
+        df['favorited'] = np.array([tweet.favorited for tweet in tweets])
+        df['retweeted'] = np.array([tweet.retweeted for tweet in tweets])
+        df['lang'] = np.array([tweet.lang for tweet in tweets])
+        df['created_at'] = np.array([tweet.created_at for tweet in tweets])
+        
+        return df
+'''    
     
-    
-    # 사용자 정보에대한 결과값을 데이터프레임으로 저장
-    def result_tweet2(self, tweets):               
+    # 사용자 정보에대한 결과값을 데이터프레임으로 저장'''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+    def user_result(self, tweets):
+        user=TwitterAPI.userInfo(self, username)
         df = pd.DataFrame()
  
         df["id"] = np.array([user.id])
@@ -165,42 +289,116 @@ class TwitterClient :
         df["statuses_count"] = np.array([user.statuses_count])
         
         return df
-            
+'''
+Modifier: Seo JaeIck
+Modify on: 2019.04.09.
+user=TwitterAPI.userInfo(self, username) 추가
+
+   def result_tweet2(self, tweets):               
+        df = pd.DataFrame()
+ 
+        df["id"] = np.array([user.id])
+        df["id_str"] = np.array([user.id_str])
+        df["name"] = np.array([user.name])
+        df["screen_name"] = np.array([user.screen_name])
+        df["location"] = np.array([user.location])
+        df["description"] = np.array([user.description])
+        df["url"] = np.array([user.url])
+        df["entities"] = np.array([user.entities])
+        df["protected"] = np.array([user.protected])
+        df["followers_count"] = np.array([user.followers_count])
+        df["friends_count"] = np.array([user.friends_count])
+        df["listed_count"] = np.array([user.listed_count])
+        df["created_at"] = np.array([user.created_at])
+        df["favourites_count"] = np.array([user.favourites_count])
+        df["time_zone"] = np.array([user.time_zone])
+        df["geo_enabled"] = np.array([user.geo_enabled])
+        df["verified"] = np.array([user.verified])
+        df["lang"] = np.array([user.lang])
+        df["contributors_enabled"] = np.array([user.contributors_enabled])
+        df["is_translator"] = np.array([user.is_translator])
+        df["profile_background_color"] = np.array([user.profile_background_color])
+        df["profile_background_image_url"] = np.array([user.profile_background_image_url])
+        df["profile_background_image_url_https"] = np.array([user.profile_background_image_url_https])
+        df["profile_background_tile"] = np.array([user.profile_background_tile])
+        df["profile_image_url"] = np.array([user.profile_image_url])
+        df["profile_image_url_https"] = np.array([user.profile_image_url_https])
+        df["profile_link_color"] = np.array([user.profile_link_color])
+        df["profile_sidebar_border_color"] = np.array([user.profile_sidebar_border_color])
+        df["profile_text_color"] = np.array([user.profile_text_color])
+        df["profile_use_background_image"] = np.array([user.profile_use_background_image])
+        df["has_extended_profile"] = np.array([user.has_extended_profile])
+        df["default_profile"] = np.array([user.default_profile])
+        df["default_profile_image"] = np.array([user.default_profile_image])
+        df["following"] = np.array([user.following])
+        df["follow_request_sent"] = np.array([user.follow_request_sent])
+        df["notifications"] = np.array([user.notifications])
+        df["translator_type"] = np.array([user.translator_type])
+        df["statuses_count"] = np.array([user.statuses_count])
+        
+        return df
+
+'''           
 
 
-#API키를 얻기 위해서는 각 변수들을 입력해주어야한다     
+'''
+Modifier: Seo JaeIck
+Modify on: 2019.04.09.
+Search API와 get_user API의 결과를 합친 allResult 추가
+
+'''
+    def allResult(self):
+        tweets1=self.keySearch(keyword, sinceD, untilD, count)
+        df1=self.keyword_result(tweets1)
+        keys1=tuple(df1.keys())
+        values1=tuple(df1.values)
+        keyValue1=(keys1, values1)
+        
+        tweets2=self.userInfo(username)
+        df2=self.user_result(tweets2)
+        keys2=tuple(df2.keys())
+        values2=tuple(df2.values)
+        keyValue2=(keys2, values2)
+        
+        allKeyValue=(keyValue1, keyValue2)
+
+        
+
+
+'''
+Modifier=Seo JaeIck
+modify on=2019.04.07
+키 값을 불러오고, 검색 조건을 입력하고, 결과값들을 출력하는 부분을 주석처리
+
+'''
+'''
 ck = "MGRK5IsX8xwxhz0FYv5Llm5ps"
 cs = "JRh3fHqPqEq6VWcyoKax6MG4nE21z0zatiDjEGnvmHm99cyrLA"
 at = "1103843008670121984-qw1ooMrZLzK10AcQkuixvvq0dizVfR" 
 ats = "dqplsyeDz5n7kkYB8kW6kIkDW7lPkoFnL3r4vpCR0brdJ" 
 
 
-#찾고자 하는 것들을 입력
 keyword="버닝썬"
 sinceD="2019-03-20"
 untilD="2019-04-04"
 count=10
 username="realDonaldTrump"
     
-s = TwitterClient(ck,cs,at,ats)     # 클래스 생성자
-s.OAuth()                           # 클래스의 TweepyAuth()함수 호출
+s = TwitterAPI(ck,cs,at,ats)     # 클래스 생성자
+s.OAuth                      # 클래스의 OAuth()함수 호출
 
-
-# 키워드 검색 결과 저장(칼럼 전체, 칼럼 값 전체)
 tweets1=s.keySearch(keyword, sinceD, untilD, count)
-df1=s.result_tweet(tweets1)
+df1=s.keyword_result(tweets1)
 keys1=tuple(df1.keys())
 values1=tuple(df1.values)
 keyValue1=(keys1, values1)
 
-# 사용자 정보 결과 저장(칼럼 전체, 칼럼 값 전체)
-tweets2=s.UserInfo(username)
-df2=s.result_tweet2(tweets2)
+tweets2=s.userInfo(username)
+df2=s.user_result(tweets2)
 keys2=tuple(df2.keys())
 values2=tuple(df2.values)
 keyValue2=(keys2, values2)
 
-# 키워드 검색과 사용자 정보 결과 값들
 allKeyValue=(keyValue1, keyValue2)
 
 
@@ -208,10 +406,9 @@ allKeyValue=(keyValue1, keyValue2)
 #print(df2)                 #사용자 이름을 통한 사용자 정보 출력
 #print(keyValue1)           #키워드 검색의 결과    
 #print(keyValue2)           #사용자 정보의 결과
-print(allKeyValue)         #키워드 검색과 사용자 정보 결과를 합침
+#print(allKeyValue)         #키워드 검색과 사용자 정보 결과를 합침
                                 #((키워드 전체 칼럼, 키워드 칼럼의 값),(사용자 정보 전체 칼럼, 사용자 칼럼의 값))
-
-	
+'''	
 
 
 

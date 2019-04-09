@@ -31,7 +31,7 @@ public class KeywordCount {
         @SuppressWarnings("deprecation")
 		Job job = new Job(conf, "KeywordCount");
         
-       //WordCount.class에 드라이버 정보가 들어 있으므로 맵리듀스 잡에서 사용하는 라이브러리 파일지정.
+       //KeywordCount.class에 드라이버 정보가 들어 있으므로 맵리듀스 잡에서 사용하는 라이브러리 파일지정.
         //맵과 리듀스에 맞는 클래스 지정.
         job.setJarByClass(KeywordCount.class);
         job.setMapperClass(KeywordCountMapper.class);
