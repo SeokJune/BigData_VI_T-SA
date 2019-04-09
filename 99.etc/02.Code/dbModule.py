@@ -16,6 +16,13 @@ import pymysql
 
 class dbModule :
 	
+
+
+	'''
+	 Modifier: Bae InGyu
+	Modify on: 2019.04.05.
+	연결상태 예외처리 추가 
+	'''
 	# 클래스의 생성자----------------------------------------------------------------------------	
 	def __init__(self,host,user,pswd,db,charset) :   
 		self.host = host
@@ -25,35 +32,17 @@ class dbModule :
 		self.charset = charset
 
 
-	'''
-	 Modifier: Bae InGyu
-	Modify on: 2019.04.09.
-	cursor생성 이곳에서 하는걸로 변경 및 DB연결,cursor Return으로 변경  
-	'''
-
 	# MariaDB연결함수----------------------------------------------------------------------------
 	def dbConnect(self) :
+		global conn
 		conn = pymysql.connect(host = self.host, user = self.user, password = self.pswd, db = self.db, charset = self.charset)
-		curs = conn.cursor()
-		return conn , curs 
-
-
-
-
-	'''
-	 Modifier: Bae InGyu
-	Modify on: 2019.04.05.
-	연결상태 예외처리 추가 
-	
-	# MariaDB연결함수----------------------------------------------------------------------------
-	def dbConnect(self) :
-		conn = pymysql.connect(host = self.host, user = self.user, password = self.pswd, db = self.db, charset = self.charset)
+			
 		if conn.open == True :              
 			print("========DB연결성공========")
 		else :
 			print("========DB연결실패========")
-		# dbModule에서 global 선언하면 dbModule에서만 적용됨 Main.py에서 import해도 적용안됨 
-	'''
+
+
 
 
 	'''
@@ -96,31 +85,21 @@ class dbModule :
 	#===========================================================================================#
 
 
-	'''
-	 Modifier: Bae InGyu
-	Modify on: 2019.04.09.
-	cusror종료 여기서 하는걸로 변경 및 DB연결종료cursor종료 Return으로 변경 
-	'''
-
-	# MariaDB연결종료함수-------------------------------------------------------------------------
-	def dbClose(self) :
-		conn , curs = self.dbConnect()
-		return conn.close() , curs.close()
-
 
 	'''
 	 Modifier: Bae InGyu
 	Modify on: 2019.04.05.
 	연결상태 예외처리 추가 
-	
+	'''
 	# MariaDB연결종료함수-------------------------------------------------------------------------
 	def dbClose(self) :
 		conn.close()
+
 		if conn.open == True :                            
 			print("========DB연결성공========")
 		else :
 			print("========DB연결종료========")
-	'''
+
 
 	'''
 	 Modifier: Bae In Gyu
@@ -144,15 +123,13 @@ class dbModule :
 
 	# 해당 테이블에 레코드 존재파악 함수------------------------------------------------------------ 
 	def getRowByCheck(self,table) :
-               	# 데이터가 없으면 false 있으면 True
+                    
+		# 데이터가 없으면 false 있으면 True
 		if bool(self.selectDB(table)) == True :
 			return True 
+                     
 		else : 
 			return False
-	
-	# found_rows()(직전 select 한 테이블 row수를 반환) 
-	# return conn.cursor().rowcount (select 후 사용하면 -1을 리턴함)
-	# UDATE/ DELETE/ INSERT 시에는 실제로 적용된 Row 수를 얻기위해서는 ROW_COUNT 를 사용한다.
 
 	#===========================================================================================#
 	
@@ -168,7 +145,9 @@ class dbModule :
 	def selectDB(self,table) :
 		try :
 			# MariaDB연결 및 Cursor생성
-			conn, curs = self.dbConnect()
+			self.dbConnect()
+			curs = conn.cursor()
+
 			# 테이블 조회
 			sql = "select * from "+table.strip()+";"
 			curs.execute(sql)
@@ -183,7 +162,8 @@ class dbModule :
 			print("조회실패")
 		
 		finally :
-			# Select후 Cursor종료 및 MariaDB연결종료                
+			# Select후 Cursor종료 및 MariaDB연결종료
+			curs.close()                 
 			self.dbClose()
                  		
                     
@@ -282,7 +262,8 @@ class dbModule :
 	def deleteDB (self,table) :
 		try : 
 			# MariaDB연결 및 Cursor생성
-			conn, curs = self.dbConnect()
+			self.dbConnect()
+			curs = conn.cursor()
 
 			# Data삭제
 			sql = "delete from "+table.strip()+";"              
@@ -294,7 +275,8 @@ class dbModule :
 			print("삭제실패")		 
 
 		finally :
-			# Cursor종료 및 MariaDB연결종료 
+			# Connection 닫기
+			curs.close() 
 			self.dbClose()
                  
 
@@ -359,9 +341,8 @@ class dbModule :
 	def insertDB (self,table,values) :
 		try :
 			# MariaDB연결 및 Cursor생성
-			conn, curs = self.dbConnect()
-
-			# Data삽입			
+			self.dbConnect()
+			curs = conn.cursor()
 			self.values = values 
 			sql = "insert into "+table.strip()+values
 			curs.execute(sql)
@@ -372,8 +353,21 @@ class dbModule :
 			print("삽입실패")
 
 		finally :
-			# Cursor종료 및 MariaDB연결종료
+			# Connection 닫기
+			curs.close() 
 			self.dbClose()
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
