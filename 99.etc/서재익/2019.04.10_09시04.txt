@@ -1,3 +1,0 @@
-search API로 나온 결과와 get_user API로 나온 결과 확인중
-since 기준 - 날이 바뀌는 00시 기준
-date 기준 - 날이 바뀌기 전인 00시 이전까지
