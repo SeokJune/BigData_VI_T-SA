@@ -1,0 +1,10 @@
+user API 데이터프레임 추가
+df["utc_offset"] = np.array([user.utc_offset])
+df["statuses_count"] = np.array([user.statuses_count])
+df["status_created"] = np.array([user.status.created_at])  
+df["status_id"] = np.array([user.status.id])  
+df["status_id_str"] = np.array([user.status.id_str])  
+df["status_text"] = np.array([user.status.text])
+
+
+글로벌 캡스톤 과제 및 발표준비 하겠습니다
