@@ -3,3 +3,10 @@ KeywordCountMapper.java (매퍼 클래스) (단어를 공백단위로 나누어,
 KeywordCountReducer.java (리듀스 클래스) (키값은 그대로 두고, 단어 카운트)
 
 KeywordCount.jar (hadoop 라이브러리 포함 실행 파일)
+
+
+2019.4.15 Mapper Class 자연어처리 추가중..
+현재 진행 상황
+1. Kkma
+2. open-korea-text
+라이브러리 둘다 class not found exception ERROR 발생. 해결 중.
