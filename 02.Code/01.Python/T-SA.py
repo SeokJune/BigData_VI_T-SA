@@ -32,11 +32,20 @@ statDB = ('localhost',  # hostIP
           '1234',       # password
           'mysql',      # DB 종류
           'utf8')       # charset
+
+tableName = ('KEYWORD_JSON',
+             'KEYWORD_HASHTAGS',
+             'KEYWORD_METADATA',
+             'KEYWORD_USER',
+             'USER_JSON')
+
+
 # TwitterAPI, dbModule 객체 생성 -------------------------------------------------------------------
 twitter = TwitterAPI.TwitterAPI()
 db = dbModule.dbModule(statDB[0],statDB[1],statDB[2],statDB[3],statDB[4]) 
 #  TwitterAPI의 OAuth 실행 -------------------------------------------------------------------------
 api = twitter.OAuth(statTwitter[0], statTwitter[1], statTwitter[2], statTwitter[3])
+
 # 작동부 -------------------------------------------------------------------------------------------
 while True:
     '''
@@ -66,10 +75,13 @@ while True:
     Modify on: 2019-04-09 
     작업할 테이블명 입력 후 데이터가 존재할 시 삭제하는 기능 추가 
     '''
-    table = input("작업할 테이블명 입력: ") 
-    if db.getRowByCheck(table) == True :
-       print("========기존에 있는 데이터 삭제시작========")
-       db.deleteDB(table)
+    #table = input("작업할 테이블명 입력: ") 
+    if db.getRowByCheck(tableName) == True :
+       print("========테이블에 존재하는 데이터 삭제시작========")
+       db.deleteDB(tableName)
+    else :
+       print("========테이블에 존재하는 데이터 없음========")
+       
     '''
       기능 실행(1, 2, 3)
     '''
@@ -80,8 +92,11 @@ while True:
         tweets = twitter.search_Keyword(api, statKeyword[0], statKeyword[1], statKeyword[2], statKeyword[3], statKeyword[4])
         keyword_Json, keyword_Hashtags, keyword_Metadata, keyword_User = twitter.result_Keyword(tweets)
         # dbModule.py 작업 -------------------------------------------------------------------------
-        db.insertDB(table,values)
-        print(db.selectDB(table))
+
+
+
+
+        
         # -----------------------------------------------------------------------------------------
         print('Keyword Search 완료')
     # UserInfo Search 실행(2) --------------------------------------------------------------------------
@@ -91,8 +106,12 @@ while True:
         userInfo = twitter.search_User(api, statUserInfo[0])
         user_Json = twitter.result_User(userInfo)
         # dbModule.py 작업 -------------------------------------------------------------------------
-        db.insertDB(table,values)
-        print(db.selectDB(table))
+    
+
+
+
+
+        
         # -----------------------------------------------------------------------------------------
         print('User Search 완료')
     # Visualization 실행(3) ------------------------------------------------------------------------
