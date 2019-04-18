@@ -10,3 +10,12 @@ KeywordCount.jar (hadoop 라이브러리 포함 실행 파일)
 1. Kkma
 2. open-korea-text
 라이브러리 둘다 class not found exception ERROR 발생. 해결 중.
+
+
+2019.4.19 Mapper Class 자연어 처리 추가 완료.
+사용 라이브러리 : KOMORAN
+Class not found error 오류 해결 : import
+
+맵을 통해 특수문자를 포함한 단위로 자른다. -> 리듀서로 보내기전 분리된 단어를 통해 자연어 처리 -> 리듀서로 카운터
+
+**명사만 출력하기.
