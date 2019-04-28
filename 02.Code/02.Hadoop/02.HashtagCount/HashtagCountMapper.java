@@ -1,7 +1,7 @@
 
 /**
  * @HashtagCount
- * @Title: 매퍼 클래스(맵과 리듀스를 등록하는 일 수행)
+ * @Title: 맵 클래스(raw 데이터를 가져와 key와 value로 바꾸는 작업 수행)
  * @author: Lee_yun_Hyuck
  * @Create_at: 2019-04-28
  */
