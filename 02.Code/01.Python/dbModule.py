@@ -89,12 +89,12 @@ class dbModule :
 
          
 	# 테이블의 데이터 모두조회함수----------------------------------------------------------------
-	def selectDB(self,table) :
+	def selectDB(self,tableName) :
 		try :
 			# MariaDB연결 및 Cursor생성
 			conn, curs = self.dbConnect()
 			# 테이블 조회
-			sql = "select * from "+table.strip()+";"
+			sql = "select * from "+tableName.strip()+";"
 			curs.execute(sql)
 
 			# 테이블 데이터출력	
@@ -163,23 +163,30 @@ class dbModule :
 
 
 	# 테이블의 데이터 삽입함수--------------------------------------------------------------------
-	def insertDB (self,test,values) :
-		try :
+	def insertDB (self, tableName, values) :
+		#try :
 			# MariaDB연결 및 Cursor생성
 			conn, curs = self.dbConnect()
-
+			
 			# Data삽입
-			self.values = values			
-			sql = "insert into "+table.strip()+"values"+values+";"
+			sql = "insert into " + tableName.strip() + " values("
+			sql += "'" + values[0] + "',"
+			sql +=       str(values[2][0]) + "," 
+			sql +=       str(values[2][1]) + ","
+			sql += "'" + values[1] + "');"
 			curs.execute(sql)
 			conn.commit()
 			print("삽입완료")
 
-		except :
-			print("삽입실패")
+		#except :
+		#	print("삽입실패")
+		#	print(valuse[0])
+		#	print(valuse[2][0])
+		#	print(valuse[2][1])
+		#	print(valuse[1])
 
-		finally :
-			# Cursor종료 및 MariaDB연결종료
-			self.dbClose()
+		#finally :
+			#Cursor종료 및 MariaDB연결종료
+		#	self.dbClose()
 
 
