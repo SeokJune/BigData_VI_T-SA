@@ -22,19 +22,19 @@ statTwitter = ('lNZwPI2dQ5l89K1nOGW6Sod6u',                             # consum
                'CvbR5ga31iWxQVrWcnzdnp7NGBbmAFGWRntjuZbXnpAet')         # access_token_secret
 '''
 statKeyword = ('이윤혁',         # keyword
-               '2019-04-15',    # sinceDate
-               '2019-04-17',    # untilDate
+               '2019-04-25',    # sinceDate
+               '2019-04-29',    # untilDate
                'extended',      # mode
                10)              # count
 statUserInfo = ('BWnYuiJ0vkWsATq')  #screen_name / @으로 시작하는 이름
 statDB = ('localhost',  # hostIP
-          'VI',         # userID
+          'root',         # userID
           '1234',       # password
           'mysql',      # DB 종류
           'utf8')       # charset
 
 tableName = ('KEYWORD_JSON',
-             'KEYWORD_HASHTAGS',
+             'KEYWORD_HASHTAG',
              'KEYWORD_METADATA',
              'KEYWORD_USER',
              'USER_JSON')
@@ -77,7 +77,7 @@ while True:
     '''
     #table = input("작업할 테이블명 입력: ") 
     if db.getRowByCheck(tableName) == True :
-       print("========테이블에 존재하는 데이터 삭제시작========")
+       print("========테이블에 존재4하는 데이터 삭제시작========")
        db.deleteDB(tableName)
     else :
        print("========테이블에 존재하는 데이터 없음========")
@@ -92,11 +92,10 @@ while True:
         tweets = twitter.search_Keyword(api, statKeyword[0], statKeyword[1], statKeyword[2], statKeyword[3], statKeyword[4])
         keyword_Json, keyword_Hashtags, keyword_Metadata, keyword_User = twitter.result_Keyword(tweets)
         # dbModule.py 작업 -------------------------------------------------------------------------
+        for val in keyword_Hashtags:
+            db.insertDB('KEYWORD_HASHTAG', val)
+        print(db.selectDB('KEYWORD_HASHTAG'))
 
-
-
-
-        
         # -----------------------------------------------------------------------------------------
         print('Keyword Search 완료')
     # UserInfo Search 실행(2) --------------------------------------------------------------------------
@@ -107,7 +106,6 @@ while True:
         user_Json = twitter.result_User(userInfo)
         # dbModule.py 작업 -------------------------------------------------------------------------
     
-
 
 
 
