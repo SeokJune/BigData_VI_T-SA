@@ -22,7 +22,7 @@ public class KeywordCount {
 		Configuration conf = new Configuration();
 		
 		//잡 실행을 위한 잡 객체 생성
-		Job job = Job.getInstance(conf, "word count");
+		Job job = Job.getInstance(conf, "Keywordcount");
 		//잡 실행에 필요한 사용자 라이브러리 파일 지정
 		job.setJarByClass(KeywordCount.class);
 		//잡에서 사용할 클래스들 설정
