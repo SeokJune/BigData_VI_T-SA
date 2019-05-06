@@ -6,7 +6,7 @@ T-SA.py
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 import TwitterAPI
 import dbModule
-
+import Visualization
 # TwitterAPI, dbModule 관련 변수 설정 ---------------------------------------------------------------
 
 # 서재익
@@ -21,11 +21,11 @@ statTwitter = ('lNZwPI2dQ5l89K1nOGW6Sod6u',                             # consum
                '1107934597189263361-E83WGFw4XnDGpPkmYewJA7aIecHru6',    # access_token
                'CvbR5ga31iWxQVrWcnzdnp7NGBbmAFGWRntjuZbXnpAet')         # access_token_secret
 '''
-statKeyword = ('이윤혁',         # keyword
-               '2019-04-25',    # sinceDate
-               '2019-04-29',    # untilDate
+statKeyword = ('하루',         # keyword
+               '2019-05-01',    # sinceDate
+               '2019-05-04',    # untilDate
                'extended',      # mode
-               10)              # count
+               5)              # count
 statUserInfo = ('BWnYuiJ0vkWsATq')  #screen_name / @으로 시작하는 이름
 statDB = ('localhost',  # hostIP
           'root',         # userID
@@ -37,12 +37,14 @@ tableName = ('KEYWORD_JSON',
              'KEYWORD_HASHTAG',
              'KEYWORD_METADATA',
              'KEYWORD_USER',
-             'USER_JSON')
+             'KEYWORD',
+             'HASHTAG')
 
 
 # TwitterAPI, dbModule 객체 생성 -------------------------------------------------------------------
 twitter = TwitterAPI.TwitterAPI()
 db = dbModule.dbModule(statDB[0],statDB[1],statDB[2],statDB[3],statDB[4]) 
+visual=Visualization.Visualization()
 #  TwitterAPI의 OAuth 실행 -------------------------------------------------------------------------
 api = twitter.OAuth(statTwitter[0], statTwitter[1], statTwitter[2], statTwitter[3])
 
@@ -75,9 +77,8 @@ while True:
     Modify on: 2019-04-09 
     작업할 테이블명 입력 후 데이터가 존재할 시 삭제하는 기능 추가 
     '''
-    #table = input("작업할 테이블명 입력: ") 
     if db.getRowByCheck(tableName) == True :
-       print("========테이블에 존재4하는 데이터 삭제시작========")
+       print("========테이블에 존재하는 데이터 삭제시작========")
        db.deleteDB(tableName)
     else :
        print("========테이블에 존재하는 데이터 없음========")
@@ -91,10 +92,21 @@ while True:
         # TwitterAPI.py 작업 -----------------------------------------------------------------------
         tweets = twitter.search_Keyword(api, statKeyword[0], statKeyword[1], statKeyword[2], statKeyword[3], statKeyword[4])
         keyword_Json, keyword_Hashtags, keyword_Metadata, keyword_User = twitter.result_Keyword(tweets)
+#        print(tweets)
         # dbModule.py 작업 -------------------------------------------------------------------------
+
+
+        # KEYWORD_JSON TABLE INSERT
+        for val in keyword_Json:
+             db.insertDB('KEYWORD_JSON', val)
+
+        # KEYWORD_HASHTAG TABLE INSERT    
         for val in keyword_Hashtags:
             db.insertDB('KEYWORD_HASHTAG', val)
-        print(db.selectDB('KEYWORD_HASHTAG'))
+
+	# KEYWORD DATE COUNT SELECT
+        print(db.keywordDateCount('KEYWORD_HASHTAG'))
+
 
         # -----------------------------------------------------------------------------------------
         print('Keyword Search 완료')
@@ -109,6 +121,7 @@ while True:
 
 
 
+
         
         # -----------------------------------------------------------------------------------------
         print('User Search 완료')
@@ -116,6 +129,16 @@ while True:
     elif cNum == '3':
         print('Visualization 시작')
         # Visualization.py 작업 --------------------------------------------------------------------
+#        table = 'VISUALIZE'
+#        b=dict(db.selectDB(table))
+#        print(twitter.result_Keyword.keywordJson.json["created_at"])
+#        for  in len(twitter.json["created_at"])
+        #visual.visualize(b)
+#        visual.statKeyword(statKeyword[1])
+        tweets = twitter.search_Keyword(api, statKeyword[0], statKeyword[1], statKeyword[2], statKeyword[3], statKeyword[4])
+        visual.chart(twitter.result_Keyword(tweets),statKeyword[1])
+
+#        print(twitter.result_Keyword(tweets))
 
         # -----------------------------------------------------------------------------------------
         print('Visualization 완료')
