@@ -1,0 +1,62 @@
+CREATE TABLE KEYWORD_JSON
+(CREATED_AT DATETIME NOT NULL,
+ ID VARCHAR(20) NOT NULL,
+ TEXT TEXT,
+ TRUNCATED CHAR(1),
+ HASHTAG CHAR(4),
+ METADATA CHAR(4),
+ USER CHAR(4),
+ RETWEET_COUNT INT NOT NULL,
+ FAVORITE_COUNT INT NOT NULL,
+ LANG VARCHAR(3),
+ PRIMARY KEY (CREATED_AT,ID)
+);
+
+---------------------------------------------------------------
+
+CREATE TABLE KEYWORD_HASHTAG
+(HCODE CHAR(4) NOT NULL,
+ START INT NOT NULL,
+ END INT NOT NULL,
+ TEXT TEXT NOT NULL,
+ PRIMARY KEY (HCODE,START,END)
+);
+
+---------------------------------------------------------------
+
+CREATE TABLE KEYWORD_METADATA
+(MCODE CHAR(4) NOT NULL,
+ ISO_LANGUAGE_CODE VARCHAR(3) NOT NULL,
+ RESULT_TYPE ENUM('mixed','recent','popular') NOT NULL,
+ PRIMARY KEY (MCODE)
+);
+
+---------------------------------------------------------------
+
+CREATE TABLE KEYWORD_USER
+(UCODE CHAR(4) NOT NULL,
+ ID VARCHAR(20) NOT NULL,
+ NAME VARCHAR(50) NOT NULL,
+ SCREEN_NAME VARCHAR(50) NOT NULL,
+ PRIMARY KEY (UCODE)
+);
+
+---------------------------------------------------------------
+
+CREATE TABLE KEYWORD
+(KEYWORD VARCHAR(10) NOT NULL,
+ COUNT INT NOT NULL,
+ PRIMARY KEY (KEYWORD)
+);
+
+---------------------------------------------------------------
+
+CREATE TABLE HASHTAG
+(HASHTAG VARCHAR(10) NOT NULL,
+ COUNT INT NOT NULL,
+ PRIMARY KEY (HASHTAG)
+);
+
+
+
+
