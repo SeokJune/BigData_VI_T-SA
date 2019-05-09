@@ -1,82 +1,127 @@
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-TwitterAPI.py
-      Title: TwitterAPI의 어플리케이션 인증, 데이터 수집(search,getuser), db저장 할 형식으로 변환
-     Author: Lee SeokJune
-  Create on: 2019.04.17 09:42
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+# --------------------------------------------------------------------------------------------------
+# TwitterAPI.py
+#      Title: Twitter Application Authentication, Collect Twitter Data, Data preprocessing
+#     Author: Lee SeokJune
+#  Create on: 2019.04.17
+# --------------------------------------------------------------------------------------------------
+# import module
+## Python Module available on Twitter
 import tweepy
-
+# --------------------------------------------------------------------------------------------------
+# Class Name: TwitterAPI
+# Method list: OAuth
+#            : searchKeyword, searchUser
+#            : resultSearchResults, 
 class TwitterAPI:
-    # Twitter Application 인증 -> api -------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------------
+    # Twitter Application Authentication(Return Type: api)
     def OAuth(self, consumer_key, consumer_secret, access_token, access_token_secret):
+        # Page located at http://dev.twitter.com/apps(under "OAuth settings")
+        ## consumer_key, consumer_secret
+        # Page located at http://dev.twitter.com/apps(under "Your access token")
+        ## access_token, access_token_secret
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
         api = tweepy.API(auth)
+        # api return
         return api
-    # Keyword Search in Tweet --------------------------------------------------------------------
-    def search_Keyword(self, api, keyword, sinceD, untilD, mode, count):
+    # ----------------------------------------------------------------------------------------------
+    # Keyword in Tweet(Return Type: list)
+    def searchKeyword(self, api, query, since, until, lang, limit):
+        ## api: result of TwitterAPI.OAuth
+        ## query: Words included in the Tweet you want to find(ex. KOREA OR JAPAN OR CHINA)
+        ## since: Start Date
+        ## until: End Date
+        ## lang: The Language of the Tweets
+        ## limit: Defines the maximum amount of Tweets to fetch
+        # result list
         tweets = []
         try:
-            for tweet in tweepy.Cursor(api.search, q = keyword, since = sinceD, until = untilD, tweet_moede = mode,count = count).items():
+            # Return Type: list of 'SearchResults' objects
+            for tweet in tweepy.Cursor(api.search, q = query, since = since, until = until, lang = lang, tweet_mode = 'extended').items(limit):
+                # Add a line(tweet) to 'tweets'(result list)
                 tweets.append(tweet)
+            # tweets(result list) return
             return tweets
+        # The main exception Tweepy uses. Is raised for a number of things.
         except tweepy.error.TweepError:
-            print("Tweet Per Minute")
-    # User Search --------------------------------------------------------------------------------
-    def search_User(self, api, screen_name):
-        userInfo = api.get_user(screen_name)
-        return userInfo
-    # result Keyword -----------------------------------------------------------------------------
-    def result_Keyword(self, tweets):
-        keywordJson = []        # Table(KEYWORD_JSON)
-        keywordHashtags = []    # Table(KEYWORD_HASHTAGS)
-        keywordMetadata = []    # Table(KEYWORD_METADATA)
-        keywordUser = []        # Table(KEYWORD_J_USER)
-        keyNum = 0
-        # tweet 하나씩 가져오기 --------------------------------------------------------------------
+            print("Error(search_Keyword): Tweet Per Minute")
+    # ----------------------------------------------------------------------------------------------
+    # User in Twitter(Return Type: 'User' object)
+    def searchUser(self, api, identificationInfo):
+        ## api: result of TwitterAPI.OAuth
+        ## identificationInfo: user_id OR screen_name
+        ### user_id: Specifies the ID of the user. Helpful for disambiguating when a valid user ID is also a valid screen name.
+        ### screen_name: Specifies the screen name of the user. Helpful for disambiguating when a valid screen name is also a user ID.
+        try:
+            # Return Type: 'User' object
+            userInfo = api.get_user(identificationInfo)
+            # userInfo('User' object) return
+            return userInfo
+        # The main exception Tweepy uses. Is raised for a number of things.
+        except tweepy.error.TweepError:
+            print("Error(search_User): Tweet Per Minute")
+    # ----------------------------------------------------------------------------------------------
+    # result Keyword
+    def resultSearchResults(self, tweets):
+        ## tweets: result of TwitterAPI.searchKeyword
+        # result list(json, hashtag, metadata, user)
+        json = []       # Table(SR_JSON)
+        hashtag = []    # Table(SR_HASHTAG)
+        metadata = []   # Table(SR_METADATA)
+        user = []       # Table(SR_USER)
+        # P.K('hashtag', 'metadata', 'user')
+        keyNum = 1
+        # ------------------------------------------------------------------------------------------
+        # Load tweets One Line 
         for t in tweets:
-            # _json 선택 -------------------------------------------------------------------------
+            # --------------------------------------------------------------------------------------
+            # '_json' Select
             json = t._json
-            # Table(KEYWORD_JSON) ----------------------------------------------------------------
+            # --------------------------------------------------------------------------------------
+            # Table(SR_JSON)
             keywordJson.append([json['created_at'],
-                       json['id'],
-                       json['id_str'],
-                       json['text'],
-                       json['truncated'],
-                       str(keyNum + 1).zfill(4),
-                       str(keyNum + 1).zfill(4),
-                       json['source'],
-                       json['in_reply_to_status_id'],
-                       json['in_reply_to_status_id_str'],
-                       json['in_reply_to_user_id'],
-                       json['in_reply_to_user_id_str'],
-                       json['in_reply_to_screen_name'],
-                       str(keyNum + 1).zfill(4),
-                       json['geo'],
-                       json['coordinates'],
-                       json['place'],
-                       json['contributors'],
-                       json['is_quote_status'],
-                       json['retweet_count'],
-                       json['favorite_count'],
-                       json['favorited'],
-                       json['retweeted'],
-                       #json['possibly_sensitive'],
-                       json['lang']])
-            # Table(KEYWORD_HASHTAGS) ------------------------------------------------------------
+                                json['id'],
+                                json['id_str'],
+                                json['text'],
+                                json['truncated'],
+                                str(keyNum).zfill(4),
+                                str(keyNum).zfill(4),
+                                json['source'],
+                                json['in_reply_to_status_id'],
+                                json['in_reply_to_status_id_str'],
+                                json['in_reply_to_user_id'],
+                                json['in_reply_to_user_id_str'],
+                                json['in_reply_to_screen_name'],
+                                str(keyNum).zfill(4),
+                                json['geo'],
+                                json['coordinates'],
+                                json['place'],
+                                json['contributors'],
+                                json['is_quote_status'],
+                                json['retweet_count'],
+                                json['favorite_count'],
+                                json['favorited'],
+                                json['retweeted'],
+                                #json['possibly_sensitive'],
+                                json['lang']])
+            # --------------------------------------------------------------------------------------
+            # Table(SR_HASHTAGS)
             hashtags = json['entities']['hashtags']
             for h in hashtags:
-                keywordHashtags.append([str(keyNum + 1).zfill(4),
+                keywordHashtags.append([str(keyNum).zfill(4),
                                         h['text'],
                                         h['indices']])
-            # Table(KEYWORD_METADATA) ------------------------------------------------------------
+            # --------------------------------------------------------------------------------------
+            # Table(SR_METADATA)
             metadata = json['metadata']
-            keywordMetadata.append([str(keyNum + 1).zfill(4),
+            keywordMetadata.append([str(keyNum).zfill(4),
                                     metadata['iso_language_code'],
                                     metadata['result_type']])
-            # Table(KEYWORD_USER) ----------------------------------------------------------------
+            # --------------------------------------------------------------------------------------
+            # Table(SR_USER)
             user = json['user']
-            keywordUser.append([str(keyNum + 1).zfill(4),
+            keywordUser.append([str(keyNum).zfill(4),
                                 user['id'],
                                 user['id_str'],
                                 user['name'],
@@ -103,10 +148,13 @@ class TwitterAPI:
                                 user['follow_request_sent'],
                                 user['notifications'],
                                 user['translator_type']])
-            # key 증가 ----------------------------------------------------------------------------
+            # --------------------------------------------------------------------------------------
+            # Increase in Key Value
             keyNum += 1
+        # ------------------------------------------------------------------------------------------
         return keywordJson, keywordHashtags, keywordMetadata, keywordUser
-    # result UserInfo ----------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------------
+    # result UserInfo
     def result_User(self, userInfo):
         userJson = [] # Table(User_JSON)
         # _json 선택 ------------------------------------------------------------------------------
