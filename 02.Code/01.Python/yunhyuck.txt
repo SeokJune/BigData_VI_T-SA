@@ -1,0 +1,95 @@
+from IPython.core.interactiveshell import InteractiveShell
+InteractiveShell.ast_node_interactivity = "all"
+
+client_key = 'lNZwPI2dQ5l89K1nOGW6Sod6u'
+client_secret = 'D6eGld20D99yrL89SMYPhJsjiHqmNKGL5LznkNKOQQPoIoQxWA'
+
+import base64
+import json
+import requests
+
+key_secret = '{}:{}'.format(client_key, client_secret).encode('ascii')
+b64_encoded_key = base64.b64encode(key_secret)
+b64_encoded_key = b64_encoded_key.decode('ascii')
+
+
+base_url = 'https://api.twitter.com/'
+auth_url = '{}oauth2/token'.format(base_url)
+
+auth_headers = {
+    'Authorization': 'Basic {}'.format(b64_encoded_key),
+    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+}
+
+auth_data = {
+    'grant_type': 'client_credentials'
+}
+
+auth_resp = requests.post(auth_url, headers=auth_headers, data=auth_data)
+
+print("auth_resp.status_code = : ", auth_resp.status_code)
+
+# Keys in data response are token_type (bearer) and access_token (your access token)
+
+access_token = auth_resp.json()['access_token']
+
+#print('access_token = : ', access_token)
+
+search_headers = {
+    'Authorization': 'Bearer {}'.format(access_token)    
+}
+
+# ... find tweets by geolocation origin and date range (only)
+# ... ---> point_radius seems to need to be <= 25mi or returns status code = 422
+
+search_params = {
+    'query': '"¼­ÀçÀÍ" OR "ÀÌÀ±Çõ"',
+    'fromDate': '201904010000',
+    'toDate': '201905050000',
+    'maxResults' : '100'
+}
+
+search_url = '{}1.1/tweets/search/fullarchive/yunhyuck.json'.format(base_url)
+
+print('search_url = ', search_url)
+print('\n')
+print('search_params = ', search_params)
+search_resp = requests.get(search_url, headers = search_headers, params = search_params)
+print("search_resp.status_code = : ", search_resp.status_code)
+tweet_data = search_resp.json()
+# ... tweet_data
+#tweet_data
+
+type(tweet_data)
+type(tweet_data['results'])
+len(tweet_data['results'])
+
+for ii in range(len(tweet_data['results'])):
+    for keys,values in tweet_data['results'][ii].items():
+        print(keys)
+
+date_key = "created_at"
+text_key = "text"
+truncated_key = "truncated"
+extended_tweet_key = "extended_tweet"
+
+t1 = []
+
+for t in tweet_data['results']:
+    t1.append(t)
+print(t1[14])
+'''
+for ii in range(len(tweet_data['results'])):
+    for keys,values in tweet_data['results'][ii].items():
+        if keys == date_key:
+            print(tweet_data['results'][ii][date_key])
+        if keys == text_key:
+            print(tweet_data['results'][ii][text_key])
+            print("\n")
+        #if keys == truncated_key:
+        #    print(tweet_data['results'][ii][truncated_key])
+        #    print("\n")
+        if keys == extended_tweet_key:
+            print(tweet_data['results'][ii][extended_tweet_key]['full_text'])
+            print("\n")
+'''
