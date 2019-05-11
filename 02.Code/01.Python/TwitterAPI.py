@@ -97,9 +97,9 @@ class TwitterAPI:
     #  Preproceeing
     # ----------------------------------------------------------------------------------------------
     def preprocess(self, tweets):
-        json = []       # Table(TWEET_JSON)
-        hashtag = []    # Table(TWEET_HASHTAG)
-        user = []       # Table(TWEET_USER)
+        json = []       # Table(JSON)
+        hashtag = []    # Table(HASHTAG)
+        user = []       # Table(USER)
         # P.K(HASHTAG, USER)
         keyNum = 1
         #Load Tweets One Line
@@ -121,7 +121,7 @@ class TwitterAPI:
                                h['indices'][1],         # End Position of Hashtag
                                h['text']])              # Hashtag
             # Table(TWEET_USER)
-            user.append([str(keyNum).zfill(4),  # P.K
+            user.append([str(keyNum).zfill(4),          # P.K
                          t['user']['id_str'],           # str(id)
                          t['user']['name'],             # User Name
                          t['user']['screen_name'],      # User Screen Name(@)
