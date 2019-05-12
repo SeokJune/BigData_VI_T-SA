@@ -5,10 +5,13 @@
 # import module
 # --------------------------------------------------------------------------------------------------
 # Class that implement functions related to Twitter API
+## pip install 
 import TwitterAPI
 # Class that implement functions related to DataBase
+##
 import DBModule
 # Class that implement functions related to Visualization
+##
 import Visualization
 # --------------------------------------------------------------------------------------------------
 # Set Parameter(Twitter)
