@@ -8,7 +8,7 @@
 ## pip install 
 import TwitterAPI
 # Class that implement functions related to DataBase
-##
+## pip3 install pymysql
 import DBModule
 # Class that implement functions related to Visualization
 ##
