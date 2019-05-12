@@ -1,14 +1,34 @@
+====================================================================================================
+- root 拌沥 立加
+~$ mysql -u -root -p
+====================================================================================================
+- DB 积己 
+CREATE DATABASE TWITTER;
+====================================================================================================
+- 拌沥 积己
+CREATE USER 'T-SA'@'localhost' IDENTIFIED BY '1234';
+- 葛电 鼻茄 何咯
+GRANT ALL PRIVILEGES ON TWITTER.* TO 'T-SA'@'localhost';
+- 鼻茄 利侩
+FLUSH PRIVILEGES;
+====================================================================================================
+- T-SA 拌沥 立加(DB: TWITTER)
+~$ mysql -u T-SA -p TWITTER
+====================================================================================================
+- TWITTER. HASHTAG 积己
 CREATE TABLE HASHTAG( HCODE CHAR(4) NOT NULL, START INT NOT NULL, END INT NOT NULL, TEXT TEXT NOT NULL, PRIMARY KEY(HCODE, START, END));
-
+====================================================================================================
+- TWITTER.USER 积己
 CREATE TABLE USER( UCODE CHAR(4) NOT NULL, ID VARCHAR(20) NOT NULL, NAME VARCHAR(50) NOT NULL, SCREEN_NAME VARCHAR(50) NOT NULL, LOCATION VARCHAR(20), DESCRIPTION TEXT, PRIMARY KEY(UCODE));
-
+====================================================================================================
+- TWITTER.JSON 积己 棺 恐贰虐 眠啊
 CREATE TABLE JSON( YEAR CHAR(4) NOT NULL, MONTH CHAR(2) NOT NULL, DAY CHAR(2) NOT NULL, HOUR CHAR(2) NOT NULL, MINUTE CHAR(2) NOT NULL, SECOND CHAR(2) NOT NULL, ID VARCHAR(20) NOT NULL,  TEXT TEXT NOT NULL, TRUNCATED CHAR(1) NOT NULL,  HASHTAG CHAR(4) NOT NULL, USER CHAR(4) NOT NULL, RETWEET_COUNT INT, FAVORITE_COUNT INT, LANG VARCHAR(10), PRIMARY KEY(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, ID));
 ALTER TABLE JSON ADD CONSTRAINT FK_HASHTAG FOREIGN KEY(HASHTAG) REFERENCES HASHTAG(HCODE);
 ALTER TABLE JSON ADD CONSTRAINT FK_USER FOREIGN KEY(USER) REFERENCES USER(UCODE);
-
-
+====================================================================================================
+ - TWITTER.KEYWORD_COUNT 积己
 CREATE TABLE KEYWORD_COUNT( KEYWORD VARCHAR(10) NOT NULL, COUNT INT NOT NULL, PRIMARY KEY(KEYWORD));
-
-
+====================================================================================================
+- TWITTER.HASHTAG_COUNT 积己
 CREATE TABLE HASHTAG_COUNT( HASHTAG VARCHAR(10) NOT NULL, COUNT INT NOT NULL, PRIMARY KEY(HASHTAG));
-
+====================================================================================================
