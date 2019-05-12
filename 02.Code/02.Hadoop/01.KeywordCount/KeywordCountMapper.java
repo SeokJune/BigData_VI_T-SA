@@ -51,7 +51,7 @@ public class KeywordCountMapper extends Mapper<LongWritable, Text, Text, IntWrit
         	  //읽어온 단어 분석
             KomoranResult analyzeResultList = komoran.analyze(token);
             //tokens 리스트 정의 후, 명사에 대해 분류하여 적재.
-            List<String> tokens = analyzeResultList.getMorphesByTags("NP","NNP","NNG");
+            List<String> tokens = analyzeResultList.getMorphesByTags("SL","NNP","NNG");
               //요소들을 읽어오기 위한 Iterator 생성 후, tokens 내용 적재.
             Iterator<String> itrs = tokens.iterator();
       	      //----------------------------------------------------------------------------------------------------------------
