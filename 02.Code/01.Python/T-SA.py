@@ -213,7 +213,7 @@ while True:
     # ----------------------------------------------------------------------------------------------
     # Hadoop - Keyword
     # ----------------------------------------------------------------------------------------------
-    elif cNum == '31'
+    elif cNum == '31':
         # ------------------------------------------------------------------------------------------
         os.system('''sqoop import --connect jdbc:mysql://localhost/%s --username %s --password %s --table %s --columns %s --%s hdfs://localhost:9000/user/vi/%s -%s %s''' 
                   % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
