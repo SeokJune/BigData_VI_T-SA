@@ -1,11 +1,11 @@
 # DBModule.py
 #     Title: MariaDB connection and close, SQL command DML(Data Manipulation Language) processing
 #    Author: Bae InGyu
-# Create_at: 2019.04.02
 #--------------------------------------------------------------------------------------------------
-import pymysql #Modules for Python to MariaDB Interworking
+#Modules for Python to MariaDB Interworking
+import pymysql
 # -------------------------------------------------------------------------------------------------
-#  Class Name: dbModule:
+#  Class Name: DBModule:
 # Method list: dbConnect, dbClose
 #            : selectDB, insertDB, deleteDB
 #            : keywordDateCount
@@ -27,14 +27,14 @@ class DBModule :
 	def dbConnect(self) :
 		# MariaDB Connection
 		conn = pymysql.connect(host = self.host, user = self.user, password = self.pswd, db = self.db, charset = self.charset)
-		# Generating Dictoionary Cursor		
+		# Generating Dictionary Cursor		
 		curs = conn.cursor()
 		# 'conn', 'curs' return
 		return conn , curs 
 	# -----------------------------------------------------------------------------------------
 	# dbClose
 	# -----------------------------------------------------------------------------------------
-	def dbClose(self) :
+	def dbClose(self,conn,curs) :
 		conn , curs = self.dbConnect()
                 # MariaDB Connection and Cursor Close
 		# 'conn.close()', 'curs.close()' return
@@ -42,9 +42,9 @@ class DBModule :
 	# -----------------------------------------------------------------------------------------
 	# selectDB
 	# -----------------------------------------------------------------------------------------
-	def selectDB(self,tableName) :
+	def dbSelect(self,tableName) :
 		try :
-			# MariaDB Connection and Generating Dictoionary Cursor
+			# MariaDB Connection and Generating Dictionary Cursor
 			conn, curs = self.dbConnect()
 			# select all data in the table
 			sql = "select * from "+tableName.strip()+";"
@@ -57,60 +57,69 @@ class DBModule :
 			print("Select Failed")
 		finally :
 			# MariaDB Connection and Cursor Close              
-			self.dbClose()
+			self.dbClose(conn,curs)
 	# -----------------------------------------------------------------------------------------
 	# insertDB
 	# -----------------------------------------------------------------------------------------
-	def insertDB (self, tableName, values) :
+	def dbInsert(self, tableName, values) :
 		try :
-			# MariaDB Connection and Generating Dictoionary Cursor
+			# MariaDB Connection and Generating Dictionary Cursor
 			conn, curs = self.dbConnect()
 			# insert data in the table
-			if tableName == 'KEYWORD_JSON':                                
-				values[0] = '-'.join([values[0][26:],values[0][4:7],values[0][8:19]])
-				values[0] = values[0].replace('May','05')
-				sql = "insert into " + tableName.strip() + " values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
-				curs.execute(sql,(values[0],values[2],values[3],values[4],values[5],
-						  values[6],values[11],values[19],values[20],values[23]))
+			if tableName == 'S_HASHTAG':
+				sql = "insert into " + tableName.strip() + " values(%s,%s,%s,%s);"
+				curs.execute(sql,(values[0],values[1],values[2],values[3]))
+				conn.commit()
+				print("Insert Complete") 	
+
+			elif tableName == 'S_USER':
+				sql = "insert into " + tableName.strip() + " values(%s,%s,%s,%s,%s,%s);"
+				curs.execute(sql,(values[0],values[1],values[2],values[3],values[4],values[5]))
 				conn.commit()
 				print("Insert Complete")
 
-			elif tableName == 'KEYWORD_HASHTAG':			
-				sql = "insert into " + tableName.strip() + " values("
-				sql += "'" + str(values[0]) + "',"
-				sql +=       str(values[2][0]) + "," 
-				sql +=       str(values[2][1]) + ","
-				sql += "'" + str(values[1]) + "');"
-				curs.execute(sql)
+			elif tableName == 'S_JSON':
+				values[0] = values[0].replace('Apr','04')
+				values[0] = '-'.join([values[0][25:],values[0][4:6],values[0][7:19]])
+				sql = "insert into " + tableName.strip() + " values(%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+				curs.execute(sql,(values[0],values[1],values[2],values[3],values[4],values[5],values[6],values[7],values[8]))
 				conn.commit()
 				print("Insert Complete")
 
-			#else if tableName == 'KEYWORD_METADATA':			
-			#	sql = "insert into " + tableName.strip() + " values("
+			elif tableName == 'T_HASHTAG':
+				sql = "insert into " + tableName.strip() + " values(%s,%s,%s,%s);"
+				curs.execute(sql,(values[0],values[1],values[2],values[3]))
+				conn.commit()
+				print("Insert Complete") 	
 
-			#else if tableName == 'KEYWORD_USER':			
-			#	sql = "insert into " + tableName.strip() + " values("
+			elif tableName == 'T_USER':
+				sql = "insert into " + tableName.strip() + " values(%s,%s,%s,%s,%s,%s);"
+				curs.execute(sql,(values[0],values[1],values[2],values[3],values[4],values[5]))
+				conn.commit()
+				print("Insert Complete")
 
-			#else if tableName == 'KEYWORD':			
-			#	sql = "insert into " + tableName.strip() + " values("
 
-			#else if tableName == 'HASHTAG':			
-			#	sql = "insert into " + tableName.strip() + " values("
-			
-
-		except :
+			elif tableName == 'T_JSON':
+				sql = "insert into " + tableName.strip() + " values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+				curs.execute(sql,(values[0][26:],values[0][4:7],values[0][8:11],values[0][11:13],
+						  values[0][14:16],values[0][17:19],values[1],values[2],values[3],
+						  values[4],values[5],values[6],values[7],values[8],values[9],values[10],values[11]))
+				conn.commit()
+				print("Insert Complete")	
+	
+		except:
 			print("Insert Failed")
 
-		finally :
+		finally:
 			# MariaDB Connection and Cursor Close
-			self.dbClose()
+			self.dbClose(conn,curs)
 
 	# -----------------------------------------------------------------------------------------
 	# deleteDB
 	# -----------------------------------------------------------------------------------------
-	def deleteDB (self,tableName) :
+	def dbDelete(self,tableName) :
 		try : 
-			# MariaDB Connection and Generating Dictoionary Cursor
+			# MariaDB Connection and Generating Dictionary Cursor
 			conn, curs = self.dbConnect()
 			# delete all data in the table
 			sql = "delete from "+table.strip()+";"              
@@ -120,65 +129,27 @@ class DBModule :
 			print("Delete Failed")		 
 		finally :
 			# MariaDB Connection and Cursor Close
-			self.dbClose()
+			self.dbClose(conn,curs)
 	# -----------------------------------------------------------------------------------------
 	# keywordDateCount
 	# -----------------------------------------------------------------------------------------
 	def keywordDateCount (self, tableName):
 		try : 
-			# MariaDB Connection and Generating Dictoionary Cursor
+			# MariaDB Connection and Generating Dictionary Cursor
 			conn, curs = self.dbConnect()
-			# Keyword Date Count(Date 수정하고 sql문 수정해야함)
-			sql = "select HCODE, COUNT(*) from " + tableName.strip() + " group by HCODE;"              
+			# Keyword Date Count
+			sql = "select CREATE_AT, COUNT(*) from " + tableName.strip() + " group by CREATE_AT;"              
 			curs.execute(sql)
-			
 			result = curs.fetchall()
-
 			return result
 		except :
 			print("Created_at Count Select failed")		 
 		finally :
 			# Cursor종료 및 MariaDB연결종료 
-			self.dbClose()
+			self.dbClose(conn,curs)
 
 
 
-
-	
-
-	'''
-	def getRowByCheck(self,tableName) :
-		try :	
-			# MariaDB연결 및 Cursor생성
-			conn, curs = self.dbConnect()
-
-			# 테이블 조회
-			result = []
-			i = 0
-			for table in tableName :
-				sql = "select * from "+table.strip()+";"
-				curs.execute(sql)
-        
-				# 테이블 데이터출력
-				result.append(curs.fetchall())		
-				print(result[i])
-				i += 1
-				
-			# 모든 테이블 ROW 여부파악 하나의 테이블이라도 ROW가 존재하면 True로 반환
-			if bool(result[0] or result[1] or result[2] or result[3] or result[4] or result[5]) == True :
-				return True
-			
-		except :
-			print("파악실패")
-		
-		finally :
-			# Select후 Cursor종료 및 MariaDB연결종료                
-			self.dbClose()
-
-	'''
 
 
 	
-
-	
-
