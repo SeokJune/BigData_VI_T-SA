@@ -59,8 +59,8 @@ hashtagCount = ()
 paramSqoop = ['TWITTER', # DB Name
               'T-SA', # User Name
               '1234', # Password
-              ['S_JSON', , , ], # Table List
-              ['text', , , ], # Columns
+              ['S_JSON', 'KEYWORD_COUNT', , ], # Table List
+              ['text', 'KEYWORD,COUNT', , ], # Columns
               [['target-dir', 'KEYWORD_INPUT'], [, ], [, ], [, ]], # [target-dir/export-dir, Path]
               [['m', '1'], ['input-fields-terminated-by','"\t"']]]
 # --------------------------------------------------------------------------------------------------
@@ -238,17 +238,17 @@ while True:
         os.system('''sqoop import --connect %s --username %s  --password %s
                                   --table %s --columns %s
                                   --%s hdfs://localhost:9000/user/vi/%s  -%s %s''' 
-                  % (pramSqoop[0], pramSqoop[1], pramSqoop[2],
-                     pramSqoop[3][2], pramSqoop[4][2],
-                     pramSqoop[5][2][0], pramSqoop[5][2][1], pramSqoop[6][0][0], pramSqoop[6][0][1]))
+                  % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
+                     paramSqoop[3][2], paramSqoop[4][2],
+                     paramSqoop[5][2][0], paramSqoop[5][2][1], paramSqoop[6][0][0], paramSqoop[6][0][1]))
         os.system('''yarn jar /home/vi/hadoop/jar/KeywordCount.jar KeywordCount /user/vi/%s/part-m-00000 %s'''
-                  % (pramSqoop[5][2][1], pramSqoop[5][3][1]))
+                  % (paramSqoop[5][2][1], paramSqoop[5][3][1]))
         os.system('''sqoop export --connect %s --username %s  --password %s
                                   --table %s --columns %s
                                   --%s hdfs://localhost:9000/user/vi/%s/part-r-00000  --%s %s''' 
-                  % (pramSqoop[0], pramSqoop[1], pramSqoop[2],
-                     pramSqoop[3][3], pramSqoop[4][3],
-                     pramSqoop[5][3][0], pramSqoop[5][3][1], pramSqoop[6][1][0], pramSqoop[6][1][1]))
+                  % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
+                     paramSqoop[3][3], paramSqoop[4][3],
+                     paramSqoop[5][3][0], paramSqoop[5][3][1], paramSqoop[6][1][0], paramSqoop[6][1][1]))
         # ------------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------------
     # Visualization(Base) - Search
