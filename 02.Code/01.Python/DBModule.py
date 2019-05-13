@@ -42,12 +42,12 @@ class DBModule :
 	# -----------------------------------------------------------------------------------------
 	# selectDB
 	# -----------------------------------------------------------------------------------------
-	def dbSelect(self,tableName) :
+	def dbSelect(self, cols, tabs, cond) :
 		try :
 			# MariaDB Connection and Generating Dictionary Cursor
 			conn, curs = self.dbConnect()
 			# select all data in the table
-			sql = "select * from "+tableName.strip()+";"
+			sql = "select %s from %s %s;" %(cols, tabs, cond)
 			curs.execute(sql)
 			# fetchall data	
 			result = curs.fetchall()
@@ -86,7 +86,7 @@ class DBModule :
 				conn.commit()
 				print("Insert Complete")
 
-			elif tableName == 'T_HASHTAG':
+			if tableName == 'T_HASHTAG':
 				sql = "insert into " + tableName.strip() + " values(%s,%s,%s,%s);"
 				curs.execute(sql,(values[0],values[1],values[2],values[3]))
 				conn.commit()
@@ -98,12 +98,11 @@ class DBModule :
 				conn.commit()
 				print("Insert Complete")
 
-
 			elif tableName == 'T_JSON':
-				sql = "insert into " + tableName.strip() + " values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
-				curs.execute(sql,(values[0][26:],values[0][4:7],values[0][8:11],values[0][11:13],
-						  values[0][14:16],values[0][17:19],values[1],values[2],values[3],
-						  values[4],values[5],values[6],values[7],values[8],values[9],values[10],values[11]))
+				values[0] = values[0].replace('Apr','04')
+				values[0] = '-'.join([values[0][25:],values[0][4:6],values[0][7:19]])
+				sql = "insert into " + tableName.strip() + " values(%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+				curs.execute(sql,(values[0],values[1],values[2],values[3],values[4],values[5],values[6],values[7],values[8]))
 				conn.commit()
 				print("Insert Complete")	
 	
@@ -115,9 +114,9 @@ class DBModule :
 			self.dbClose(conn,curs)
 
 	# -----------------------------------------------------------------------------------------
-	# deleteDB
+	# deleteDB 수정하기 search , timeline , keyword count , hashtag count
 	# -----------------------------------------------------------------------------------------
-	def dbDelete(self,tableName) :
+	def dbDelete(self,database) :
 		try : 
 			# MariaDB Connection and Generating Dictionary Cursor
 			conn, curs = self.dbConnect()
@@ -138,7 +137,7 @@ class DBModule :
 			# MariaDB Connection and Generating Dictionary Cursor
 			conn, curs = self.dbConnect()
 			# Keyword Date Count
-			sql = "select CREATE_AT, COUNT(*) from " + tableName.strip() + " group by CREATE_AT;"              
+			sql = "select date_format(create_at,'%Y-%m-%d') create_at, count(*) from " + tableName.strip() + " group by date_format(create_at, '%Y-%m-%d');"              
 			curs.execute(sql)
 			result = curs.fetchall()
 			return result
@@ -152,4 +151,6 @@ class DBModule :
 
 
 
+
 	
+
