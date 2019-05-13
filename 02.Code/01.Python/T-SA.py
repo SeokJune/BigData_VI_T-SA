@@ -155,11 +155,11 @@ while True:
     elif cNum == '21':
         # ------------------------------------------------------------------------------------------
         for val in tHashtag:
-            db.insertDB('S_HASHTAG',val)
+            db.dbInsert('S_HASHTAG',val)
         for val in tUser:
-            db.insertDB('S_USER',val)  
+            db.dbInsert('S_USER',val)  
         for val in tJson:
-            db.insertDB('S_JSON',val)
+            db.dbInsert('S_JSON',val)
         # ------------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------------
     # DataBase - Insert(Timeline)
