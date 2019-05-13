@@ -225,7 +225,7 @@ while True:
                   % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
                      paramSqoop[3][1], paramSqoop[4][1],
                      paramSqoop[5][1][0], paramSqoop[5][1][1], paramSqoop[6][1][0], paramSqoop[6][1][1]))
-        os.system('''hdfs dfs -rmr KEYWORD_*''')
+        os.system('''hdfs dfs -rmr /user/vi/KEYWORD_*''')
         # ------------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------------
     # Hadoop - Hashtag
@@ -242,7 +242,7 @@ while True:
                   % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
                      paramSqoop[3][3], paramSqoop[4][3],
                      paramSqoop[5][3][0], paramSqoop[5][3][1], paramSqoop[6][1][0], paramSqoop[6][1][1]))
-        os.system('''hdfs dfs -rmr HASHTAG_*''')
+        os.system('''hdfs dfs -rmr /user/vi/HASHTAG_*''')
         # ------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------
     # Hadoop - Start
