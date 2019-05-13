@@ -57,7 +57,7 @@ hashtagCount = ()
 # 'TwitterAPI' object
 twitter = TwitterAPI.TwitterAPI('https://api.twitter.com/')
 # 'DBModule' object
-db = DBModule.DBModule(paramDB[0],paramDB[1],paramDB[2],paramDB[3],paramDB[4])
+db = DBModule.DBModule(paramDB[0], paramDB[1], paramDB[2], paramDB[3], paramDB[4])
 # 'Bisualization' object
 visual = Visualization.Visualization()
 # --------------------------------------------------------------------------------------------------
