@@ -215,40 +215,34 @@ while True:
     # ----------------------------------------------------------------------------------------------
     elif cNum == '31'
         # ------------------------------------------------------------------------------------------
-        os.system('''sqoop import --connect jdbc:mysql://localhost/%s --username %s  --password %s
-                                  --table %s --columns %s
-                                  --%s hdfs://localhost:9000/user/vi/%s  -%s %s''' 
+        os.system('''sqoop import --connect jdbc:mysql://localhost/%s --username %s --password %s --table %s --columns %s --%s hdfs://localhost:9000/user/vi/%s -%s %s''' 
                   % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
                      paramSqoop[3][0], paramSqoop[4][0],
                      paramSqoop[5][0][0], paramSqoop[5][0][1], paramSqoop[6][0][0], paramSqoop[6][0][1]))
         os.system('''yarn jar /home/vi/hadoop/jar/KeywordCount.jar KeywordCount /user/vi/%s/part-m-00000 %s'''
                   % (paramSqoop[5][0][1], paramSqoop[5][1][1]))
-        os.system('''sqoop export --connect jdbc:mysql://localhost/%s --username %s  --password %s
-                                  --table %s --columns %s
-                                  --%s hdfs://localhost:9000/user/vi/%s/part-r-00000  --%s %s''' 
+        os.system('''sqoop export --connect jdbc:mysql://localhost/%s --username %s --password %s --table %s --columns %s --%s hdfs://localhost:9000/user/vi/%s/part-r-00000 --%s %s''' 
                   % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
                      paramSqoop[3][1], paramSqoop[4][1],
                      paramSqoop[5][1][0], paramSqoop[5][1][1], paramSqoop[6][1][0], paramSqoop[6][1][1]))
+        os.system('''hdfs dfs -rmr KEYWORD_*''')
         # ------------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------------
     # Hadoop - Hashtag
     # ----------------------------------------------------------------------------------------------
     elif cNum == '32':
         # ------------------------------------------------------------------------------------------
-        os.system('''sqoop import --connect %s --username %s  --password %s
-                                  --table %s --columns %s
-                                  --%s hdfs://localhost:9000/user/vi/%s  -%s %s''' 
+        os.system('''sqoop import --connect %s --username %s --password %s --table %s --columns %s --%s hdfs://localhost:9000/user/vi/%s -%s %s''' 
                   % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
                      paramSqoop[3][2], paramSqoop[4][2],
                      paramSqoop[5][2][0], paramSqoop[5][2][1], paramSqoop[6][0][0], paramSqoop[6][0][1]))
         os.system('''yarn jar /home/vi/hadoop/jar/KeywordCount.jar KeywordCount /user/vi/%s/part-m-00000 %s'''
                   % (paramSqoop[5][2][1], paramSqoop[5][3][1]))
-        os.system('''sqoop export --connect %s --username %s  --password %s
-                                  --table %s --columns %s
-                                  --%s hdfs://localhost:9000/user/vi/%s/part-r-00000  --%s %s''' 
+        os.system('''sqoop export --connect %s --username %s --password %s --table %s --columns %s --%s hdfs://localhost:9000/user/vi/%s/part-r-00000 --%s %s''' 
                   % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
                      paramSqoop[3][3], paramSqoop[4][3],
                      paramSqoop[5][3][0], paramSqoop[5][3][1], paramSqoop[6][1][0], paramSqoop[6][1][1]))
+        os.system('''hdfs dfs -rmr HASHTAG_*''')
         # ------------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------------
     # Visualization(Base) - Search
