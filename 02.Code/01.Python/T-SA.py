@@ -159,7 +159,7 @@ while True:
         for val in c:
             db.insertDB('S_USER',val)  
         for val in a:
-            db.insertDB('S_JSON',val
+            db.insertDB('S_JSON',val)
         # ------------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------------
     # DataBase - Insert(Timeline)
