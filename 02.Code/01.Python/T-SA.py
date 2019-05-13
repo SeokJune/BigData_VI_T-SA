@@ -59,9 +59,9 @@ hashtagCount = ()
 paramSqoop = ['TWITTER', # DB Name
               'T-SA', # User Name
               '1234', # Password
-              ['S_JSON', 'KEYWORD_COUNT', , ], # Table List
-              ['text', 'KEYWORD,COUNT', , ], # Columns
-              [['target-dir', 'KEYWORD_INPUT'], [, ], [, ], [, ]], # [target-dir/export-dir, Path]
+              ['S_JSON', 'KEYWORD_COUNT', 'S_JSON', 'HASHTAG_COUNT'], # Table List
+              ['text', 'KEYWORD,COUNT', 'COUNT', 'HASHTAG,COUNT'], # Columns
+              [['target-dir', 'KEYWORD_INPUT'], ['export-dir', 'KEYWORD_OUTPUT'], ['target-dir', 'HASHTAG_INTPUT'], ['export-dir', 'HASHTAG_OUTPUT']], # [target-dir/export-dir, Path]
               [['m', '1'], ['input-fields-terminated-by','"\t"']]]
 # --------------------------------------------------------------------------------------------------
 # Creating 'TwitterAPI', 'dbModule', 'Visualization' object
@@ -218,17 +218,17 @@ while True:
         os.system('''sqoop import --connect jdbc:mysql://localhost/%s --username %s  --password %s
                                   --table %s --columns %s
                                   --%s hdfs://localhost:9000/user/vi/%s  -%s %s''' 
-                  % (pramSqoop[0], pramSqoop[1], pramSqoop[2],
-                     pramSqoop[3][0], pramSqoop[4][0],
-                     pramSqoop[5][0][0], pramSqoop[5][0][1], pramSqoop[6][0][0], pramSqoop[6][0][1]))
+                  % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
+                     paramSqoop[3][0], paramSqoop[4][0],
+                     paramSqoop[5][0][0], paramSqoop[5][0][1], paramSqoop[6][0][0], paramSqoop[6][0][1]))
         os.system('''yarn jar /home/vi/hadoop/jar/KeywordCount.jar KeywordCount /user/vi/%s/part-m-00000 %s'''
-                  % (pramSqoop[5][0][1], pramSqoop[5][1][1]))
+                  % (paramSqoop[5][0][1], paramSqoop[5][1][1]))
         os.system('''sqoop export --connect jdbc:mysql://localhost/%s --username %s  --password %s
                                   --table %s --columns %s
                                   --%s hdfs://localhost:9000/user/vi/%s/part-r-00000  --%s %s''' 
-                  % (pramSqoop[0], pramSqoop[1], pramSqoop[2],
-                     pramSqoop[3][1], pramSqoop[4][1],
-                     pramSqoop[5][1][0], pramSqoop[5][1][1], pramSqoop[6][1][0], pramSqoop[6][1][1]))
+                  % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
+                     paramSqoop[3][1], paramSqoop[4][1],
+                     paramSqoop[5][1][0], paramSqoop[5][1][1], paramSqoop[6][1][0], paramSqoop[6][1][1]))
         # ------------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------------
     # Hadoop - Hashtag
