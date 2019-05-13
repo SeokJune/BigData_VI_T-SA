@@ -210,7 +210,7 @@ while True:
     # ----------------------------------------------------------------------------------------------
     elif cNum == '31'
         # ------------------------------------------------------------------------------------------
-        os.system('''sqoop import --connect %s --username %s  --password %s
+        os.system('''sqoop import --connect jdbc:mysql://localhost/%s --username %s  --password %s
                                   --table %s --columns %s
                                   --%s hdfs://localhost:9000/user/vi/%s  -%s %s''' 
                   % (pramSqoop[0], pramSqoop[1], pramSqoop[2],
@@ -218,7 +218,7 @@ while True:
                      pramSqoop[5][0][0], pramSqoop[5][0][1], pramSqoop[6][0][0], pramSqoop[6][0][1]))
         os.system('''yarn jar /home/vi/hadoop/jar/KeywordCount.jar KeywordCount /user/vi/%s/part-m-00000 %s'''
                   % (pramSqoop[5][0][1], pramSqoop[5][1][1]))
-        os.system('''sqoop export --connect %s --username %s  --password %s
+        os.system('''sqoop export --connect jdbc:mysql://localhost/%s --username %s  --password %s
                                   --table %s --columns %s
                                   --%s hdfs://localhost:9000/user/vi/%s/part-r-00000  --%s %s''' 
                   % (pramSqoop[0], pramSqoop[1], pramSqoop[2],
