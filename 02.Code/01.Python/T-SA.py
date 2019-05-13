@@ -39,12 +39,23 @@ include_rts = False
 # Setting Parameters realted to DB Connect: HostIP, UserID, Password, DB Name, encoding Character Type
 paramDB = ('localhost', 'T-SA', '1234', 'TWITTER', 'utf8')
 # Table list
-tableName = ('S_JSON', 'S_HASHTAG', 'S_USER','T_JSON', 'T_HASHTAG', 'T_USER','KEYWORD_COUNT', 'HASHTAG_COUNT')
+tableName = ('S_JSON', 'S_HASHTAG', 'S_USER', 'T_JSON', 'T_HASHTAG', 'T_USER', 'KEYWORD_COUNT', 'HASHTAG_COUNT')
+# --------------------------------------------------------------------------------------------------
+# Result Parameter(Twitter, DB)
+# --------------------------------------------------------------------------------------------------
+sJson = ()
+sHashtag = ()
+sUser = ()
+tJson = ()
+tHashtag = ()
+tUser = ()
+keywordCount = ()
+hashtagCount = ()
 # --------------------------------------------------------------------------------------------------
 # Creating 'TwitterAPI', 'dbModule' object
 # --------------------------------------------------------------------------------------------------
 # 'TwitterAPI' object
-#twitter = TwitterAPI.TwitterAPI('https://api.twitter.com/')
+twitter = TwitterAPI.TwitterAPI('https://api.twitter.com/')
 # 'DBModule' object
 db = DBModule.DBModule(paramDB[0],paramDB[1],paramDB[2],paramDB[3],paramDB[4])
 # 'Bisualization' object
@@ -53,16 +64,16 @@ visual = Visualization.Visualization()
 # Operating Part
 # --------------------------------------------------------------------------------------------------
 # Output Title list
-Choise = (('Twitter',
-            'Search', 'Timeline'),
-            ('DataBase',
-            'Insert(Search)', 'Insert(Timeline)',
-            'Delete(Search)', 'Delete(Timeline)', 'Delete(KeywordCount)', 'Delete(HashtagCount)',
-            'Back-Up(ALL)', 'Roll-Back(ALL)'),
-            ('Visualization(Base)',
-            'Line Graph', 'Word Cloud', 'Bar Graph', 'Stacked Bar Graph', 'Pie Graph'),
-            ('Visualization(Analysis)',
-            'Bar Graph', 'Stacked Bar Graph', 'Pie Graph'))
+Title = (('Twitter',
+          'Search', 'Timeline'),
+         ('DataBase',
+          'Insert(Search)', 'Insert(Timeline)',
+          'Delete(Search)', 'Delete(Timeline)', 'Delete(KeywordCount)', 'Delete(HashtagCount)',
+          'Back-Up(ALL)', 'Roll-Back(ALL)'),
+         ('Visualization(Base)',
+          'Line Graph', 'Word Cloud', 'Bar Graph', 'Stacked Bar Graph', 'Pie Graph'),
+         ('Visualization(Analysis)',
+          'Bar Graph', 'Stacked Bar Graph', 'Pie Graph'))
 # --------------------------------------------------------------------------------------------------
 while True:
     # ----------------------------------------------------------------------------------------------
@@ -92,13 +103,13 @@ while True:
     # ----------------------------------------------------------------------------------------------
     # Output Title
     # ----------------------------------------------------------------------------------------------
-    for x in range(0, len(Choise)):
-        for y in range(0, len(Choise[x])):
+    for x in range(0, len(Title)):
+        for y in range(0, len(Title[x])):
             if y == 0:
-                print('%s.%s' % (x + 1, Choise[x][y]))
+                print('%s.%s' % (x + 1, Title[x][y]))
             else:
-                print('\t%s%s.%s' % (x + 1, y, Choise[x][y]))
-    print('%s.EXIT' % str(len(Choise) + 1))
+                print('\t%s%s.%s' % (x + 1, y, Title[x][y]))
+    print('%s.EXIT' % str(len(Title) + 1))
     print('Choice Number(XX) >>>')
     # ----------------------------------------------------------------------------------------------
     # Input Number
