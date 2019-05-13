@@ -28,7 +28,7 @@ date = ('201901010000', '201912310000')
 maxResults = 100
 # Setting Parameters related to Timeline: code(user_id, screen_name), count
 ## code(user_id - , screen_name - Name starting with '@')
-code = ('Lee SeokJune','LSeokjune')
+code = ('Lee SeokJune', 'LSeokjune')
 ## Specifies the number of Tweets to try and retrieve: ~200
 count = 100
 ## false - Timeline will strip any native retweets
@@ -125,15 +125,39 @@ while True:
     # Twitter - Search
     # ----------------------------------------------------------------------------------------------
     if cNum == '11':
+        '''
         # ------------------------------------------------------------------------------------------
-        print(cNum)
+        # Single Operation
         # ------------------------------------------------------------------------------------------
+        # Issuing Access Token
+        accessToken = twitter.encodeKey(paramAPI[0][0], paramAPI[0][1])
+        # ------------------------------------------------------------------------------------------
+        # Bearer Authentication(=Token Authentication): HTTP authentication scheme that involves security tokens
+        bearerKey = twitter.getAuthResponse(accessToken)
+        # ------------------------------------------------------------------------------------------
+        # Get Tweets using TwitterAPI
+        tweets = twitter.searchTweet(bearerKey, paramAPI[0][2], query, date[0], date[1], maxResults)
+        # ------------------------------------------------------------------------------------------
+        # Prepeocessing Tweets
+        json, hashtag, user = twitter.preprocess(tweets)
+        # ------------------------------------------------------------------------------------------
+        '''
     # ----------------------------------------------------------------------------------------------
     # Twitter - Timeline
     # ----------------------------------------------------------------------------------------------
     elif cNum == '12':
         # ------------------------------------------------------------------------------------------
-        print(cNum)
+        # Issuing Access Token
+        accessToken = twitter.encodeKey(paramAPI[0][0], paramAPI[0][1])
+        # ------------------------------------------------------------------------------------------
+        # Bearer Authentication(=Token Authentication): HTTP authentication scheme that involves security tokens
+        bearerKey = twitter.getAuthResponse(accessToken)
+        # ------------------------------------------------------------------------------------------
+        # Get Timelines using get_Timeline
+        timelines = twitter.searchTimeline(bearerKey, code[1], count, include_rts)
+        # ------------------------------------------------------------------------------------------
+        # Prepeocessing Timelines
+        tJson, tHashtag, tUser = twitter.preprocess(timelines)
         # ------------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------------
     # DataBase - Insert(Search)
