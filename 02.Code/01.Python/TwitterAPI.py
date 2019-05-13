@@ -76,7 +76,7 @@ class TwitterAPI:
     # ----------------------------------------------------------------------------------------------
     #  Get Search Timeline(Return Type: 'User' object)
     # ----------------------------------------------------------------------------------------------
-    def searchTimeline(self, authResponse, screenName, count):
+    def searchTimeline(self, authResponse, screenName, count, include_rts):
         # Set URL
         searchUrl = '{}1.1/statuses/user_timeline.json'.format(self.baseUrl)
         # Keys in data response are token_type (bearer) and access_token (your access token)
@@ -85,7 +85,8 @@ class TwitterAPI:
         searchHeaders = { 'Authorization': 'Bearer {}'.format(accessToken) }
         # Set Param: screenName, count
         searchParams = { 'screen_name': screenName,
-                         'count': count}
+                         'count': count,
+                         'include_rts': include_rts}
         # GET Transmission Method(URL, header, param)
         searchResponse = requests.get(searchUrl, headers = searchHeaders, params = searchParams)
         # return object
