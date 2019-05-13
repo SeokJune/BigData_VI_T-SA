@@ -10,7 +10,8 @@ import base64   # Using by 'encodeKey'
 import requests # Using by 'getAuthResponse'
 # --------------------------------------------------------------------------------------------------
 #  Class Name: TwitterAPI:
-# Method list: encodeKey, getAuthResponse
+# Method list: Generator
+#            : encodeKey, getAuthResponse
 #            : searchTweet, searchTimeline
 #            : preprocess
 # --------------------------------------------------------------------------------------------------
@@ -132,23 +133,3 @@ class TwitterAPI:
         # (json, hashtag, user) return
         return json, hashtag, user
 # --------------------------------------------------------------------------------------------------
-'''
-APIKey = ('lNZwPI2dQ5l89K1nOGW6Sod6u', 'MGRK5IsX8xwxhz0FYv5Llm5ps')
-APISecretKey = ('D6eGld20D99yrL89SMYPhJsjiHqmNKGL5LznkNKOQQPoIoQxWA', 'JRh3fHqPqEq6VWcyoKax6MG4nE21z0zatiDjEGnvmHm99cyrLA')
-APILabel = ('TSA0','TSA1')
-
-t = TwitterAPI('https://api.twitter.com/')
-
-a = t.encodeKey(APIKey[0], APISecretKey[0])
-b = t.getAuthResponse(a)
-#c = t.searchTweet(b, APILabel[0], '"이윤혁" OR "서재익" OR "이석준" OR "배인규"', '201903010000', '201905010000', '10')
-#d, e, f = t.preprocessTweet(c)
-
-
-x = t.searchTimeline(b, 'LSeokjune','10')
-d, e, f = t.preprocessTweet(x)
-print(d)
-print(e)
-print(f)
-'''
-
