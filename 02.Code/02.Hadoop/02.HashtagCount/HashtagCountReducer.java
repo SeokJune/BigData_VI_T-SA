@@ -10,25 +10,25 @@ import java.io.IOException;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-//Reducer 클래스 상속, 입력과 출력을 같은 타입으로 출력.
-public class HashtagCountReducer extends Reducer<Text, IntWritable, Text, IntWritable>{
+// Reducer class inheritance, output the same type of input and output.
+public class KeywordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable>{
     private IntWritable result = new IntWritable();
  
-    //출력 파라미터를 가져와서 더해주는 기능을 추가하기 위한 리듀스 메서드 재정의
-    //Iterable<>로 감싸진 이유는 맵에서 IntWritable에 저장된 값들이 묶여 있기 때문에 values 값들만 추출하기 위해서이다.
+    // Redefine methods to add outputting parameters and override methods Method overrides
+    // Iterable <> is to extract values only because the values stored in IntWritable are tied in the map.
     @Override
     protected void reduce(Text key, Iterable<IntWritable> values,
             Reducer<Text, IntWritable, Text, IntWritable>.Context context) throws IOException, InterruptedException {
-      //단어의 수만큼 증가하는 값을 저장하는 변수
-    	int sum = 0;
-    	//각각의 글자 수를 알아내어 단어를 합산한다.
+     // Variable that stores a value that increases by the number of words
+     int sum = 0;
+     // Find the number of each character and add up the words.
         for (IntWritable val : values) {
             sum += val.get();
         }
-        //맵리듀스의 입출력 타입인 IntWritable객체를 생성한 result에 출력값을 설정.
-        //이 때, 출력값은 단어의 합산한 값.
+        // Set the output value to the result that generated the IntWritable object which is the input / output type of the MapReduce.
+        // At this time, the output value is the sum of words.
         result.set(sum);
-        //context객체의 write메서드를 통해  출력 키로 입력 데이터의 키를 그대로 사용한다.
+        // Use the key of the input data as the output key through the write method of the context object.
         context.write(key, result);
     }
 }
