@@ -111,7 +111,7 @@ class TwitterAPI:
             # Table(TWEET_JSON)
             json.append(['-'.join([t['created_at'][26:30],      # Creation Date and Time (YYYY-mm-dd HH:MM:SS)
                                    self.mapMonth[t['created_at'][4:7]],
-                                   t['created_at'][8:19]]),       
+                                   t['created_at'][8:19]]),
                         t['id_str'],                            # str(id)
                         t['text'],                              # tweet
                         t['truncated'],                         #  
