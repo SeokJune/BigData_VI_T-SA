@@ -32,7 +32,6 @@ class Visualization:
         plt.title('Number of keywords used by date on a Line Graph')
         plt.show()
 
-
     def base_wordcloud(self, b):
         path = '/home/vi/.local/lib/python3.6/site-packages/matplotlib/mpl-data/fonts/ttf/NanumBarunGothicUltraLight.ttf'
         wc=WordCloud(font_path=path,background_color='white',max_words=2000)
@@ -58,13 +57,12 @@ class Visualization:
 
 
     def analysis_bargraph(self, b):
-
-#        countlist=[b['문재인'],b['홍준표'],b['안철수'],b['유승민'],b['심상정']]
-#        candidate=['문재인','홍준표','안철수','유승민']
+        countlist=[b['문재인'],b['홍준표'],b['안철수'],b['유승민'],b['심상정']]
+        candidate=['문재인','홍준표','안철수','유승민','심상정']
 #        can_df=pd.DataFrame(countlist, df2['index'],columns=['TweetCount'])
  
-        df=pd.DataFrame(list(b.values()),list(b.keys()), columns=['Count'])
-        df2=pd.DataFrame(list(b.values()),list(b.keys()), columns=['tweetCount'])
+        df=pd.DataFrame(countlist,candidate, columns=['Tweet Count'])
+        df2=pd.DataFrame(voting, president_vote.index,columns=['Vote Count'])
         result=pd.concat([df,df2],axis=1)
         result.plot.bar()
         plt.title('Supported Ratio on a Bar Graph')
@@ -83,8 +81,8 @@ class Visualization:
         plt.bar('Count', df['Count'][1], bottom=df['Count'][0])
         plt.bar('Count', df['Count'][2], bottom=sum(df['Count'][:2]))
         plt.bar('Count', df['Count'][3], bottom=sum(df['Count'][:3]))
-#        plt.bar('Count', df['Count'][4], bottom=sum(df['Count'][:4]))
-#        plt.bar('Count', df['Count'][5], bottom=sum(df['Count'][:5]))
+        plt.bar('Count', df['Count'][4], bottom=sum(df['Count'][:4]))
+        plt.bar('Count', df['Count'][5], bottom=sum(df['Count'][:5]))
 
         plt.title("Number of keywords used by date on a Stacked Bar Graph")
         plt.legend(df["index"], loc='center left',bbox_to_anchor=(1,0.5))
@@ -97,39 +95,35 @@ class Visualization:
 
     def analysis_stackedbargraph(self, b):
 
-        df=pd.DataFrame(list(b.values()),list(b.keys()), columns=['Count'])
-        df.loc["ETC",:]=df['Count'][5:len(df)].sum()
+        countlist=[b['문재인'],b['홍준표'],b['안철수'],b['유승민'],b['심상정']]
+        candidate=['문재인','홍준표','안철수','유승민','심상정']
+
+        df=pd.DataFrame(countlist,candidate, columns=['Tweet Count'])
         df=df.reset_index()
         df=df.set_index("index")
         df=df.reset_index()
 
-        plt.subplot(211)
-        plt.bar('Count', df['Count'][0])
-        plt.bar('Count', df['Count'][1], bottom=df['Count'][0])
-        plt.bar('Count', df['Count'][2], bottom=sum(df['Count'][:2]))
-#        plt.bar('Count', df['Count'][3], bottom=sum(df['Count'][:3]))
-#        plt.bar('Count', df['Count'][4], bottom=sum(df['Count'][:4]))
+        plt.title("Supported Ratio on a Stacked Bar Graph")
+
+        plt.bar('Count', df['Tweet Count'][0], color='b')
+        plt.bar('Count', df['Tweet Count'][1], bottom=df['Tweet Count'][0], color='g')
+        plt.bar('Count', df['Tweet Count'][2], bottom=sum(df['Tweet Count'][:2]), color='r')
+        plt.bar('Count', df['Tweet Count'][3], bottom=sum(df['Tweet Count'][:3]), color='c')
+        plt.bar('Count', df['Tweet Count'][4], bottom=sum(df['Tweet Count'][:4]), color='m')
 #        plt.bar('Count', df['Count'][5], bottom=sum(df['Count'][:5]))
 
     #    plt.title("Supported Ratio on a Stacked Bar Graph")
         plt.legend(df["index"], loc='center left',bbox_to_anchor=(1,0.5))
 
 
+        plt.bar('Vote Count', voting[0], color='b')
+        plt.bar('Vote Count', voting[1], bottom=voting[0], color='g')
+        plt.bar('Vote Count', voting[2], bottom=sum(voting[:2]), color='r')
+        plt.bar('Vote Count', voting[3], bottom=sum(voting[:3]), color='c')
+        plt.bar('Vote Count', voting[4], bottom=sum(voting[:4]), color='m')
 
-        plt.subplot(212)
-        plt.bar('Vote Count', voting[0])
-        plt.bar('Vote Count', voting[1], bottom=voting[0])
-        plt.bar('Vote Count', voting[2], bottom=sum(voting[:2]))
-#        plt.bar('Vote Count', voting[3], bottom=sum(voting[:3]))
-#        plt.bar('Vote Count', voting[4], bottom=sum(voting[:4]))
-
-        plt.title("Supported Ratio on a Stacked Bar Graph")
         plt.legend(president_vote.index,loc='center left',bbox_to_anchor=(1,0.5))
         plt.show()
-
-
-
-
 
 
     def base_piegraph(self, b):
@@ -137,22 +131,26 @@ class Visualization:
         df=pd.DataFrame(list(b.values()),list(b.keys()), columns=['Count'])
         df.loc["ETC",:]=df['Count'][5:len(df)].sum()
         df=df.reset_index()
+        df=df.drop(df.index[5:len(df)-1])
         df=df.set_index("index")
         df=df.reset_index()
 
-        def my_autopct(pct):
-            total=sum(b.values())
-            val=int(round(pct*total/100.0))
-            return '{v:d}\n({p:.1f}%)'.format(p=pct,v=val)
+        def make_autopct(values):
+            def my_autopct(pct):
+                total=sum(values)
+                val=int((pct*total)/100.0)
+                return '{v:d}\n({p:.1f}%)'.format(p=pct,v=val)
+            return my_autopct
 
         fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
 
+        percent=make_autopct(df["Count"])
+        data=df["Count"]
         candidate = df["index"]
-        date=pd.to_numeric(df["Count"])
-        data = list(date)
-
-
-        wedges, texts, autotexts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40, autopct=my_autopct)        
+#        date=pd.to_numeric(df["Count"])
+#        result=my_autopct(df["Count"][0])
+#        print(result)
+        wedges, texts, autotexts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40, autopct=make_autopct(df["Count"]))        
 
         bbox_props = dict(boxstyle="square", fc="w", ec="k", lw=0.72)
         kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
@@ -165,33 +163,39 @@ class Visualization:
             horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
             connectionstyle = "angle,angleA=0,angleB={}".format(ang)
             kw["arrowprops"].update({"connectionstyle": connectionstyle})
-            ax.annotate(my_autopct(data[i]), xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
+            ax.annotate(percent(i), xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
             ax.set_title("Pie Graph")
 
         plt.setp(autotexts, size=9, weight="bold")
         plt.legend(df["index"], loc='center left',bbox_to_anchor=(1.3,0.7))
         plt.show()
 
+
     def analysis_piegraph(self, b):
-        df=pd.DataFrame(list(b.values()),list(b.keys()), columns=['Count'])
-        df.loc["ETC",:]=df['Count'][5:len(df)].sum()
+
+        countlist=[b['문재인'],b['홍준표'],b['안철수'],b['유승민'],b['심상정']]
+        candidate=['문재인','홍준표','안철수','유승민','심상정']
+
+        print(list(countlist))
+
+        df=pd.DataFrame(countlist,candidate, columns=['Tweet Count'])
         df=df.reset_index()
         df=df.set_index("index")
         df=df.reset_index()
-
-        def my_autopct(pct):
-            total=sum(b.values())
-            val=int(round(pct*total/100.0))
-            return '{v:d}\n({p:.1f}%)'.format(p=pct,v=val)
+        def make_autopct(values):
+            def my_autopct(pct):
+                total=sum(values)
+                val=int(round(pct*total/100.0))
+                return '{v:d}\n({p:.1f}%)'.format(v=val,p=pct)
+            return my_autopct
 
         fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
 
         candidate = df["index"]
+#        date=pd.to_numeric(df["Tweet Count"])
+        data = df["Tweet Count"]
 
-        date=pd.to_numeric(df["Count"])
-        data = list(date)
-
-        wedges, texts, autotexts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40, autopct=my_autopct)        
+        wedges, texts, autotexts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40, autopct=make_autopct(countlist))        
 
         bbox_props = dict(boxstyle="square", fc="w", ec="k", lw=0.72)
         kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
@@ -204,7 +208,7 @@ class Visualization:
             horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
             connectionstyle = "angle,angleA=0,angleB={}".format(ang)
             kw["arrowprops"].update({"connectionstyle": connectionstyle})
-            ax.annotate(my_autopct(data[i]), xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
+            ax.annotate(make_autopct(countlist[i]), xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
             ax.set_title("Tweet Count on a Pie Graph")
 
         plt.setp(autotexts, size=9, weight="bold")
@@ -212,17 +216,11 @@ class Visualization:
 
 
 
-
-        def my_autopct1(pct):
-            total=sum(voting)
-            val=int((round(pct)*total)/100)
-            return '{v:d}\n({:.1f}%)'.format(pct,v=val)
-
         fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
 
         candidate = president_vote.index
         data = voting
-        wedges, texts, autotexts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40, autopct=my_autopct1)        
+        wedges, texts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)        
 
         bbox_props = dict(boxstyle="square", fc="w", ec="k", lw=0.72)
         kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
@@ -239,6 +237,6 @@ class Visualization:
             ax.annotate(my_autopct1(voting[i]), xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
             ax.set_title("Voting Count on a Pie Graph")
 
-        plt.setp(autotexts, size=9, weight="bold")
+        plt.setp(texts, size=9, weight="bold")
         plt.legend(candidate, loc='center left',bbox_to_anchor=(1.3,0.7))
         plt.show()
