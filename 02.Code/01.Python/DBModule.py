@@ -88,7 +88,7 @@ class DBModule:
     # ----------------------------------------------------------------------------------------------
     # Elimination Data to DataBase
     # ----------------------------------------------------------------------------------------------
-    def dbDelte(self, tableNm):
+    def dbDelete(self, tableNm):
         try:
             # DB Connect
             conn, curs = self.dbConnect()
