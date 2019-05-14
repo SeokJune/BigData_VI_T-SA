@@ -81,16 +81,15 @@ Title = (('Twitter',
          ('DataBase',
           'Select(JSON - S, T)', 'Select(COUNT - Keyword, Hashtag)',
           'Insert(Search)', 'Insert(Timeline)', # BIG, BIG
-          'Delete(Search)', 'Delete(Timeline)', 'Delete(KeywordCount)', 'Delete(HashtagCount)',
-          'Back-Up(ALL)', 'Roll-Back(ALL)'), # LSJ, LSJ
+          'Delete(Search)', 'Delete(Timeline)', 'Delete(KeywordCount)', 'Delete(HashtagCount)'),
          ('Hadoop',
           'Keyword', 'Hashtag', 'Start', 'Stop'), # LYH, LYH, LYH, LYH
          ('Visualization(Base)',
           'Line Graph', 'Word Cloud', 'Bar Graph', 'Stacked Bar Graph', 'Pie Graph'),
          ('Visualization(Analysis)',
           'Bar Graph', 'Stacked Bar Graph', 'Pie Graph'),
-         ('BACK-UP(TWITTER)',),
-         ('ROLL-BACK(TWITTER)',),
+         ('BACK-UP(TWITTER)',), # LSJ
+         ('ROLL-BACK(TWITTER)',), #LSJ
          ('EXIT',))
 # --------------------------------------------------------------------------------------------------
 while True:
