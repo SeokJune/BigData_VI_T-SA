@@ -23,47 +23,47 @@ import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
 import kr.co.shineware.nlp.komoran.core.Komoran;
 import kr.co.shineware.nlp.komoran.model.KomoranResult;
 
-//Mapper 클래스의 generic 타입  <입력키, 입력값, 출력키, 출력값>
-//하둡에서 요구되는 long, int, String에 대응되는 타입으로 변경해서 사용 
+//The generic type of the Mapper class <input key, input value, output key, output value>
+//It can be changed to the type corresponding to long, int, String required by Hadoop. 
 public class KeywordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
-	//IntWritable값으로 상수 1을 저장한다.
-    //리듀스에서 IntWritable의 값을 가지고 단어 카운트 할 때 사용.
+    //Stores the constant 1 as an IntWritable value.
+    //Used to count words with the value of IntWritable in the Reduce.
     private final static IntWritable one = new IntWritable(1);
-    //출력물에서 나오는 단어를 저장하고자 하는 Text 객체
+    //Text object to save the word from output
     private Text word = new Text();
  
-    //입력되는 키와 값에 대해 리듀스로 넘어갈 키와 값으로 매핑
+    //Mapping keys and values to keys and values to reduce
     @Override
     protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, IntWritable>.Context context)
             throws IOException, InterruptedException {
-         //공백 단위로 들어온 텍스트를 끊어 온다. 나머지 특수문자를 포함한 나머지 문자에 대해서도 처리
+         //Breaks text that comes in blank spaces. Process the remaining characters including the remaining special characters
         StringTokenizer itr = new StringTokenizer(value.toString(), " \t\n\r,.'\"-=%…()[]{}“▷+ⓒ!?:;#\'");
         
-         //리턴할 다음 토큰이 없을 때(false) 만큼 반복.
+         //Repeat as long as there is no next token to return (false)
         while(itr.hasMoreTokens()) {
         	  //
         	  String token = itr.nextToken();
-              //---------------------------------------------자연어 처리 부분---------------------------------------------------
-        	  //코모란 객체 생성 DEFAULT_MODEL기본 사전 사용 << 사전 정의 가능
+              //---------------------------------------------Natural language processing---------------------------------------
+        	  //Create Como objects DEFAULT_MODEL Use default dictionary << Predefined
         	  Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
-        	  //사용자 사전 경로 추가.(사용자 명사 정의 가능)
+        	  //Add user dictionary path (user noun can be defined)
         	  komoran.setUserDic("/home/vi/eclipse-workspace/KeywordCount/src/dic.user");
-        	  //읽어온 단어 분석
+        	  //Analyze the words you read
             KomoranResult analyzeResultList = komoran.analyze(token);
-            //tokens 리스트 정의 후, 명사에 대해 분류하여 적재.
+            //tokens list, then categorized and loaded for nouns.
             List<String> tokens = analyzeResultList.getMorphesByTags("SL","NNP","NNG");
-              //요소들을 읽어오기 위한 Iterator 생성 후, tokens 내용 적재.
+              //After creating an Iterator to read the elements, load the tokens content.
             Iterator<String> itrs = tokens.iterator();
       	      //----------------------------------------------------------------------------------------------------------------
-            //context 객체는 키-값쌍으로 내보낼 때 사용되며, 출력타입으로 인자화 된다.
+            //The context object is used when exporting key-value pairs, and is parameterized as an output type.
             while(itrs.hasNext()) {
-            //ktr 변수 생성하여 자연어 처리된 단어 저장.(단어, 공백 제거)
+            //Save the word processed by natural language by creating ktr variable. (Remove word, space)
             String ktr = itrs.next().trim();
-            //ktr에 저장된 단어가 한글자 이상이나 5글자 이하일 경우 조건.
+            //The condition when the word stored in ktr is more than one character or less than 5 characters.
             if(ktr.getBytes().length > (byte)3 && ktr.getBytes().length < (byte)16) {
-            	  //word객체에 ktr 삽입.
+            	  //Insert ktr into the word object.
                 word.set(ktr);
-                //context 객체는 키-값쌍으로 내보낼 때 사용되며, 출력타입으로 인자화 된다.
+                //The context object is used when exporting key-value pairs, and is parameterized as an output type.
                 context.write(word, one);
             	}
             }
