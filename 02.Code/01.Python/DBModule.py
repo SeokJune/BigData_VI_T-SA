@@ -120,33 +120,37 @@ class DBModule :
 		try : 
 			# MariaDB Connection and Generating Dictionary Cursor
 			conn, curs = self.dbConnect()
-			# delete all data in the table
-			sql = "delete from "+table.strip()+";"              
-			curs.execute(sql)
-			conn.commit()
+			if database == 'search':
+				# delete all data in the table
+				sql = "delete from S_HASHTAG;"              
+				curs.execute(sql)
+				sql = "delete from S_USER;"
+				curs.execute(sql)
+				sql = "delete from S_JSON;"
+				curs.execute(sql)
+				conn.commit()
+			elif database == 'timeline':
+				# delete all data in the table
+				sql = "delete from T_HASHTAG;"              
+				curs.execute(sql)
+				sql = "delete from T_USER;"
+				curs.execute(sql)
+				sql = "delete from T_JSON;"
+				curs.execute(sql)
+				conn.commit()
+			elif database == 'keyword_count':
+				sql = "delete from KEYWORD_COUNT;"
+				curs.execute(sql)
+				conn.commit()
+			elif database == 'hashtag_count':
+				sql = "delete from HASHTAG_COUNT;"
+				curs.execute(sql)
+				conn.commit()
 		except :
 			print("Delete Failed")		 
 		finally :
 			# MariaDB Connection and Cursor Close
 			self.dbClose(conn,curs)
-	# -----------------------------------------------------------------------------------------
-	# keywordDateCount
-	# -----------------------------------------------------------------------------------------
-	def keywordDateCount (self, tableName):
-		try : 
-			# MariaDB Connection and Generating Dictionary Cursor
-			conn, curs = self.dbConnect()
-			# Keyword Date Count
-			sql = "select date_format(create_at,'%Y-%m-%d') create_at, count(*) from " + tableName.strip() + " group by date_format(create_at, '%Y-%m-%d');"              
-			curs.execute(sql)
-			result = curs.fetchall()
-			return result
-		except :
-			print("Created_at Count Select failed")		 
-		finally :
-			# Cursor종료 및 MariaDB연결종료 
-			self.dbClose(conn,curs)
-
 
 
 
