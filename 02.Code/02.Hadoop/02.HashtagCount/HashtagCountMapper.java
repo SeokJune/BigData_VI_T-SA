@@ -14,31 +14,34 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-//Mapper 클래스의 generic 타입  <입력키, 입력값, 출력키, 출력값>
-//하둡에서 요구되는 long, int, String에 대응되는 타입으로 변경해서 사용
+//The generic type of the Mapper class <input key, input value, output key, output value>
+//It can be changed to the type corresponding to long, int, String required by Hadoop. 
 public class HashtagCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
-    //IntWritable값으로 상수 1을 저장한다.
-   	//리듀스에서 IntWritable의 값을 가지고 단어 카운트 할 때 사용.
+    //Stores the constant 1 as an IntWritable value.
+    //Used to count words with the value of IntWritable in the Reduce.
     private final static IntWritable one = new IntWritable(1);
-    //출력물에서 나오는 단어를 저장하고자 하는 Text 객체
+    //Text object to save the word from output
     private Text word = new Text();
  
  
-    //입력되는 키와 값에 대해 리듀스로 넘어갈 키와 값으로 매핑 
+    //Mapping keys and values to keys and values to reduce
     @Override
     protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, IntWritable>.Context context)
             throws IOException, InterruptedException {
-       //공백 단위로 들어온 텍스트를 끊어 온다.
+       
+       // Breaks text that comes in as a blank space.
     	  StringTokenizer itr = new StringTokenizer(value.toString());
-         //리턴할 다음 토큰이 없을 때(false) 만큼 반복. 
+         // Repeat as long as there is no next token to return (false).
          while(itr.hasMoreTokens()) {
-             //ktr 변수에 다음 변수를 불러오는데 앞, 뒤 공백을 제거하여 저장.
+         // Call the next variable in the ktr variable, save it by removing leading and trailing spaces.
              String ktr = itr.nextToken().trim(); 
-             //ktr에 저장되는 단어의 길이가 한글자 이상 5글자 이하인 경우 조건
-             if(ktr.getBytes().length > (byte)3 && ktr.getBytes().length < (byte)16) {
-                 // word 객체에 text 형식으로 ktr단어 적재.
+
+          // If the length of the word stored in ktr is more than one character but less than 5 characters
+          if(ktr.getBytes().length > (byte)3 && ktr.getBytes().length < (byte)16) {
+                 
+                 // Load the word ktr in text in the word object.
                  word.set(ktr);
-                 // 리듀스에 넘겨줄 값 정의
+                 // Define the value to pass to the redox
                  context.write(word, one);
              	}
          }
