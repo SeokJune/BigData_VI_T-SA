@@ -65,6 +65,33 @@ class DBModule :
 		try :
 			# MariaDB Connection and Generating Dictionary Cursor
 			conn, curs = self.dbConnect()
+			
+			sql = 'INSERT INTO ' + tableName.strip()
+
+                        if tableNmae in ['S_JSON', 'T_JSON']:
+                                sql += 'VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
+                                curs.execute(sql, values[0][26:30] + '01' if values[0][4:7] == 'Jan' else
+                                                                     '02' if values[0][4:7] == 'Feb' else
+                                                                     '03' if values[0][4:7] == 'Mar' else
+                                                                     '04' if values[0][4:7] == 'Apr' else
+                                                                     '05' if values[0][4:7] == 'May' else
+                                                                     '06' if values[0][4:7] == 'Jun' else
+                                                                     '07' if values[0][4:7] == 'Jul' else
+                                                                     '08' if values[0][4:7] == 'Aug' else
+                                                                     '09' if values[0][4:7] == 'Sep' else
+                                                                     '10' if values[0][4:7] == 'Oct' else
+                                                                     '11' if values[0][4:7] == 'Nov' else '12'
+                                                                   + values[0][8:10]
+                                                                   + values[0][11:19]
+                                             , values[1], values[2], values[3], values[4], values[5], values[6], values[7], values[8])
+                        elif tableNmae in ['S_HASHTAG', 'T_JHASHTAG']:
+                                sql += 'VALUES(%s, %s, %s, %s);'
+                                curs.execute(sql, values[0], values[1], values[2], values[3])
+                        elif tableNmae in ['S_USER', 'T_USER']:
+                                sql += 'VALUES(%s, %s, %s, %s, %s, %s);'
+                                curs.execute(sql, values[0], values[1], values[2], values[3], values[4], values[5])
+                        conn.commit()
+			'''
 			# insert data in the table
 			if tableName == 'S_HASHTAG':
 				sql = "insert into " + tableName.strip() + " values(%s,%s,%s,%s);"
@@ -104,7 +131,8 @@ class DBModule :
 				sql = "insert into " + tableName.strip() + " values(%s,%s,%s,%s,%s,%s,%s,%s,%s);"
 				curs.execute(sql,(values[0],values[1],values[2],values[3],values[4],values[5],values[6],values[7],values[8]))
 				conn.commit()
-				print("Insert Complete")	
+				print("Insert Complete")
+			'''
 	
 		except:
 			print("Insert Failed")
