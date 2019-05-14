@@ -1,6 +1,6 @@
 # TwitterAPI.py
-#     Title: Collect Twitter Data, Data preprocessing
-#    Author: Lee SeokJune
+#  Title: Collect Twitter Data, Data preprocessing
+# Author: Lee SeokJune
 # --------------------------------------------------------------------------------------------------
 # import module
 # --------------------------------------------------------------------------------------------------
