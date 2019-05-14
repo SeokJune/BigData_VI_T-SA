@@ -16,24 +16,24 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class HashtagCount {
 	public static void main(String[] args) throws Exception {
-		//하둡 실행(hdfs-site, core-site)에 필요한 conf 객체 생성
+                // Create the conf object needed for Hadoop implementation (hdfs-site, core-site)
 		Configuration conf = new Configuration();
-		//잡 실행을 위한 잡 객체 생성
+		// Create job object for job execution
 		Job job = Job.getInstance(conf, "HashtagCount");
-		//잡 실행에 필요한 사용자 라이브러리 파일 지정
+                // Specify the library file to be used for job execution
 		job.setJarByClass(HashtagCount.class);
-		//잡에서 사용할 클래스들 설정
+		// Set the classes to use in the job
 		job.setMapperClass(HashtagCountMapper.class);
 		job.setCombinerClass(HashtagCountReducer.class);
 		job.setReducerClass(HashtagCountReducer.class);
-		//매퍼와 리듀서 클래스의 출력 데이터의 키와 값 타입 설정
+		// Set key and value type of output data of mapper and reducer class
 		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(IntWritable.class);
-		//입출력 데이터 경로 설정.
-		//첫 번째 인자는 입력 파라미터, 두 번째 인자는 출력 파라미터
+		job.setOutputValueClass(IntWritable.class);	
+		// Set the I / O data path.
+		// The first parameter is the input parameter, the second parameter is the output parameter
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
-		//실행에 필요한 경로와 같은 깂들이 정상적으로 들어간다면, 잡 실행
+		// If the same values as the path needed for execution are entered
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }
