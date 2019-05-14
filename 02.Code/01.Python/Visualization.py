@@ -29,7 +29,7 @@ voting=pd.to_numeric(president_vote.values)
 class Visualization:
     def base_linegraph(self, b):
         plt.plot(b.keys(),b.values())
-        plt.title('Number of keywords used by date on a line Graph')
+        plt.title('Number of keywords used by date on a Line Graph')
         plt.show()
 
 
@@ -50,8 +50,7 @@ class Visualization:
 #        df=df.reset_index()
 #        df=df.set_index("index")
 #        df=df.reset_index()
-        print(b.keys())
-        print(b.values())
+        plt.title('Number of keywords used by date on a Bar Graph')
         plt.bar(list(b.keys()),list(b.values()))
         plt.show()
 
@@ -68,6 +67,7 @@ class Visualization:
         df2=pd.DataFrame(list(b.values()),list(b.keys()), columns=['tweetCount'])
         result=pd.concat([df,df2],axis=1)
         result.plot.bar()
+        plt.title('Supported Ratio on a Bar Graph')
         plt.show()
 
 
@@ -86,7 +86,7 @@ class Visualization:
 #        plt.bar('Count', df['Count'][4], bottom=sum(df['Count'][:4]))
 #        plt.bar('Count', df['Count'][5], bottom=sum(df['Count'][:5]))
 
-        plt.title("Supported Ratio on a Stacked Bar Graph")
+        plt.title("Number of keywords used by date on a Stacked Bar Graph")
         plt.legend(df["index"], loc='center left',bbox_to_anchor=(1,0.5))
         plt.show()
 
@@ -123,11 +123,9 @@ class Visualization:
 #        plt.bar('Vote Count', voting[3], bottom=sum(voting[:3]))
 #        plt.bar('Vote Count', voting[4], bottom=sum(voting[:4]))
 
-   #     plt.title("Vote Count on a Stacked Bar Graph")
+        plt.title("Supported Ratio on a Stacked Bar Graph")
         plt.legend(president_vote.index,loc='center left',bbox_to_anchor=(1,0.5))
         plt.show()
-
-
 
 
 
@@ -168,7 +166,7 @@ class Visualization:
             connectionstyle = "angle,angleA=0,angleB={}".format(ang)
             kw["arrowprops"].update({"connectionstyle": connectionstyle})
             ax.annotate(my_autopct(data[i]), xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
-            ax.set_title("10 Popular Keyword on a Pie Graph")
+            ax.set_title("Pie Graph")
 
         plt.setp(autotexts, size=9, weight="bold")
         plt.legend(df["index"], loc='center left',bbox_to_anchor=(1.3,0.7))
@@ -207,11 +205,10 @@ class Visualization:
             connectionstyle = "angle,angleA=0,angleB={}".format(ang)
             kw["arrowprops"].update({"connectionstyle": connectionstyle})
             ax.annotate(my_autopct(data[i]), xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
-            ax.set_title("10 Popular Keyword on a Pie Graph")
+            ax.set_title("Tweet Count on a Pie Graph")
 
         plt.setp(autotexts, size=9, weight="bold")
         plt.legend(df["index"], loc='center left',bbox_to_anchor=(1.3,0.7))
-        plt.show()
 
 
 
