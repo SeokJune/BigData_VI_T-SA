@@ -18,7 +18,7 @@ import requests # Using by 'getAuthResponse'
 class TwitterAPI:
     # ----------------------------------------------------------------------------------------------
     # Generator
-    # Set: baseUrl
+    # Set: baseUrl, mapMonth
     # ----------------------------------------------------------------------------------------------
     def __init__(self, baseUrl):
         self.baseUrl = baseUrl
