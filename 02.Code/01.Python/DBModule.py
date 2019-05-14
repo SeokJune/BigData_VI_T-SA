@@ -70,8 +70,10 @@ class DBModule:
             # Write Query: Select Data / Execute Query
             sql = 'INSERT INTO ' + tableNm
             if tableNm in ['S_JSON', 'T_JSON']:
-                sql += ' VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
-                curs.execute(sql, (value[0], value[1], value[2], value[3], value[4], value[5], value[6], value[7], value[8]))
+                # Check List: CREATED_AT, ID
+                if !self.dbSelect('*',tableNm,'WHERE CREATED_AT = \'%s\', ID = \'%s\'' % (value[0], value[1]))
+                    sql += ' VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
+                    curs.execute(sql, (value[0], value[1], value[2], value[3], value[4], value[5], value[6], value[7], value[8]))
             elif tableNm in ['S_HASHTAG', 'T_JHASHTAG']:
                 sql += ' VALUES(%s, %s, %s, %s);'
                 curs.execute(sql, (value[0], value[1], value[2], value[3]))
