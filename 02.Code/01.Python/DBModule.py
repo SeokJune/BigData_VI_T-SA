@@ -28,7 +28,7 @@ class DBModule:
         conn = pymysql.connect(host = self.host,     # IP
                                user = self.user,     # User ID
                                password = self.pswd, # User Password
-                               db = self.dbNm        # DB Name
+                               db = self.dbNm,        # DB Name
                                charset = self.char)  # Encoding Character
         # Create Cursor
         curs = conn.cursor()
