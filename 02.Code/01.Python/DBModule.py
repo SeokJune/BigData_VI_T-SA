@@ -71,7 +71,6 @@ class DBModule:
             sql = 'INSERT INTO ' + tableNm
             if tableNm in ['S_JSON', 'T_JSON']:
                 # Check List: CREATED_AT, ID
-                # Check List: CREATED_AT, ID
                 if self.dbSelect('EXISTS(SELECT *', tableNm, "WHERE CREATE_AT = '%s' AND ID = '%s')" % (value[0], value[1]))[0][0] == 0:
                     sql += ' VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
                     curs.execute(sql, (value[0], value[1], value[2], value[3], value[4], value[5], value[6], value[7], value[8]))
