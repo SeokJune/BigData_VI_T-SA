@@ -68,9 +68,9 @@ class DBModule :
 			
 			sql = 'INSERT INTO ' + tableName.strip()
 
-                        if tableName in ['S_JSON', 'T_JSON']:
-                                sql += 'VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
-                                curs.execute(sql, values[0][26:30] + '01' if values[0][4:7] == 'Jan' else
+			if tableName in ['S_JSON', 'T_JSON']:
+				sql += 'VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
+				curs.execute(sql, values[0][26:30] + '01' if values[0][4:7] == 'Jan' else
                                                                      '02' if values[0][4:7] == 'Feb' else
                                                                      '03' if values[0][4:7] == 'Mar' else
                                                                      '04' if values[0][4:7] == 'Apr' else
@@ -84,13 +84,13 @@ class DBModule :
                                                                    + values[0][8:10]
                                                                    + values[0][11:19]
                                              , values[1], values[2], values[3], values[4], values[5], values[6], values[7], values[8])
-                        elif tableName in ['S_HASHTAG', 'T_JHASHTAG']:
-                                sql += 'VALUES(%s, %s, %s, %s);'
-                                curs.execute(sql, values[0], values[1], values[2], values[3])
-                        elif tableName in ['S_USER', 'T_USER']:
-                                sql += 'VALUES(%s, %s, %s, %s, %s, %s);'
-                                curs.execute(sql, values[0], values[1], values[2], values[3], values[4], values[5])
-                        conn.commit()
+			elif tableName in ['S_HASHTAG', 'T_JHASHTAG']:
+				sql += 'VALUES(%s, %s, %s, %s);'
+				curs.execute(sql, values[0], values[1], values[2], values[3])
+			elif tableName in ['S_USER', 'T_USER']:
+				sql += 'VALUES(%s, %s, %s, %s, %s, %s);'
+				curs.execute(sql, values[0], values[1], values[2], values[3], values[4], values[5])
+			conn.commit()
 			'''
 			# insert data in the table
 			if tableName == 'S_HASHTAG':
