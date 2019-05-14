@@ -22,6 +22,8 @@ class TwitterAPI:
     # ----------------------------------------------------------------------------------------------
     def __init__(self, baseUrl):
         self.baseUrl = baseUrl
+        self.mapMonth = {'Jan':'01', 'Feb':'02', 'Mar':'03', 'Apr':'04', 'May':'05','Jun':'06',
+                         'Jul':'07', 'Aug':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11','Des':'12'}
     # ----------------------------------------------------------------------------------------------
     # Encode: clientKey, clientSecret
     # ----------------------------------------------------------------------------------------------
@@ -106,15 +108,17 @@ class TwitterAPI:
         #Load Tweets One Line
         for t in tweets:
             # Table(TWEET_JSON)
-            json.append([t['created_at'],       # Creation Date and Time
-                        t['id_str'],            # str(id)
-                        t['text'],              # tweet
-                        t['truncated'],         #  
-                        str(keyNum).zfill(4),   # TWEET_HASHTAG(F.K)
-                        str(keyNum).zfill(4),   # TWEET_USER(F.K)
-                        t['retweet_count'],     # Retweet Count
-                        t['favorite_count'],    # Favorite Count
-                        t['lang']])             # Written Language
+            json.append(['-'.join([t['created_at'][26:30],      # Creation Date and Time (YYYY-mm-dd HH:MM:SS)
+                                   month[t['created_at'][4:7]],
+                                   t['created_at'][8:19]]),       
+                        t['id_str'],                            # str(id)
+                        t['text'],                              # tweet
+                        t['truncated'],                         #  
+                        str(keyNum).zfill(4),                   # TWEET_HASHTAG(F.K)
+                        str(keyNum).zfill(4),                   # TWEET_USER(F.K)
+                        t['retweet_count'],                     # Retweet Count
+                        t['favorite_count'],                    # Favorite Count
+                        t['lang']])                             # Written Language
             # Table(TWEET_HASHTAG)
             for h in t['entities']['hashtags']:
                 hashtag.append([str(keyNum).zfill(4),   # P.K
