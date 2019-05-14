@@ -69,13 +69,13 @@ class DBModule:
             conn, curs = self.dbConnect()
             # Write Query: Select Data / Execute Query
             sql = 'INSERT INTO ' + tableNm
-            if tableName in ['S_JSON', 'T_JSON']:
+            if tableNm in ['S_JSON', 'T_JSON']:
                 sql += ' VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
                 curs.execute(sql, (value[0], value[1], value[2], value[3], value[4], value[5], value[6], value[7], value[8]))
-            elif tableName in ['S_HASHTAG', 'T_JHASHTAG']:
+            elif tableNm in ['S_HASHTAG', 'T_JHASHTAG']:
                 sql += ' VALUES(%s, %s, %s, %s);'
                 curs.execute(sql, (value[0], value[1], value[2], value[3]))
-            elif tableName in ['S_USER', 'T_USER']:
+            elif tableNm in ['S_USER', 'T_USER']:
                 sql += ' VALUES(%s, %s, %s, %s, %s, %s);'
                 curs.execute(sql, (value[0], value[1], value[2], value[3], value[4], value[5]))
             # Apply Query
@@ -93,7 +93,7 @@ class DBModule:
             # DB Connect
             conn, curs = self.dbConnect()
             # Write Query: Select Data
-            sql = 'DELETE FROM ' + tableName
+            sql = 'DELETE FROM ' + tableNm
             # Execute Query
             curs.execute(sql)
             # Apply Query
