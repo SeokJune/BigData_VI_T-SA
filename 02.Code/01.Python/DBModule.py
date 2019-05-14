@@ -71,13 +71,13 @@ class DBModule:
             sql = 'INSERT INTO ' + tableNm
             if tableName in ['S_JSON', 'T_JSON']:
                 sql += 'VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
-                curs.execute(sql, value[0], value[1], value[2], value[3], value[4], value[5], value[6], value[7], value[8])
+                curs.execute(sql, (value[0], value[1], value[2], value[3], value[4], value[5], value[6], value[7], value[8]))
             elif tableName in ['S_HASHTAG', 'T_JHASHTAG']:
                 sql += 'VALUES(%s, %s, %s, %s);'
-                curs.execute(sql, value[0], value[1], value[2], value[3])
+                curs.execute(sql, (value[0], value[1], value[2], value[3]))
             elif tableName in ['S_USER', 'T_USER']:
                 sql += 'VALUES(%s, %s, %s, %s, %s, %s);'
-                curs.execute(sql, value[0], value[1], value[2], value[3], value[4], value[5])
+                curs.execute(sql, (value[0], value[1], value[2], value[3], value[4], value[5]))
             # Apply Query
             conn.commit()
         except:
