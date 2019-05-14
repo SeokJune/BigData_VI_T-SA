@@ -93,7 +93,7 @@ class DBModule:
             # DB Connect
             conn, curs = self.dbConnect()
             # Write Query: Select Data
-            sql = 'DELETE FROM ' + tableNm
+            sql = 'DELETE FROM %s;' % tableNm
             # Execute Query
             curs.execute(sql)
             # Apply Query
