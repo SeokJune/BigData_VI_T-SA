@@ -100,12 +100,7 @@ class TwitterAPI:
     # ----------------------------------------------------------------------------------------------
     #  Preproceeing
     # ----------------------------------------------------------------------------------------------
-    def preprocess(self, tweets):
-        json = []       # Table(JSON)
-        hashtag = []    # Table(HASHTAG)
-        user = []       # Table(USER)
-        # P.K(HASHTAG, USER)
-        keyNum = 1
+    def preprocess(self, tweets, json = [], hashtag = [], user = [], keyNum = 1):
         #Load Tweets One Line
         for t in tweets:
             # Table(TWEET_JSON)
