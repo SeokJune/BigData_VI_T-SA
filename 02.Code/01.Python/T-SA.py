@@ -15,8 +15,6 @@ import DBModule
 import Visualization
 # OS related Module
 import os
-# Time related Module
-from datetime import datetime, timedelta
 # --------------------------------------------------------------------------------------------------
 # Set Parameter(Twitter)
 # --------------------------------------------------------------------------------------------------
@@ -131,29 +129,6 @@ while True:
         # Prepeocessing Tweets
         sJson, sHashtag, sUser += twitter.preprocess(tweets)
         # ------------------------------------------------------------------------------------------
-        # Multi Operation
-        # ------------------------------------------------------------------------------------------
-        # Date Converting
-        fromDate = datetime.strptime(date[0] + '00', '%Y%m%d%H%M%S')
-        toDate = datetime.strptime(date[1] + '00', '%Y%m%d%H%M%S')
-        # toDate - fromDate: int(str(toDate - fromDate)[:2])
-        # 1day = 4 Search
-        # 00:00:00 ~ 06:00:00
-        # 06:00:00 ~ 12:00:00
-        # 12:00:00 ~ 18:00:00
-        # 18:00:00 ~ 00:00:00
-        for CntHour in range(0, int(str(toDate - fromDate)[:2]) * 4):
-            # Get Tweets using TwitterAPI
-            tweets = twitter.searchTweet(bearerKey,
-                                         paramAPI[0][2],
-                                         query,
-                                         str(fromDate + timedelta(hours = 6 * hour)),
-                                         str(fromDate + timedelta(hours = 6 * (hour + 1))),
-                                         maxResults)
-            # --------------------------------------------------------------------------------------
-            # Prepeocessing Tweets
-            sJson, sHashtag, sUser = twitter.preprocess(tweets, sJson, sHashtag, sUser)
-            # --------------------------------------------------------------------------------------
         print("Success: Twitter - Search")
         # ------------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------------
