@@ -22,7 +22,8 @@ from datetime import datetime, timedelta
 # --------------------------------------------------------------------------------------------------
 # Setting Parameters realted to KEY: consumer_key, consumer_secret, label
 paramAPI = (('lNZwPI2dQ5l89K1nOGW6Sod6u', 'D6eGld20D99yrL89SMYPhJsjiHqmNKGL5LznkNKOQQPoIoQxWA', 'TSA0'),
-            ('MGRK5IsX8xwxhz0FYv5Llm5ps', 'JRh3fHqPqEq6VWcyoKax6MG4nE21z0zatiDjEGnvmHm99cyrLA', 'TSA1'))
+            ('MGRK5IsX8xwxhz0FYv5Llm5ps', 'JRh3fHqPqEq6VWcyoKax6MG4nE21z0zatiDjEGnvmHm99cyrLA', 'TSA1'),
+            ('NJhOCzxZPiPFckKJGUdSXRwz2', 'Cki8kGwebzFdEPHXOmZbX1lIdsMAgkx7Wauqey2Ll2Gwou5eCA', 'TSA')) # don't touch
 # Setting Parameters related to SearchAPI: query, date(from, to), maxResults
 ## Query length: Sandbox - 128 characters, Premium - 1024 characters
 query = '"문재인" OR "홍준표" OR "안철수" OR "유승민" OR "심상정"'
@@ -147,14 +148,14 @@ while True:
         # 12:00:00 ~ 18:00:00
         # 18:00:00 ~ 00:00:00
         # Get Tweets using TwitterAPI
-        for CntHour in range(0, int(str(toDate - fromDate)[:2]) * 4):
-            print('========== %s ~ %s ==========' % (str((fromDate + timedelta(hours = 6 * CntHour)).strftime('%Y%m%d%H%M')),
-                                                     str((fromDate + timedelta(hours = 6 * (CntHour + 1))).strftime('%Y%m%d%H%M'))))
+        for CntHour in range(0, int(str(toDate - fromDate)[:2]) * 2):
+            print('========== %s ~ %s ==========' % (str((fromDate + timedelta(hours = 12 * CntHour)).strftime('%Y%m%d%H%M')),
+                                                     str((fromDate + timedelta(hours = 12 * (CntHour + 1))).strftime('%Y%m%d%H%M'))))
             tweets = twitter.searchTweet(bearerKey,
                                          paramAPI[0][2],
                                          query,
-                                         str((fromDate + timedelta(hours = 6 * CntHour)).strftime('%Y%m%d%H%M')),
-                                         str((fromDate + timedelta(hours = 6 * (CntHour + 1))).strftime('%Y%m%d%H%M')),
+                                         str((fromDate + timedelta(hours = 12 * CntHour)).strftime('%Y%m%d%H%M')),
+                                         str((fromDate + timedelta(hours = 12 * (CntHour + 1))).strftime('%Y%m%d%H%M')),
                                          maxResults)
             # Prepeocessing Tweets
             sJson, sHashtag, sUser = twitter.preprocess(tweets, sJson, sHashtag, sUser)
