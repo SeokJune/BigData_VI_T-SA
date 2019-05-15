@@ -119,6 +119,7 @@ while True:
         # ------------------------------------------------------------------------------------------
         # Single Operation
         # ------------------------------------------------------------------------------------------
+        '''
         # Get Tweets using TwitterAPI
         tweets = twitter.searchTweet(bearerKey,
                                      paramAPI[0][2],
@@ -128,6 +129,7 @@ while True:
                                      maxResults)
         # Prepeocessing Tweets
         sJson, sHashtag, sUser += twitter.preprocess(tweets)
+        '''
         # ------------------------------------------------------------------------------------------
         print("Success: Twitter - Search")
         # ------------------------------------------------------------------------------------------
