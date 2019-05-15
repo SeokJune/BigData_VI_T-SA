@@ -15,6 +15,8 @@ import DBModule
 import Visualization
 # OS related Module
 import os
+# Time related Module
+from datetime import datetime, timedelta
 # --------------------------------------------------------------------------------------------------
 # Set Parameter(Twitter)
 # --------------------------------------------------------------------------------------------------
@@ -25,7 +27,7 @@ paramAPI = (('lNZwPI2dQ5l89K1nOGW6Sod6u', 'D6eGld20D99yrL89SMYPhJsjiHqmNKGL5Lznk
 ## Query length: Sandbox - 128 characters, Premium - 1024 characters
 query = '"문재인" OR "홍준표" OR "안철수" OR "유승민" OR "심상정"'
 ## date(from, to): Sandbox - Full history, Premium - Full history
-date = ('201901010000', '201912310000')
+date = ('201704180000', '201705100000') # 2017.04.17 자정 ~ 2017.05.09
 ## Tweets per request: Sandbox - 10~100, Premium - 10~500
 maxResults = 100
 # Setting Parameters related to Timeline: code(user_id, screen_name), count
@@ -110,9 +112,6 @@ while True:
     # Twitter - Search
     # ----------------------------------------------------------------------------------------------
     if cNum == '11':
-        '''
-        # ------------------------------------------------------------------------------------------
-        # Single Operation
         # ------------------------------------------------------------------------------------------
         # Issuing Access Token
         accessToken = twitter.encodeKey(paramAPI[0][0], paramAPI[0][1])
@@ -120,13 +119,41 @@ while True:
         # Bearer Authentication(=Token Authentication): HTTP authentication scheme that involves security tokens
         bearerKey = twitter.getAuthResponse(accessToken)
         # ------------------------------------------------------------------------------------------
+        # Single Operation
+        # ------------------------------------------------------------------------------------------
         # Get Tweets using TwitterAPI
-        tweets = twitter.searchTweet(bearerKey, paramAPI[0][2], query, date[0], date[1], maxResults)
-        # ------------------------------------------------------------------------------------------
+        tweets = twitter.searchTweet(bearerKey,
+                                     paramAPI[0][2],
+                                     query,
+                                     date[0],
+                                     date[1],
+                                     maxResults)
         # Prepeocessing Tweets
-        sJson, sHashtag, sUser = twitter.preprocess(tweets)
-        '''
+        sJson, sHashtag, sUser += twitter.preprocess(tweets)
         # ------------------------------------------------------------------------------------------
+        # Multi Operation
+        # ------------------------------------------------------------------------------------------
+        # Date Converting
+        fromDate = datetime.strptime(date[0] + '00', '%Y%m%d%H%M%S')
+        toDate = datetime.strptime(date[1] + '00', '%Y%m%d%H%M%S')
+        # toDate - fromDate: int(str(toDate - fromDate)[:2])
+        # 1day = 4 Search
+        # 00:00:00 ~ 06:00:00
+        # 06:00:00 ~ 12:00:00
+        # 12:00:00 ~ 18:00:00
+        # 18:00:00 ~ 00:00:00
+        for CntHour in range(0, int(str(toDate - fromDate)[:2]) * 4):
+            # Get Tweets using TwitterAPI
+            tweets = twitter.searchTweet(bearerKey,
+                                         paramAPI[0][2],
+                                         query,
+                                         str(fromDate + timedelta(hours = 6 * hour)),
+                                         str(fromDate + timedelta(hours = 6 * (hour + 1))),
+                                         maxResults)
+            # --------------------------------------------------------------------------------------
+            # Prepeocessing Tweets
+            sJson, sHashtag, sUser = twitter.preprocess(tweets, sJson, sHashtag, sUser)
+            # --------------------------------------------------------------------------------------
         print("Success: Twitter - Search")
         # ------------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------------
