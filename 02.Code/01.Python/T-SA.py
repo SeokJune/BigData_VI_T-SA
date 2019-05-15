@@ -151,7 +151,7 @@ while True:
                                          paramAPI[0][2],
                                          query,
                                          str((fromDate + timedelta(hours = 6 * CntHour)).strftime('%Y%m%d%H%M')),
-                                         str((fromDate + timedelta(hours = 6 * (CntHour + 1))).strftime('%Y%m%d%H%M'))),
+                                         str((fromDate + timedelta(hours = 6 * (CntHour + 1))).strftime('%Y%m%d%H%M')),
                                          maxResults)
             # Prepeocessing Tweets
             sJson, sHashtag, sUser = twitter.preprocess(tweets, sJson, sHashtag, sUser)
