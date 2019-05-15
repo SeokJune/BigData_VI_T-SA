@@ -14,7 +14,6 @@ import pandas as pd
 # A class that implements data visualization.
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-
 # --------------------------------------------------------------------------------------------------
 # Set Parameter(Data)
 # --------------------------------------------------------------------------------------------------
@@ -38,27 +37,46 @@ voting=pd.to_numeric(president_vote.values)
 # -------------------------------------------------------------------------------------------------
 class Visualization:
     # ----------------------------------------------------------------------------------------------
-    # Line graph visualization using Json data.
+    # Line graph visualization using 'Json' data.
     # ----------------------------------------------------------------------------------------------
     def base_linegraph(self, b):         
-        plt.plot(b.keys(),b.values())
+        # Set the x and y axis of the line graph.
+        plt.plot(b.keys(),   # X axis Data
+                 b.values()) # Y axis Data
+        # Set the title of the line graph.
         plt.title('Twitter used Count by date on a Line Graph')
+        # Set the x axis label of the line graph.
         plt.xlabel('Date')
+        # Set the y axis label of the line graph.
         plt.ylabel('Tweet Count')
+        # Line graph visualization using JSON data
         plt.show()
 
-
+    # ----------------------------------------------------------------------------------------------
+    # Word Cloud visualization using 'HASHTAG_COUNT' data.
+    # ----------------------------------------------------------------------------------------------
     def base_wordcloud(self, b):
+        # Set a Path of Korean fonts
         path = '/home/vi/.local/lib/python3.6/site-packages/matplotlib/mpl-data/fonts/ttf/NanumBarunGothicUltraLight.ttf'
-        wc=WordCloud(font_path=path,background_color='white',max_words=2000)
+        # Set a word cloud
+        wc=WordCloud(font_path=path,            # Set a Path of fonts
+                     background_color='white',  # Background Color
+                     max_words=2000)            # Maximum number of words
+        # Create a word cloud
         wc=wc.generate_from_frequencies(b)
-
+        # Set a title of word cloud
         plt.title('WordCloud')
-        plt.imshow(wc, interpolation='bilinear')
+        # Set a word cloud Output
+        plt.imshow(wc,                          # Created word cloud
+                   interpolation='bilinear')    # Plane Output
+        # Screen output settings for x and y axis
         plt.axis('off')
+        # Show word cloud
         plt.show()
 
-
+    # ----------------------------------------------------------------------------------------------
+    # Bar Graph visualization using 'HASHTAG_COUNT' data.
+    # ----------------------------------------------------------------------------------------------
     def base_bargraph(self, b):
         plt.title('Number of hashtags used by date on a Bar Graph')
         plt.bar(list(b.keys()),list(b.values()))
@@ -100,20 +118,12 @@ class Visualization:
 
         count_sum=int(df["Count"].sum())
         countPer=[]
-        countPer.append("%.1f%%" % float(df['Count'][0]/count_sum*100))
-        countPer.append("%.1f%%" % float(df['Count'][1]/count_sum*100))
-        countPer.append("%.1f%%" % float(df['Count'][2]/count_sum*100))
-        countPer.append("%.1f%%" % float(df['Count'][3]/count_sum*100))
-        countPer.append("%.1f%%" % float(df['Count'][4]/count_sum*100))
-        countPer.append("%.1f%%" % float(df['Count'][5]/count_sum*100))
-
+        for i in range(len(df)):
+            countPer.append("%.1f%%" % float(df['Count'][i]/count_sum*100))
+      
         result=[]
-        result.append(str(df['Count'][0])+'\n'+countPer[0])
-        result.append(str(df['Count'][1])+'\n'+countPer[1])
-        result.append(str(df['Count'][2])+'\n'+countPer[2])
-        result.append(str(df['Count'][3])+'\n'+countPer[3])
-        result.append(str(df['Count'][4])+'\n'+countPer[4])
-        result.append(str(df['Count'][5])+'\n'+countPer[5])
+        for i in range(len(df)):
+            result.append(str(df['Count'][i])+'\n'+countPer[i])
 
 
         fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
