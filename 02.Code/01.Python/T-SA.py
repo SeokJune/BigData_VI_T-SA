@@ -187,7 +187,7 @@ while True:
     # ----------------------------------------------------------------------------------------------
     elif cNum == '21':
         # ------------------------------------------------------------------------------------------
-        sJonData = db.dbSelect("date_format(create_at,'%Y-%m-%d') create_at, count(*)",'S_JSON',"group by date_format(create_at, '%Y-%m-%d')")
+        sJsonData = db.dbSelect("date_format(create_at,'%Y-%m-%d') create_at, count(*)",'S_JSON',"group by date_format(create_at, '%Y-%m-%d')")
         # ------------------------------------------------------------------------------------------
         print("Success: DataBase - Select(S_JSON)")
         # ------------------------------------------------------------------------------------------
