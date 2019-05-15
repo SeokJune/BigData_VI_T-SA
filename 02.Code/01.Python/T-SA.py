@@ -147,6 +147,8 @@ while True:
         # 18:00:00 ~ 00:00:00
         # Get Tweets using TwitterAPI
         for CntHour in range(0, int(str(toDate - fromDate)[:2]) * 4):
+            print('========== %s ~ %s ==========' % (str((fromDate + timedelta(hours = 6 * CntHour)).strftime('%Y%m%d%H%M')),
+                                                     str((fromDate + timedelta(hours = 6 * (CntHour + 1))).strftime('%Y%m%d%H%M'))))
             tweets = twitter.searchTweet(bearerKey,
                                          paramAPI[0][2],
                                          query,
