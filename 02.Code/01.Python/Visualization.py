@@ -40,20 +40,29 @@ class Visualization:
     # Line graph visualization using 'Json' data.
     # ----------------------------------------------------------------------------------------------
     def base_linegraph(self, b):         
+        # delete '0000-00-00 date
+        del tweetData['0000-00-00']         
         # Set the x and y axis of the line graph.
-        plt.plot(b.keys(),   # X axis Data
-                 b.values()) # Y axis Data
+        plt.plot(tweetData.keys(),   # X axis Data
+                 tweetData.values(), # Y axis Data
+                 label="Keyword",    # Label name
+                 marker='o',         # Marker type of graph
+                 mfc='r')            # Marker's Color
         # Set the title of the line graph.
         plt.title('Twitter used Count by date on a Line Graph')
         # Set the x axis label of the line graph.
-        plt.xlabel('Date')
+        plt.xlabel('\n'+'Number of nominations by date in tweets')
         # Set the y axis label of the line graph.
         plt.ylabel('Tweet Count')
+        # Grid Patterns Background
+        plt.grid()
+        plt.legend(loc='upper right')
         # Line graph visualization using JSON data
         plt.show()
 
+
     # ----------------------------------------------------------------------------------------------
-    # Word Cloud visualization using 'HASHTAG_COUNT' data.
+    # Word Cloud visualization using 'KEYWORD_COUNT' data.
     # ----------------------------------------------------------------------------------------------
     def base_wordcloud(self, b):
         # Set a Path of Korean fonts
@@ -64,8 +73,6 @@ class Visualization:
                      max_words=2000)            # Maximum number of words
         # Create a word cloud
         wc=wc.generate_from_frequencies(b)
-        # Set a title of word cloud
-        plt.title('WordCloud')
         # Set a word cloud Output
         plt.imshow(wc,                          # Created word cloud
                    interpolation='bilinear')    # Plane Output
