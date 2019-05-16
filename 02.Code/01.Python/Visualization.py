@@ -31,7 +31,7 @@ president_vote=vote.iloc[1]
 voting=pd.to_numeric(president_vote.values)
 # --------------------------------------------------------------------------------------------------
 #  Class Name: Visualization
-# Method list: base_linegraph, base_wordcloud, base_bargraph
+# Method list: linegraph, base_wordcloud, base_bargraph
 #            : base_stackedbargraph, base_piegraph
 #            : analysis_bargraph, analysis_stackedbargraph, analysis_piegraph
 # -------------------------------------------------------------------------------------------------
@@ -39,10 +39,10 @@ class Visualization:
     # ----------------------------------------------------------------------------------------------
     # Line graph visualization using 'Json' data.
     # ----------------------------------------------------------------------------------------------
-    def base_linegraph(self, b):         
-        # delete '0000-00-00 date
+    def linegraph(self, tweetData):
+        # Delete '0000-00-00' date
         del tweetData['0000-00-00']         
-        # Set the x and y axis of the line graph.
+        # Set the x, y axis and markers of the line graph.
         plt.plot(tweetData.keys(),   # X axis Data
                  tweetData.values(), # Y axis Data
                  label="Keyword",    # Label name
@@ -56,15 +56,15 @@ class Visualization:
         plt.ylabel('Tweet Count')
         # Grid Patterns Background
         plt.grid()
+        # Location of Label
         plt.legend(loc='upper right')
         # Line graph visualization using JSON data
         plt.show()
 
-
     # ----------------------------------------------------------------------------------------------
     # Word Cloud visualization using 'KEYWORD_COUNT' data.
     # ----------------------------------------------------------------------------------------------
-    def base_wordcloud(self, b):
+    def wordcloud(self, tweetData):
         # Set a Path of Korean fonts
         path = '/home/vi/.local/lib/python3.6/site-packages/matplotlib/mpl-data/fonts/ttf/NanumBarunGothicUltraLight.ttf'
         # Set a word cloud
@@ -72,7 +72,7 @@ class Visualization:
                      background_color='white',  # Background Color
                      max_words=2000)            # Maximum number of words
         # Create a word cloud
-        wc=wc.generate_from_frequencies(b)
+        wc=wc.generate_from_frequencies(tweetData)
         # Set a word cloud Output
         plt.imshow(wc,                          # Created word cloud
                    interpolation='bilinear')    # Plane Output
@@ -82,40 +82,115 @@ class Visualization:
         plt.show()
 
     # ----------------------------------------------------------------------------------------------
-    # Bar Graph visualization using 'HASHTAG_COUNT' data.
+    # Bar Graph visualization using 'KEYWORD_COUNT' data.
     # ----------------------------------------------------------------------------------------------
-    def base_bargraph(self, b):
-        plt.title('Number of hashtags used by date on a Bar Graph')
-        plt.bar(list(b.keys()),list(b.values()))
-        plt.xlabel('Keyword')
-        plt.ylabel('Tweet Count')
-        plt.show()
+    def bargraph(self, tweetData, base_analysis):
+        # 'Base' is graphically displayed using 'KEYWORD_COUNT'.
+        # 'Analysis' shows the graph using 'KEYWORD_COUNT' and comparison data.
+        # Base=0, Analysis=1.
+        if base_analysis==1:
+            # Save the number of times the names of the candidates.
+            countlist=[tweetData['문재인'], tweetData['홍준표'], tweetData['안철수'], tweetData['유승민'], tweetData['심상정']]
+            # Save candidates' names.
+            candidate=['문재인','홍준표','안철수','유승민','심상정']
+ 
+            # Data frame with 'Tweet Count' as a column
+            df2=pd.DataFrame(countlist,candidate, columns=['Tweet Count'])
+            # Data frame with 'Vote Count' as a column
+            df3=pd.DataFrame(voting, president_vote.index,columns=['Vote Count'])
+            # Connect the data frame.
+            dfResult=pd.concat([df2,df3],axis=1)
 
+            # Outputs the number of votes and votes for each candidate side by side.
+            dfResult.plot.bar()
+            # Set a titles on a Bar Graph.
+            plt.title('Supported Ratio on a Bar Graph')
+            # Set the x axis label of the bar graph.
+            plt.xlabel('Candidate')
+            # Set the y axis label of the bar graph.
+            plt.ylabel('Tweet Count')
+            # Show Bar Graph
+            plt.show()   
 
-    def base_stackedbargraph(self, b):
-        df=pd.DataFrame(list(b.values()),list(b.keys()), columns=['Count'])
+        else:
+            # Set the title of the bar graph.
+            plt.title('Number of hashtags used by date on a Bar Graph')
+            # Set the x, y axis and markers of the bar graph.
+            plt.bar(list(tweetData.keys()),list(tweetData.values()))
+            # Set the x axis label of the bar graph.
+            plt.xlabel('Keyword')
+            # Set the y axis label of the bar graph.
+            plt.ylabel('Tweet Count')
+            # Show bar graph
+            plt.show()
+                     
+    # ----------------------------------------------------------------------------------------------
+    # Stacked Bar Graph visualization using 'KEYWORD_COUNT' data.
+    # ----------------------------------------------------------------------------------------------
+    def stackedbargraph(self, tweetData, base_analysis):
+        # Create data frame using 'keyword_count'
+        df=pd.DataFrame(list(tweetData.values()),list(tweetData.keys()), columns=['Count'])
+        # Sort data frames in descending order by 'Count' value
+        df=df.sort_values(['Count'],ascending=False)
+        # Sum of the remaining values except for 1st to 5th.
         df.loc["ETC",:]=df['Count'][5:len(df)].sum()
+        # Index resets.
         df=df.reset_index()
+        # Eliminate remaining values except 'ETC', 1st to 5th.
         df=df.drop(df.index[5:len(df)-1])
+        # Index Setting.
         df=df.set_index("index")
+        # Index resets.
         df=df.reset_index()
+      
+        if base_analysis==1:
+            countlist=[tweetData['문재인'], tweetData['홍준표'], tweetData['안철수'], tweetData['유승민'], tweetData['심상정']]
+            candidate=['문재인','홍준표','안철수','유승민','심상정']
+ 
+            df2=pd.DataFrame(countlist,candidate, columns=['Tweet Count'])
+            df2=df2.reset_index()
+            df2=df2.set_index("index")
+            df2=df2.reset_index()
 
-        plt.bar('Count', df['Count'][0])
-        plt.bar('Count', df['Count'][1], bottom=df['Count'][0])
-        plt.bar('Count', df['Count'][2], bottom=sum(df['Count'][:2]))
-        plt.bar('Count', df['Count'][3], bottom=sum(df['Count'][:3]))
-        plt.bar('Count', df['Count'][4], bottom=sum(df['Count'][:4]))
-        plt.bar('Count', df['Count'][5], bottom=sum(df['Count'][:5]))
+            plt.title("Supported Ratio on a Stacked Bar Graph")
+            plt.bar('Count', df2['Tweet Count'][0], color='b')
+            plt.bar('Count', df2['Tweet Count'][1], bottom=df2['Tweet Count'][0], color='g')
+            plt.bar('Count', df2['Tweet Count'][2], bottom=sum(df2['Tweet Count'][:2]), color='r')
+            plt.bar('Count', df2['Tweet Count'][3], bottom=sum(df2['Tweet Count'][:3]), color='c')
+            plt.bar('Count', df2['Tweet Count'][4], bottom=sum(df2['Tweet Count'][:4]), color='m')
+            plt.legend(df2["index"], loc='center left',bbox_to_anchor=(1,0.5))
 
-        plt.title("Number of keywords used by date on a Stacked Bar Graph")
-        plt.legend(df["index"], loc='center left',bbox_to_anchor=(1,0.5))
-        plt.xlabel('Keyword')
-        plt.ylabel('Tweet Count')
-        plt.show()
+            plt.bar('Vote Count', voting[0], color='b')
+            plt.bar('Vote Count', voting[1], bottom=voting[0], color='g')
+            plt.bar('Vote Count', voting[2], bottom=sum(voting[:2]), color='r')
+            plt.bar('Vote Count', voting[3], bottom=sum(voting[:3]), color='c')
+            plt.bar('Vote Count', voting[4], bottom=sum(voting[:4]), color='m')
 
+            plt.legend(president_vote.index,loc='center left',bbox_to_anchor=(1,0.5))
+            plt.xlabel('19th Presidential election Vote rate')
 
-    def base_piegraph(self, b):
-        df=pd.DataFrame(list(b.values()),list(b.keys()), columns=['Count'])
+            plt.show()
+
+        else :
+             plt.bar('Count', df['Count'][0])
+             plt.bar('Count', df['Count'][1], bottom=df['Count'][0])
+             plt.bar('Count', df['Count'][2], bottom=sum(df['Count'][:2]))
+             plt.bar('Count', df['Count'][3], bottom=sum(df['Count'][:3]))
+             plt.bar('Count', df['Count'][4], bottom=sum(df['Count'][:4]))
+             plt.bar('Count', df['Count'][5], bottom=sum(df['Count'][:5]))
+
+             plt.title("Number of keywords used by date on a Stacked Bar Graph")
+             plt.legend(df["index"], loc='center left',bbox_to_anchor=(1,0.5))
+             plt.xlabel('Keyword')
+             plt.ylabel('Tweet Count')
+             plt.show()      
+
+    # ----------------------------------------------------------------------------------------------
+    # Pie Graph visualization using 'KEYWORD_COUNT' data.
+    # ----------------------------------------------------------------------------------------------
+    def piegraph(self, tweetData, base_analysis):
+        df=pd.DataFrame(list(tweetData.values()),list(tweetData.keys()), columns=['Count'])
+        df=df.sort_values(['Count'],ascending=False)
         df.loc["ETC",:]=df['Count'][5:len(df)].sum()
         df=df.reset_index()
         df=df.drop(df.index[5:len(df)-1])
@@ -126,159 +201,97 @@ class Visualization:
         count_sum=int(df["Count"].sum())
         countPer=[]
         for i in range(len(df)):
-            countPer.append("%.1f%%" % float(df['Count'][i]/count_sum*100))
-      
+            countPer.append("%.1f%%" % float(df['Count'][i]/count_sum*100))      
         result=[]
         for i in range(len(df)):
             result.append(str(df['Count'][i])+'\n'+countPer[i])
 
+        if base_analysis==1:
+            countlist=[tweetData['문재인'],tweetData['홍준표'],tweetData['안철수'],tweetData['유승민'],tweetData['심상정']]
+            candidate=['문재인','홍준표','안철수','유승민','심상정']
+            count_sum2=(countlist[0]+countlist[1]+countlist[2]+countlist[3]+countlist[4])
+            df2=pd.DataFrame(countlist,candidate, columns=['Tweet Count'])
+            df2=df2.reset_index()
+            df2=df2.set_index("index")
+            df2=df2.reset_index()
+            data = df2["Tweet Count"]
 
-        fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
+            countPer2=[]
+            for i in range(len(df2)):
+                countPer2.append("%.1f%%" % float(countlist[i]/count_sum2*100))      
+            result2=[]
+            for i in range(len(df2)):
+                result2.append(str(countlist[i])+'\n'+countPer2[i])
 
-        data=df["Count"]
-        candidate = df["index"]
+            fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
+            wedges, texts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)        
+            bbox_props = dict(boxstyle="square", fc="w", ec="k", lw=0.72)
+            kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
+              bbox=bbox_props, zorder=0, va="center")
 
-        wedges, texts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)        
+            for i, p in enumerate(wedges):
+                ang = (p.theta2 - p.theta1)/2. + p.theta1
+                y = np.sin(np.deg2rad(ang))
+                x = np.cos(np.deg2rad(ang))
+                horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+                connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+                kw["arrowprops"].update({"connectionstyle": connectionstyle})
+                ax.annotate(result2[i], xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
+                ax.set_title("Tweet Count on a Pie Graph")
 
-        bbox_props = dict(boxstyle="square", fc="w", ec="k", lw=0.72)
-        kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
-          bbox=bbox_props, zorder=0, va="center")
-
-        for i, p in enumerate(wedges):
-            ang = (p.theta2 - p.theta1)/2. + p.theta1
-            y = np.sin(np.deg2rad(ang))
-            x = np.cos(np.deg2rad(ang))
-            horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
-            connectionstyle = "angle,angleA=0,angleB={}".format(ang)
-            kw["arrowprops"].update({"connectionstyle": connectionstyle})
-            ax.annotate(result[i], xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
-            ax.set_title("Pie Graph")
-
-        plt.legend(df["index"], loc='center left',bbox_to_anchor=(1.3,0.7))
-        plt.show()
-
-
-    def analysis_bargraph(self, b):
-        countlist=[b['문재인'],b['홍준표'],b['안철수'],b['유승민'],b['심상정']]
-        candidate=['문재인','홍준표','안철수','유승민','심상정']
- 
-        df=pd.DataFrame(countlist,candidate, columns=['Tweet Count'])
-        df2=pd.DataFrame(voting, president_vote.index,columns=['Vote Count'])
-        dfResult=pd.concat([df,df2],axis=1)
-        dfResult.plot.bar()
-        plt.title('Supported Ratio on a Bar Graph')
-        plt.xlabel('Candidate')
-        plt.ylabel('Tweet Count')
-        plt.show()
+            plt.legend(df2["index"], loc='center left',bbox_to_anchor=(1.3,0.7))
 
 
-    def analysis_stackedbargraph(self, b):
-        countlist=[b['문재인'],b['홍준표'],b['안철수'],b['유승민'],b['심상정']]
-        candidate=['문재인','홍준표','안철수','유승민','심상정']
+   
+            fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
+            candidate = president_vote.index
+            data = voting
+            wedges, texts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)        
+            bbox_props = dict(boxstyle="square", fc="w", ec="k", lw=0.72)
+            kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
+              bbox=bbox_props, zorder=0, va="center")
 
-        df=pd.DataFrame(countlist,candidate, columns=['Tweet Count'])
-        df=df.reset_index()
-        df=df.set_index("index")
-        df=df.reset_index()
+            count_sum3=(voting[0]+voting[1]+voting[2]+voting[3]+voting[4])
+            countPer3=[]
+            for i in range(len(df2)):
+                countPer3.append("%.1f%%" % float(voting[i]/count_sum3*100))          
+            result3=[]
+            for i in range(len(df2)):
+                result3.append(str(voting[i])+'\n'+countPer3[i])
 
-        plt.title("Supported Ratio on a Stacked Bar Graph")
-        plt.bar('Count', df['Tweet Count'][0], color='b')
-        plt.bar('Count', df['Tweet Count'][1], bottom=df['Tweet Count'][0], color='g')
-        plt.bar('Count', df['Tweet Count'][2], bottom=sum(df['Tweet Count'][:2]), color='r')
-        plt.bar('Count', df['Tweet Count'][3], bottom=sum(df['Tweet Count'][:3]), color='c')
-        plt.bar('Count', df['Tweet Count'][4], bottom=sum(df['Tweet Count'][:4]), color='m')
-        plt.legend(df["index"], loc='center left',bbox_to_anchor=(1,0.5))
+            for i, p in enumerate(wedges):
+                ang = (p.theta2 - p.theta1)/2. + p.theta1
+                y = np.sin(np.deg2rad(ang))
+                x = np.cos(np.deg2rad(ang))
+                horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+                connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+                kw["arrowprops"].update({"connectionstyle": connectionstyle})
+                ax.annotate(result3[i], xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
+                ax.set_title("Voting Rate on a Pie Graph")
 
+            plt.legend(candidate, loc='center left',bbox_to_anchor=(1.3,0.7))
+            plt.show()
 
-        plt.bar('Vote Count', voting[0], color='b')
-        plt.bar('Vote Count', voting[1], bottom=voting[0], color='g')
-        plt.bar('Vote Count', voting[2], bottom=sum(voting[:2]), color='r')
-        plt.bar('Vote Count', voting[3], bottom=sum(voting[:3]), color='c')
-        plt.bar('Vote Count', voting[4], bottom=sum(voting[:4]), color='m')
+        else:
+            fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
+            data=df["Count"]
+            candidate = df["index"]
+            wedges, texts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)        
 
-        plt.legend(president_vote.index,loc='center left',bbox_to_anchor=(1,0.5))
-        plt.xlabel('19th Presidential election Vote rate')
-        plt.ylabel('Tweet Count')
-        plt.show()
+            bbox_props = dict(boxstyle="square", fc="w", ec="k", lw=0.72)
+            kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
+              bbox=bbox_props, zorder=0, va="center")
 
+            for i, p in enumerate(wedges):
+                ang = (p.theta2 - p.theta1)/2. + p.theta1
+                y = np.sin(np.deg2rad(ang))
+                x = np.cos(np.deg2rad(ang))
+                horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+                connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+                kw["arrowprops"].update({"connectionstyle": connectionstyle})
+                ax.annotate(result[i], xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
+                ax.set_title("Top 5 Keyword on a Pie Graph")
 
-    def analysis_piegraph(self, b):
-        countlist=[b['문재인'],b['홍준표'],b['안철수'],b['유승민'],b['심상정']]
-        candidate=['문재인','홍준표','안철수','유승민','심상정']
-        count_sum=(countlist[0]+countlist[1]+countlist[2]+countlist[3]+countlist[4])
-        df=pd.DataFrame(countlist,candidate, columns=['Tweet Count'])
-        df=df.reset_index()
-        df=df.set_index("index")
-        df=df.reset_index()
-        data = df["Tweet Count"]
+            plt.legend(df["index"], loc='center left',bbox_to_anchor=(1.3,0.7))
+            plt.show()
 
-        countPer=[]
-        countPer.append("%.1f%%" % float(countlist[0]/count_sum*100))
-        countPer.append("%.1f%%" % float(countlist[1]/count_sum*100))
-        countPer.append("%.1f%%" % float(countlist[2]/count_sum*100))
-        countPer.append("%.1f%%" % float(countlist[3]/count_sum*100))
-        countPer.append("%.1f%%" % float(countlist[4]/count_sum*100))
-
-        result=[]
-        result.append(str(countlist[0])+'\n'+countPer[0])
-        result.append(str(countlist[1])+'\n'+countPer[1])
-        result.append(str(countlist[2])+'\n'+countPer[2])
-        result.append(str(countlist[3])+'\n'+countPer[3])
-        result.append(str(countlist[4])+'\n'+countPer[4])
-
-        fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
-        wedges, autotexts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)        
-        bbox_props = dict(boxstyle="square", fc="w", ec="k", lw=0.72)
-        kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
-          bbox=bbox_props, zorder=0, va="center")
-
-        for i, p in enumerate(wedges):
-            ang = (p.theta2 - p.theta1)/2. + p.theta1
-            y = np.sin(np.deg2rad(ang))
-            x = np.cos(np.deg2rad(ang))
-            horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
-            connectionstyle = "angle,angleA=0,angleB={}".format(ang)
-            kw["arrowprops"].update({"connectionstyle": connectionstyle})
-            ax.annotate(result[i], xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
-            ax.set_title("Tweet Count on a Pie Graph")
-
-        plt.setp(autotexts, size=9, weight="bold")
-        plt.legend(df["index"], loc='center left',bbox_to_anchor=(1.3,0.7))
-
-
-
-        fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
-        candidate = president_vote.index
-        data = voting
-        wedges, texts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)        
-        bbox_props = dict(boxstyle="square", fc="w", ec="k", lw=0.72)
-        kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
-          bbox=bbox_props, zorder=0, va="center")
-
-        count_sum2=(voting[0]+voting[1]+voting[2]+voting[3]+voting[4])
-        countPer2=[]
-        countPer2.append("%.1f%%" % float(voting[0]/count_sum2*100))
-        countPer2.append("%.1f%%" % float(voting[1]/count_sum2*100))
-        countPer2.append("%.1f%%" % float(voting[2]/count_sum2*100))
-        countPer2.append("%.1f%%" % float(voting[3]/count_sum2*100))
-        countPer2.append("%.1f%%" % float(voting[4]/count_sum2*100))
-
-        result2=[]
-        result2.append(str(voting[0])+'\n'+countPer[0])
-        result2.append(str(voting[1])+'\n'+countPer[1])
-        result2.append(str(voting[2])+'\n'+countPer[2])
-        result2.append(str(voting[3])+'\n'+countPer[3])
-        result2.append(str(voting[4])+'\n'+countPer[4])
-
-        for i, p in enumerate(wedges):
-            ang = (p.theta2 - p.theta1)/2. + p.theta1
-            y = np.sin(np.deg2rad(ang))
-            x = np.cos(np.deg2rad(ang))
-            horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
-            connectionstyle = "angle,angleA=0,angleB={}".format(ang)
-            kw["arrowprops"].update({"connectionstyle": connectionstyle})
-            ax.annotate(result2[i], xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
-            ax.set_title("Voting Rate on a Pie Graph")
-
-        plt.legend(candidate, loc='center left',bbox_to_anchor=(1.3,0.7))
-        plt.show()
