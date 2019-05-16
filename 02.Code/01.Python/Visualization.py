@@ -31,9 +31,8 @@ president_vote=vote.iloc[1]
 voting=pd.to_numeric(president_vote.values)
 # --------------------------------------------------------------------------------------------------
 #  Class Name: Visualization
-# Method list: linegraph, base_wordcloud, base_bargraph
-#            : base_stackedbargraph, base_piegraph
-#            : analysis_bargraph, analysis_stackedbargraph, analysis_piegraph
+# Method list: linegraph, wordcloud, bargraph
+#            : stackedbargraph, piegraph
 # -------------------------------------------------------------------------------------------------
 class Visualization:
     # ----------------------------------------------------------------------------------------------
