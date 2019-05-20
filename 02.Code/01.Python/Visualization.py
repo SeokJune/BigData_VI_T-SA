@@ -31,9 +31,8 @@ president_vote=vote.iloc[1]
 voting=pd.to_numeric(president_vote.values)
 # --------------------------------------------------------------------------------------------------
 #  Class Name: Visualization
-# Method list: linegraph, base_wordcloud, base_bargraph
-#            : base_stackedbargraph, base_piegraph
-#            : analysis_bargraph, analysis_stackedbargraph, analysis_piegraph
+# Method list: linegraph, wordcloud, bargraph
+#            : stackedbargraph, piegraph
 # -------------------------------------------------------------------------------------------------
 class Visualization:
     # ----------------------------------------------------------------------------------------------
@@ -306,6 +305,7 @@ class Visualization:
             # Show text, arrow, box on graph
             kw = dict(xycoords='data',                  # The coordinate system that xy is given in. default = 'data'
                       textcoords='data',                # Annotation point and text position default is value of xycoords
+                      arrowprops=dict(arrowstyle="-"),  # Setting the arrows style
                       bbox=bbox_props,                  # Setting the box
                       zorder=0,                         # Order of the drawing
                       va="center")                      # Vertical alignment
@@ -314,21 +314,24 @@ class Visualization:
             for i, p in enumerate(wedges):
                 # Calculation to Angle
                 ang = (p.theta2 - p.theta1)/2. + p.theta1
-                # 
+                # Change degree to radian.
                 y = np.sin(np.deg2rad(ang))
-
+                # Change degree to radian.
                 x = np.cos(np.deg2rad(ang))
-
+                # Decide left and right through the sign
                 horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
                 # Setting a arrows angle
                 connectionstyle = "angle,angleA=0,angleB={}".format(ang)
-
+                # Apply angle and style of arrow
                 kw["arrowprops"].update({"connectionstyle": connectionstyle})
-
-                ax.annotate(result2[i], xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
+                # Create pie Graph
+                ax.annotate(result2[i],                               # The text of the annotation.
+                            xy=(x, y),                                # The point (x,y) to annotate.
+                            xytext=(1.35*np.sign(x), 1.4*y),          # The position (x,y) to place the text at.
+                            horizontalalignment=horizontalalignment,  # Return the horizontal alignment as string.
+                            **kw)                                     # Apply to text, arrow, box's data
                 # Set a titles on a Pie Graph.
                 ax.set_title("Tweet Count on a Pie Graph")
-
 
             # Settings label
             plt.legend(df2["index"],             # Setting label's name
@@ -336,107 +339,124 @@ class Visualization:
                        bbox_to_anchor=(1.3,0.7)) # Detailed location of label
 
 
-
    
-
-            fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
-
+            # Settings Compare data to subplots.
+            fig, ax = plt.subplots(figsize=(6, 3),                   # Subplots's size
+                                   subplot_kw=dict(aspect="equal"))  # Automatically set x, y for SubPlots
+            # Candidates for comparative data.
             candidate = president_vote.index
-
+            # Vote rate of comparison data.
             data = voting
+            # Settings pie graph.
+            wedges, texts = ax.pie(data,                             # The wedge sizes.
+                                   wedgeprops=dict(width=0.5),       # Setting width
+                                   startangle=-40)                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.        
+            # Setting the box style
+            bbox_props = dict(boxstyle="square", # Box style.
+                              fc="w",            # Box's color
+                              ec="k",            # Box edge's color
+                              lw=0.72)           # Box edge's width
+            # Show text, arrow, box on graph
+            kw = dict(xycoords='data',                  # The coordinate system that xy is given in. default = 'data'
+                      textcoords='data',                # Annotation point and text position default is value of xycoords
+                      arrowprops=dict(arrowstyle="-"),  # Setting the arrows style
+                      bbox=bbox_props,                  # Setting the box
+                      zorder=0,                         # Order of the drawing
+                      va="center")                      # Vertical alignment
 
-            wedges, texts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)        
 
-            bbox_props = dict(boxstyle="square", fc="w", ec="k", lw=0.72)
-
-            kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
-
-              bbox=bbox_props, zorder=0, va="center")
-
-
-
+            # Total sum of 'voting' 
             count_sum3=(voting[0]+voting[1]+voting[2]+voting[3]+voting[4])
-
+            # List containing the percentage of each 'countlist'
             countPer3=[]
-
+            # Append the percentage of each 'voting' to countPer3
             for i in range(len(df2)):
-
                 countPer3.append("%.1f%%" % float(voting[i]/count_sum3*100))          
-
+            # List containing each 'voting' value and its percentage.
             result3=[]
-
+            # Store each 'voting' value and its percentage.
             for i in range(len(df2)):
-
                 result3.append(str(voting[i])+'\n'+countPer3[i])
 
-
-
+            # Apply box and arrow to Pie Graph
             for i, p in enumerate(wedges):
-
+                # Calculation to Angle
                 ang = (p.theta2 - p.theta1)/2. + p.theta1
-
+                # Change degree to radian.
                 y = np.sin(np.deg2rad(ang))
-
+                # Change degree to radian.
                 x = np.cos(np.deg2rad(ang))
-
+                # Decide left and right through the sign
                 horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
-
+                # Setting a arrows angle
                 connectionstyle = "angle,angleA=0,angleB={}".format(ang)
-
+                # Apply angle and style of arrow
                 kw["arrowprops"].update({"connectionstyle": connectionstyle})
-
-                ax.annotate(result3[i], xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
-
+                # Create pie Graph
+                ax.annotate(result3[i],                               # The text of the annotation.
+                            xy=(x, y),                                # The point (x,y) to annotate.
+                            xytext=(1.35*np.sign(x), 1.4*y),          # The position (x,y) to place the text at.
+                            horizontalalignment=horizontalalignment,  # Return the horizontal alignment as string.
+                            **kw)                                     # Apply to text, arrow, box's data
+                # Set a titles on a Pie Graph.
                 ax.set_title("Voting Rate on a Pie Graph")
 
-
-
-            plt.legend(candidate, loc='center left',bbox_to_anchor=(1.3,0.7))
-
+            # Settings label
+            plt.legend(candidate,                # Setting label's name
+                       loc='center left',        # Label's location
+                       bbox_to_anchor=(1.3,0.7)) # Detailed location of label
+            # Show pie graph.
             plt.show()
 
-
-
+        # Base Pie Graph
         else:
-
-            fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
-
+            # Settings to subplots.
+            fig, ax = plt.subplots(figsize=(6, 3),                   # Subplots's size
+                                   subplot_kw=dict(aspect="equal"))  # Automatically set x, y for SubPlots
+            # Tweet Counts for data.
             data=df["Count"]
+            # Settings pie graph.
+            wedges, texts = ax.pie(data,                             # The wedge sizes.
+                                   wedgeprops=dict(width=0.5),       # Setting width
+                                   startangle=-40)                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.   
 
-            candidate = df["index"]
+            bbox_props = dict(boxstyle="square", # Box style.
+                              fc="w",            # Box's color
+                              ec="k",            # Box edge's color
+                              lw=0.72)           # Box edge's width
 
-            wedges, texts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)        
+            kw = dict(xycoords='data',                  # The coordinate system that xy is given in. default = 'data'
+                      textcoords='data',                # Annotation point and text position default is value of xycoords
+                      arrowprops=dict(arrowstyle="-"),  # Setting the arrows style           
+                      bbox=bbox_props,                  # Setting the box
+                      zorder=0,                         # Order of the drawing
+                      va="center")                      # Vertical alignment
 
-
-
-            bbox_props = dict(boxstyle="square", fc="w", ec="k", lw=0.72)
-
-            kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
-
-              bbox=bbox_props, zorder=0, va="center")
-
-
-
+            # Apply box and arrow to Pie Graph
             for i, p in enumerate(wedges):
-
+                # Calculation to Angle
                 ang = (p.theta2 - p.theta1)/2. + p.theta1
-
+                # Change degree to radian.
                 y = np.sin(np.deg2rad(ang))
-
+                # Change degree to radian.
                 x = np.cos(np.deg2rad(ang))
-
+                # Decide left and right through the sign
                 horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
-
+                # Setting a arrows angle
                 connectionstyle = "angle,angleA=0,angleB={}".format(ang)
-
+                # Apply angle and style of arrow
                 kw["arrowprops"].update({"connectionstyle": connectionstyle})
-
-                ax.annotate(result[i], xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
-
+                # Create pie Graph
+                ax.annotate(result[i],                                # The text of the annotation.
+                            xy=(x, y),                                # The point (x,y) to annotate.
+                            xytext=(1.35*np.sign(x), 1.4*y),          # The position (x,y) to place the text at.
+                            horizontalalignment=horizontalalignment,  # Return the horizontal alignment as string.
+                            **kw)                                     # Apply to text, arrow, box's data
+                # Set a titles on a Pie Graph.
                 ax.set_title("Top 5 Keyword on a Pie Graph")
-
-
-
-            plt.legend(df["index"], loc='center left',bbox_to_anchor=(1.3,0.7))
-
+            # Settings label
+            plt.legend(df["index"],              # Setting label's name
+                       loc='center left',        # Label's location
+                       bbox_to_anchor=(1.3,0.7)) # Detailed location of label
+            # Show pie graph.
             plt.show()
