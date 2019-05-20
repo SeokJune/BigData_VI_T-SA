@@ -307,6 +307,7 @@ class Visualization:
             kw = dict(xycoords='data',                  # The coordinate system that xy is given in. default = 'data'
                       textcoords='data',                # Annotation point and text position default is value of xycoords
                       bbox=bbox_props,                  # Setting the box
+                      arrowprops=dict(arrowstyle="-"),
                       zorder=0,                         # Order of the drawing
                       va="center")                      # Vertical alignment
 
@@ -323,7 +324,7 @@ class Visualization:
                 # Setting a arrows angle
                 connectionstyle = "angle,angleA=0,angleB={}".format(ang)
 
-                #kw["arrowprops"].update({"connectionstyle": connectionstyle})
+                kw["arrowprops"].update({"connectionstyle": connectionstyle})
 
                 ax.annotate(result2[i], xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y), horizontalalignment=horizontalalignment, **kw)
                 # Set a titles on a Pie Graph.
