@@ -38,21 +38,18 @@ class Visualization:
     # ----------------------------------------------------------------------------------------------
     # Line graph visualization using 'Json' data.
     # ----------------------------------------------------------------------------------------------
-    def linegraph(self, tweetData):
-        # Delete '0000-00-00' date
-        del tweetData['0000-00-00']         
+    def linegraph(self, tweetData, query):    
         # Set the x, y axis and markers of the line graph.
         plt.plot(tweetData.keys(),   # X axis Data
                  tweetData.values(), # Y axis Data
-                 label="Keyword",    # Label name
+                 label=query,    # Label name
                  marker='o',         # Marker type of graph
                  mfc='r')            # Marker's Color
         # Set the title of the line graph.
-        plt.title('Twitter used Count by date on a Line Graph')
-        # Set the x axis label of the line graph.
-        plt.xlabel('\n'+'Number of nominations by date in tweets')
+        plt.title('키워드 검색을 통한 날짜별 통계')
+        plt.xticks(['2017-04-18','2017-04-25','2017-05-02', '2017-05-09'])
         # Set the y axis label of the line graph.
-        plt.ylabel('Tweet Count')
+        plt.ylabel('트윗 갯수')
         # Grid Patterns Background
         plt.grid()
         # Location of Label
@@ -95,32 +92,48 @@ class Visualization:
             candidate=['문재인','홍준표','안철수','유승민','심상정']
  
             # Data frame with 'Tweet Count' as a column
-            df2=pd.DataFrame(countlist,candidate, columns=['Tweet Count'])
+            df2=pd.DataFrame(countlist,candidate, columns=['트윗 횟수'])
             # Data frame with 'Vote Count' as a column
-            df3=pd.DataFrame(voting, president_vote.index,columns=['Vote Count'])
+            df3=pd.DataFrame(voting, president_vote.index,columns=['투표율'])
+
+            count_sum=sum(countlist)
+            result=[]
+            for i in range(len(df2)):
+                result.append(int(countlist[i]/count_sum*100))
+            result=pd.DataFrame(result,candidate,columns=['트윗 비율'])      
             # Connect the data frame.
-            dfResult=pd.concat([df2,df3],axis=1)
+            dfResult=pd.concat([result,df3],axis=1)
 
             # Outputs the number of votes and votes for each candidate side by side.
             dfResult.plot.bar()
             # Set a titles on a Bar Graph.
-            plt.title('Supported Ratio on a Bar Graph')
-            # Set the x axis label of the bar graph.
-            plt.xlabel('Candidate')
-            # Set the y axis label of the bar graph.
-            plt.ylabel('Tweet Count')
+            plt.title('트위터 비율과 실제 투표율 비교')
+            # Location of Label
+            plt.legend(loc='upper right')
+
             # Show Bar Graph
             plt.show()   
         # Base Bar Graph
         else:
+            # Create data frame using 'keyword_count'
+            df=pd.DataFrame(list(tweetData.values()),list(tweetData.keys()), columns=['Count'])
+             # Sort data frames in descending order by 'Count' value
+            df=df.sort_values(['Count'],ascending=False)
+            # Index resets.
+            df=df.reset_index()
+            # Eliminate remaining values except 'ETC', 1st to 5th.
+            df=df.drop(df.index[10:])
+            # Index Setting.
+            df=df.set_index("index")
+            # Index resets.
+            df=df.reset_index()
+
             # Set the title of the bar graph.
-            plt.title('Number of hashtags used by date on a Bar Graph')
+            plt.title('상위 10개 키워드')
             # Set the x, y axis and markers of the bar graph.
-            plt.bar(list(tweetData.keys()),list(tweetData.values()))
-            # Set the x axis label of the bar graph.
-            plt.xlabel('Keyword')
+            plt.bar(df['index'],df['Count'])
             # Set the y axis label of the bar graph.
-            plt.ylabel('Tweet Count')
+            plt.ylabel('트윗 횟수')
             # Show bar graph
             plt.show()
                      
@@ -133,11 +146,11 @@ class Visualization:
         # Sort data frames in descending order by 'Count' value
         df=df.sort_values(['Count'],ascending=False)
         # Sum of the remaining values except for 1st to 5th.
-        df.loc["ETC",:]=df['Count'][5:len(df)].sum()
+        df.loc["ETC",:]=df['Count'][10:len(df)].sum()
         # Index resets.
         df=df.reset_index()
         # Eliminate remaining values except 'ETC', 1st to 5th.
-        df=df.drop(df.index[5:len(df)-1])
+        df=df.drop(df.index[10:len(df)-1])
         # Index Setting.
         df=df.set_index("index")
         # Index resets.
@@ -149,8 +162,8 @@ class Visualization:
             # Save candidates' names.
             candidate=['문재인','홍준표','안철수','유승민','심상정']
 
-            # Data frame with 'Tweet Count' as a column
-            df2=pd.DataFrame(countlist,candidate, columns=['Tweet Count'])
+            # Data frame with '트윗 횟수' as a column
+            df2=pd.DataFrame(countlist,candidate, columns=['트윗 횟수'])
             # Index resets.
             df2=df2.reset_index()
             # Index Setting.
@@ -158,68 +171,82 @@ class Visualization:
             # Index resets.
             df2=df2.reset_index()
 
+            # Data frame with '투표율' as a column
+            df3=pd.DataFrame(voting, president_vote.index,columns=['투표율'])
+
+            count_sum=sum(countlist)
+            result=[]
+            for i in range(len(df2)):
+                result.append(int(countlist[i]/count_sum*100))
+            result=pd.DataFrame(result,candidate,columns=['트윗 비율'])      
+
+
+
             # Set a titles on a Stacked Bar Graph.
-            plt.title("Supported Ratio on a Stacked Bar Graph")
+            plt.title("트윗 비율과 투표율의 비교")
             # At the bottom of the Stacked Bar Graph. Bar color is blue.
-            plt.bar('Count', df2['Tweet Count'][0], color='b')
+            plt.barh('트윗 비율', result['트윗 비율'][0], color='b')
             # At the second bottom of the Stacked Bar Graph. Bar color is green
-            plt.bar('Count', df2['Tweet Count'][1], bottom=df2['Tweet Count'][0], color='g')
+            plt.barh('트윗 비율', result['트윗 비율'][1], left=result['트윗 비율'][0], color='g')
             # At the third bottom of the Stacked Bar Graph. Bar color is red.
-            plt.bar('Count', df2['Tweet Count'][2], bottom=sum(df2['Tweet Count'][:2]), color='r')
+            plt.barh('트윗 비율', result['트윗 비율'][2], left=sum(result['트윗 비율'][:2]), color='r')
             # At the fourth bottom of the Stacked Bar Graph. Bar color is cyan.
-            plt.bar('Count', df2['Tweet Count'][3], bottom=sum(df2['Tweet Count'][:3]), color='c')
+            plt.barh('트윗 비율', result['트윗 비율'][3], left=sum(result['트윗 비율'][:3]), color='c')
             # At the top of the Stacked Bar Graph. Bar color is magenta.
-            plt.bar('Count', df2['Tweet Count'][4], bottom=sum(df2['Tweet Count'][:4]), color='m')
+            plt.barh('트윗 비율', result['트윗 비율'][4], left=sum(result['트윗 비율'][:4]), color='m')
             # Settings label
             plt.legend(df2["index"],            # Setting label's name
                        loc='center left',       # Label's location
                        bbox_to_anchor=(1,0.5))  # Detailed location of label
 
             # At the bottom of the Stacked Bar Graph. Bar color is blue.
-            plt.bar('Vote Count', voting[0], color='b')
+            plt.barh('투표율', voting[0], color='b')
             # At the second bottom of the Stacked Bar Graph. Bar color is green
-            plt.bar('Vote Count', voting[1], bottom=voting[0], color='g')
+            plt.barh('투표율', voting[1], left=voting[0], color='g')
             # At the third bottom of the Stacked Bar Graph. Bar color is red.
-            plt.bar('Vote Count', voting[2], bottom=sum(voting[:2]), color='r')
+            plt.barh('투표율', voting[2], left=sum(voting[:2]), color='r')
             # At the fourth bottom of the Stacked Bar Graph. Bar color is cyan.
-            plt.bar('Vote Count', voting[3], bottom=sum(voting[:3]), color='c')
+            plt.barh('투표율', voting[3], left=sum(voting[:3]), color='c')
             # At the fifth bottom of the Stacked Bar Graph. Bar color is magenta.
-            plt.bar('Vote Count', voting[4], bottom=sum(voting[:4]), color='m')
+            plt.barh('투표율', voting[4], left=sum(voting[:4]), color='m')
             # Settings label
             plt.legend(president_vote.index,    # Setting label's name
                        loc='center left',       # Label's location
                        bbox_to_anchor=(1,0.5))  # Detailed location of label
             # Set the x axis label of the stacked bar graph.
-            plt.xlabel('19th Presidential election Vote rate')
+            plt.xlabel('트윗 수')
             # Show stacked bar graph.
             plt.show()
 
         # Base Stacked Bar Graph
         else :
+            plt.figure(figsize=(9,3))
             # At the bottom of the Stacked Bar Graph. 
-            plt.bar('Count', df['Count'][0])
+            plt.barh('키워드', df['Count'][0])
             # At the second bottom of the Stacked Bar Graph.
-            plt.bar('Count', df['Count'][1], bottom=df['Count'][0])
+            plt.barh('키워드', df['Count'][1], left=df['Count'][0])
             # At the third bottom of the Stacked Bar Graph.
-            plt.bar('Count', df['Count'][2], bottom=sum(df['Count'][:2]))
+            plt.barh('키워드', df['Count'][2], left=sum(df['Count'][:2]))
             # At the fourth bottom of the Stacked Bar Graph.
-            plt.bar('Count', df['Count'][3], bottom=sum(df['Count'][:3]))
+            plt.barh('키워드', df['Count'][3], left=sum(df['Count'][:3]))
             # At the fifth bottom of the Stacked Bar Graph.
-            plt.bar('Count', df['Count'][4], bottom=sum(df['Count'][:4]))
+            plt.barh('키워드', df['Count'][4], left=sum(df['Count'][:4]))
             # At the top of the Stacked Bar Graph.
-            plt.bar('Count', df['Count'][5], bottom=sum(df['Count'][:5]))
+            plt.barh('키워드', df['Count'][5], left=sum(df['Count'][:5]))
+            plt.barh('키워드', df['Count'][6], left=sum(df['Count'][:6]))
+            plt.barh('키워드', df['Count'][7], left=sum(df['Count'][:7]))
+            plt.barh('키워드', df['Count'][8], left=sum(df['Count'][:8]))
+            plt.barh('키워드', df['Count'][9], left=sum(df['Count'][:9]))
 
             # Set a titles on a Stacked Bar Graph.
-            plt.title("Number of keywords used by date on a Stacked Bar Graph")
+            plt.title("키워드 사용횟수")
             # Settings label
             plt.legend(df["index"],            # Setting label's name
                        loc='center left',      # Label's location
                        bbox_to_anchor=(1,0.5)) # Detailed location of label
-            # Set the x axis label of the stacked bar graph.
-            plt.xlabel('Keyword')
             # Set the y axis label of the stacked bar graph.
-            plt.ylabel('Tweet Count')
-            # Show stacked bar graph.
+            plt.xlabel('트윗 수')
+            # Show stacked bar graph. 
             plt.show()      
 
     # ----------------------------------------------------------------------------------------------
@@ -231,11 +258,12 @@ class Visualization:
         # Sort data frames in descending order by 'Count' value
         df=df.sort_values(['Count'], ascending=False)
         # Sum of the remaining values except for 1st to 5th.
-        df.loc["ETC",:]=df['Count'][5:len(df)].sum()
+        etc=df['Count'][10:len(df)].sum()
+#        df.loc["ETC",:]=df['Count'][10:len(df)].sum()
         # Index resets.
         df=df.reset_index()
         # Eliminate remaining values except 'ETC', 1st to 5th.
-        df=df.drop(df.index[5:len(df)-1])
+        df=df.drop(df.index[10:])
         # Index Setting.
         df=df.set_index("index")
         # Change 'Count' type to 'int' type
@@ -268,6 +296,7 @@ class Visualization:
             count_sum2=(countlist[0]+countlist[1]+countlist[2]+countlist[3]+countlist[4])
             # Create data frame using 'countlist','candidate'
             df2=pd.DataFrame(countlist,candidate, columns=['Tweet Count'])
+            df2=df2.sort_values(['Tweet Count'], ascending=False)
             # Index resets.
             df2=df2.reset_index()
             # Index Setting.
@@ -276,18 +305,17 @@ class Visualization:
             df2=df2.reset_index()
             # Set 'Tweet Count' column to 'data'.
             data = df2["Tweet Count"]
-
             # List containing the percentage of each 'countlist'
             countPer2=[]
             # Append the percentage of each 'countlist' to countPer2
             for i in range(len(df2)):
-                countPer2.append("%.1f%%" % float(countlist[i]/count_sum2*100))      
+                countPer2.append("%.1f%%" % float(df2["Tweet Count"][i]/count_sum2*100))      
 
             # List containing each 'countlist' value and its percentage.
             result2=[]
             # Store each 'countlist' value and its percentage.
             for i in range(len(df2)):
-                result2.append(str(countlist[i])+'\n'+countPer2[i])
+                result2.append(str(df2["Tweet Count"][i])+'\n'+countPer2[i])
 
 
             # Settings subplots.
@@ -296,7 +324,8 @@ class Visualization:
             # Settings pie graph.
             wedges, texts = ax.pie(data,                             # The wedge sizes.
                                    wedgeprops=dict(width=0.5),       # Setting width
-                                   startangle=-40)                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.
+                                   startangle=120,                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.
+                                   counterclock=False) 
             # Setting the box style
             bbox_props = dict(boxstyle="square", # Box style.
                               fc="w",            # Box's color
@@ -339,6 +368,17 @@ class Visualization:
                        bbox_to_anchor=(1.3,0.7)) # Detailed location of label
 
 
+            df3=pd.DataFrame(voting, president_vote.index,columns=['투표율'])
+            df3=df3.sort_values(['투표율'], ascending=False)
+            # Index resets.
+            df3=df3.reset_index()
+            # Index Setting.
+            df3=df3.set_index("index")
+            # Index resets.
+            df3=df3.reset_index()
+            # Set 'Tweet Count' column to 'data'.
+            data = df3["투표율"]
+
    
             # Settings Compare data to subplots.
             fig, ax = plt.subplots(figsize=(6, 3),                   # Subplots's size
@@ -350,7 +390,8 @@ class Visualization:
             # Settings pie graph.
             wedges, texts = ax.pie(data,                             # The wedge sizes.
                                    wedgeprops=dict(width=0.5),       # Setting width
-                                   startangle=-40)                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.        
+                                   startangle=120,                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.
+                                   counterclock=False)         
             # Setting the box style
             bbox_props = dict(boxstyle="square", # Box style.
                               fc="w",            # Box's color
@@ -453,7 +494,7 @@ class Visualization:
                             horizontalalignment=horizontalalignment,  # Return the horizontal alignment as string.
                             **kw)                                     # Apply to text, arrow, box's data
                 # Set a titles on a Pie Graph.
-                ax.set_title("Top 5 Keyword on a Pie Graph")
+                ax.set_title("상위 10위 키워드")
             # Settings label
             plt.legend(df["index"],              # Setting label's name
                        loc='center left',        # Label's location
