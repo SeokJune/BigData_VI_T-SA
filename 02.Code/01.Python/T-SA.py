@@ -313,7 +313,7 @@ while True:
                   % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
                      paramSqoop[3][0], paramSqoop[4][0],
                      paramSqoop[5][0][0], paramSqoop[5][0][1], paramSqoop[6][0][0], paramSqoop[6][0][1]))
-        os.system('yarn jar /home/vi/hadoop/jar/KeywordCount.jar KeywordCount /user/vi/%s/part-m-00000 %s'
+        os.system('yarn jar ../KeywordCount.jar KeywordCount /user/vi/%s/part-m-00000 %s'
                   % (paramSqoop[5][0][1], paramSqoop[5][1][1]))
         os.system('sqoop export --connect jdbc:mysql://localhost/%s --username %s --password %s --table %s --columns %s --%s hdfs://localhost:9000/user/vi/%s/part-r-00000 --%s %s'
                   % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
@@ -329,7 +329,7 @@ while True:
                   % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
                      paramSqoop[3][2], paramSqoop[4][2],
                      paramSqoop[5][2][0], paramSqoop[5][2][1], paramSqoop[6][0][0], paramSqoop[6][0][1]))
-        os.system('yarn jar /home/vi/hadoop/jar/HashtagCount.jar HashtagCount /user/vi/%s/part-m-00000 %s'
+        os.system('yarn jar ../HashtagCount.jar HashtagCount /user/vi/%s/part-m-00000 %s'
                   % (paramSqoop[5][2][1], paramSqoop[5][3][1]))
         os.system('sqoop export --connect jdbc:mysql://localhost/%s --username %s --password %s --table %s --columns %s --%s hdfs://localhost:9000/user/vi/%s/part-r-00000 --%s %s'
                   % (paramSqoop[0], paramSqoop[1], paramSqoop[2],
