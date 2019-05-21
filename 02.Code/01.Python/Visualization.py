@@ -99,7 +99,7 @@ class Visualization:
             count_sum=sum(countlist)
             result=[]
             for i in range(len(df2)):
-                result.append(int(countlist[i]/count_sum*100))
+                result.append(round(countlist[i]/count_sum*100))
             result=pd.DataFrame(result,candidate,columns=['트윗 비율'])      
             # Connect the data frame.
             dfResult=pd.concat([result,df3],axis=1)
@@ -121,6 +121,7 @@ class Visualization:
             df=df.sort_values(['Count'],ascending=False)
             # Index resets.
             df=df.reset_index()
+            etc=df['Count'][10:len(df)].sum()
             # Eliminate remaining values except 'ETC', 1st to 5th.
             df=df.drop(df.index[10:])
             # Index Setting.
@@ -132,6 +133,7 @@ class Visualization:
             plt.title('상위 10개 키워드')
             # Set the x, y axis and markers of the bar graph.
             plt.bar(df['index'],df['Count'])
+            plt.xlabel('총 '+str(sum(tweetData.values()))+'개 중 에서 etc는 '+str(etc)+'개')
             # Set the y axis label of the bar graph.
             plt.ylabel('트윗 횟수')
             # Show bar graph
@@ -171,13 +173,10 @@ class Visualization:
             # Index resets.
             df2=df2.reset_index()
 
-            # Data frame with '투표율' as a column
-            df3=pd.DataFrame(voting, president_vote.index,columns=['투표율'])
-
             count_sum=sum(countlist)
             result=[]
             for i in range(len(df2)):
-                result.append(int(countlist[i]/count_sum*100))
+                result.append(round(countlist[i]/count_sum*100))
             result=pd.DataFrame(result,candidate,columns=['트윗 비율'])      
 
 
@@ -305,6 +304,8 @@ class Visualization:
             df2=df2.reset_index()
             # Set 'Tweet Count' column to 'data'.
             data = df2["Tweet Count"]
+
+
             # List containing the percentage of each 'countlist'
             countPer2=[]
             # Append the percentage of each 'countlist' to countPer2
@@ -319,10 +320,10 @@ class Visualization:
 
 
             # Settings subplots.
-            fig, ax = plt.subplots(figsize=(6, 3),                   # Subplots's size
+            fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(6, 3),                   # Subplots's size
                                    subplot_kw=dict(aspect="equal"))  # Automatically set x, y for SubPlots
             # Settings pie graph.
-            wedges, texts = ax.pie(data,                             # The wedge sizes.
+            wedges, texts = ax[0].pie(data,                             # The wedge sizes.
                                    wedgeprops=dict(width=0.5),       # Setting width
                                    startangle=120,                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.
                                    counterclock=False) 
@@ -354,13 +355,13 @@ class Visualization:
                 # Apply angle and style of arrow
                 kw["arrowprops"].update({"connectionstyle": connectionstyle})
                 # Create pie Graph
-                ax.annotate(result2[i],                               # The text of the annotation.
+                ax[0].annotate(result2[i],                               # The text of the annotation.
                             xy=(x, y),                                # The point (x,y) to annotate.
                             xytext=(1.35*np.sign(x), 1.4*y),          # The position (x,y) to place the text at.
                             horizontalalignment=horizontalalignment,  # Return the horizontal alignment as string.
                             **kw)                                     # Apply to text, arrow, box's data
                 # Set a titles on a Pie Graph.
-                ax.set_title("Tweet Count on a Pie Graph")
+                ax[0].set_title("후보자들 트위터 언급 횟수")
 
             # Settings label
             plt.legend(df2["index"],             # Setting label's name
@@ -379,16 +380,12 @@ class Visualization:
             # Set 'Tweet Count' column to 'data'.
             data = df3["투표율"]
 
-   
-            # Settings Compare data to subplots.
-            fig, ax = plt.subplots(figsize=(6, 3),                   # Subplots's size
-                                   subplot_kw=dict(aspect="equal"))  # Automatically set x, y for SubPlots
             # Candidates for comparative data.
             candidate = president_vote.index
             # Vote rate of comparison data.
             data = voting
             # Settings pie graph.
-            wedges, texts = ax.pie(data,                             # The wedge sizes.
+            wedges, texts = ax[1].pie(data,                             # The wedge sizes.
                                    wedgeprops=dict(width=0.5),       # Setting width
                                    startangle=120,                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.
                                    counterclock=False)         
@@ -434,13 +431,13 @@ class Visualization:
                 # Apply angle and style of arrow
                 kw["arrowprops"].update({"connectionstyle": connectionstyle})
                 # Create pie Graph
-                ax.annotate(result3[i],                               # The text of the annotation.
+                ax[1].annotate(result3[i],                               # The text of the annotation.
                             xy=(x, y),                                # The point (x,y) to annotate.
                             xytext=(1.35*np.sign(x), 1.4*y),          # The position (x,y) to place the text at.
                             horizontalalignment=horizontalalignment,  # Return the horizontal alignment as string.
                             **kw)                                     # Apply to text, arrow, box's data
                 # Set a titles on a Pie Graph.
-                ax.set_title("Voting Rate on a Pie Graph")
+                ax[1].set_title("19대 대선 투표율")
 
             # Settings label
             plt.legend(candidate,                # Setting label's name
