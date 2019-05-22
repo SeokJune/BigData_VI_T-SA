@@ -14,7 +14,7 @@ import pandas as pd
 # A class that implements data visualization.
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from datetime import datetime
+from datetime import datetime, timedelta
 # --------------------------------------------------------------------------------------------------
 # Set Parameter(Data)
 # --------------------------------------------------------------------------------------------------
@@ -41,6 +41,9 @@ class Visualization:
     # ----------------------------------------------------------------------------------------------
     def linegraph(self, tweetData, query, startDate, endDate):    
         startDate=datetime.strptime(startDate, '%Y%m%d%H%M%S')
+        w1_startDate=(startDate+timedelta(weeks=1)).strftime('%Y-%m-%d')
+        w2_startDate=(startDate+timedelta(weeks=2)).strftime('%Y-%m-%d')
+        w3_startDate=(startDate+timedelta(weeks=3)).strftime('%Y-%m-%d')
         startDate=startDate.strftime('%Y-%m-%d')
         endDate=datetime.strptime(endDate, '%Y%m%d%H%M%S')
         endDate=endDate.strftime('%Y-%m-%d')
@@ -56,13 +59,14 @@ class Visualization:
         # Set the title of the line graph.
         plt.title('특정 키워드를 포함한 트윗의 수(일별)',fontsize=20, weight='bold')
         # Set the y axis label of the line graph.
-        plt.xticks(rotation=30)
+        plt.xticks([startDate,w1_startDate,w2_startDate,w3_startDate],rotation=30)
         plt.ylabel('작성한 트윗 수')
         # Grid Patterns Background
         plt.grid()
         # Location of Label
         plt.legend(loc='upper right')
         title=("기간 : "+startDate+'\n'+'~'+endDate)
+
  #       bboxtype=dict(boxstyle='square',alpha=0.7,fc='w')
 #        plt.text(22.5,1190,title,family='consolas',fontsize=10)
   #      plt.annotate(title,xy=(0,0),xytext=(22.5,1190),size=10,bbox=bboxtype)
