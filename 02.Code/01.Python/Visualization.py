@@ -14,6 +14,7 @@ import pandas as pd
 # A class that implements data visualization.
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from datetime import datetime, timedelta
 # --------------------------------------------------------------------------------------------------
 # Set Parameter(Data)
 # --------------------------------------------------------------------------------------------------
@@ -38,25 +39,39 @@ class Visualization:
     # ----------------------------------------------------------------------------------------------
     # Line graph visualization using 'Json' data.
     # ----------------------------------------------------------------------------------------------
-    def linegraph(self, tweetData, query):    
+    def linegraph(self, tweetData, query, startDate, endDate):    
+        startDate=datetime.strptime(startDate, '%Y%m%d%H%M%S')
+        w1_startDate=(startDate+timedelta(weeks=1)).strftime('%Y-%m-%d')
+        w2_startDate=(startDate+timedelta(weeks=2)).strftime('%Y-%m-%d')
+        w3_startDate=(startDate+timedelta(weeks=3)).strftime('%Y-%m-%d')
+        startDate=startDate.strftime('%Y-%m-%d')
+        endDate=datetime.strptime(endDate, '%Y%m%d%H%M%S')
+        endDate=endDate.strftime('%Y-%m-%d')
+
         # Set the x, y axis and markers of the line graph.
         plt.plot(tweetData.keys(),   # X axis Data
                  tweetData.values(), # Y axis Data
                  label=query,    # Label name
                  marker='o',         # Marker type of graph
                  mfc='r')            # Marker's Color
+     #   for i, val in enumerate(tweetData.values()):
+     #       plt.text(i, val, str(val), horizontalalignment='center', verticalalignmet='bottom', fontdict={'font weight':500, 'size':12})
         # Set the title of the line graph.
-        plt.title('키워드 검색을 통한 날짜별 통계')
-        plt.xticks(['2017-04-18','2017-04-25','2017-05-02', '2017-05-09'])
+        plt.title('특정 키워드를 포함한 트윗의 수(일별)',fontsize=20, weight='bold')
         # Set the y axis label of the line graph.
-        plt.ylabel('트윗 갯수')
+        plt.xticks([startDate,w1_startDate,w2_startDate,w3_startDate],rotation=30)
+        plt.ylabel('작성한 트윗 수')
         # Grid Patterns Background
         plt.grid()
         # Location of Label
         plt.legend(loc='upper right')
+        title=("기간 : "+startDate+'\n'+'~'+endDate)
+
+ #       bboxtype=dict(boxstyle='square',alpha=0.7,fc='w')
+#        plt.text(22.5,1190,title,family='consolas',fontsize=10)
+  #      plt.annotate(title,xy=(0,0),xytext=(22.5,1190),size=10,bbox=bboxtype)
         # Line graph visualization using JSON data
         plt.show()
-
     # ----------------------------------------------------------------------------------------------
     # Word Cloud visualization using 'KEYWORD_COUNT' data.
     # ----------------------------------------------------------------------------------------------
@@ -80,7 +95,11 @@ class Visualization:
     # ----------------------------------------------------------------------------------------------
     # Bar Graph visualization using 'KEYWORD_COUNT' data.
     # ----------------------------------------------------------------------------------------------
-    def bargraph(self, tweetData, base_analysis):
+    def bargraph(self, tweetData, base_analysis, startDate, endDate):
+        startDate=datetime.strptime(startDate, '%Y%m%d%H%M%S')
+        startDate=startDate.strftime('%Y-%m-%d')
+        endDate=datetime.strptime(endDate, '%Y%m%d%H%M%S')
+        endDate=endDate.strftime('%Y-%m-%d')
         # 'Base' is graphically displayed using 'KEYWORD_COUNT'.
         # 'Analysis' shows the graph using 'KEYWORD_COUNT' and comparison data.
         # Base=0, Analysis=1.
@@ -94,7 +113,7 @@ class Visualization:
             # Data frame with 'Tweet Count' as a column
             df2=pd.DataFrame(countlist,candidate, columns=['트윗 횟수'])
             # Data frame with 'Vote Count' as a column
-            df3=pd.DataFrame(voting, president_vote.index,columns=['투표율'])
+            df3=pd.DataFrame(voting, president_vote.index,columns=['득표율'])
 
             count_sum=sum(countlist)
             result=[]
@@ -107,9 +126,12 @@ class Visualization:
             # Outputs the number of votes and votes for each candidate side by side.
             dfResult.plot.bar()
             # Set a titles on a Bar Graph.
-            plt.title('트위터 비율과 실제 투표율 비교')
+            plt.title('트위터 비율과 실제 득표율 비교',fontsize=20, weight='bold')
             # Location of Label
             plt.legend(loc='upper right')
+            title=("기간 : "+startDate+'\n'+'~'+endDate)
+            bboxtype=dict(boxstyle='square',alpha=0.7,fc='w')
+            plt.annotate(title,xy=(0,0),xytext=(4.6,46.5),size=10,bbox=bboxtype)
 
             # Show Bar Graph
             plt.show()   
@@ -130,19 +152,31 @@ class Visualization:
             df=df.reset_index()
 
             # Set the title of the bar graph.
-            plt.title('상위 10개 키워드')
+            plt.title('상위 10개 키워드',fontsize=20, weight='bold')
             # Set the x, y axis and markers of the bar graph.
-            plt.bar(df['index'],df['Count'])
-            plt.xlabel('총 '+str(sum(tweetData.values()))+'개 중 에서 etc는 '+str(etc)+'개')
+            ax=plt.bar(df['index'],df['Count'])
+            plt.xticks(rotation=30)
             # Set the y axis label of the bar graph.
-            plt.ylabel('트윗 횟수')
+            plt.ylabel('작성한 트윗 수')
+
+            title=("기간 : "+startDate+'\n'+'~'+endDate)
+            bboxtype=dict(boxstyle='square',alpha=0.7,fc='w')
+            plt.annotate(title,xy=(0,0),xytext=(10,320),size=10,bbox=bboxtype)
+            title=("총 갯수 "+str(sum(tweetData.values()))+'\n'+"중 ETC 갯수는 "+str(etc)+" 개")
+            bboxtype=dict(boxstyle='square',alpha=0.7,fc='w')
+            plt.annotate(title,xy=(0,0),xytext=(10,280),size=10,bbox=bboxtype)
+
             # Show bar graph
             plt.show()
                      
     # ----------------------------------------------------------------------------------------------
     # Stacked Bar Graph visualization using 'KEYWORD_COUNT' data.
     # ----------------------------------------------------------------------------------------------
-    def stackedbargraph(self, tweetData, base_analysis):
+    def stackedbargraph(self, tweetData, base_analysis, startDate, endDate):
+        startDate=datetime.strptime(startDate, '%Y%m%d%H%M%S')
+        startDate=startDate.strftime('%Y-%m-%d')
+        endDate=datetime.strptime(endDate, '%Y%m%d%H%M%S')
+        endDate=endDate.strftime('%Y-%m-%d')
         # Create data frame using 'keyword_count'
         df=pd.DataFrame(list(tweetData.values()),list(tweetData.keys()), columns=['Count'])
         # Sort data frames in descending order by 'Count' value
@@ -182,38 +216,40 @@ class Visualization:
 
 
             # Set a titles on a Stacked Bar Graph.
-            plt.title("트윗 비율과 투표율의 비교")
+            plt.title("트윗 비율과 득표율의 비교",fontsize=20, weight='bold')
             # At the bottom of the Stacked Bar Graph. Bar color is blue.
-            plt.barh('트윗 비율', result['트윗 비율'][0], color='b')
+            plt.barh('키워드를 사용한'+'\n'+'트윗 비율', result['트윗 비율'][0], color='b')
             # At the second bottom of the Stacked Bar Graph. Bar color is green
-            plt.barh('트윗 비율', result['트윗 비율'][1], left=result['트윗 비율'][0], color='g')
+            plt.barh('키워드를 사용한'+'\n'+'트윗 비율', result['트윗 비율'][1], left=result['트윗 비율'][0], color='g')
             # At the third bottom of the Stacked Bar Graph. Bar color is red.
-            plt.barh('트윗 비율', result['트윗 비율'][2], left=sum(result['트윗 비율'][:2]), color='r')
+            plt.barh('키워드를 사용한'+'\n'+'트윗 비율', result['트윗 비율'][2], left=sum(result['트윗 비율'][:2]), color='r')
             # At the fourth bottom of the Stacked Bar Graph. Bar color is cyan.
-            plt.barh('트윗 비율', result['트윗 비율'][3], left=sum(result['트윗 비율'][:3]), color='c')
+            plt.barh('키워드를 사용한'+'\n'+'트윗 비율', result['트윗 비율'][3], left=sum(result['트윗 비율'][:3]), color='c')
             # At the top of the Stacked Bar Graph. Bar color is magenta.
-            plt.barh('트윗 비율', result['트윗 비율'][4], left=sum(result['트윗 비율'][:4]), color='m')
+            plt.barh('키워드를 사용한'+'\n'+'트윗 비율', result['트윗 비율'][4], left=sum(result['트윗 비율'][:4]), color='m')
             # Settings label
             plt.legend(df2["index"],            # Setting label's name
                        loc='center left',       # Label's location
                        bbox_to_anchor=(1,0.5))  # Detailed location of label
 
             # At the bottom of the Stacked Bar Graph. Bar color is blue.
-            plt.barh('투표율', voting[0], color='b')
+            plt.barh('실제 득표율', voting[0], color='b')
             # At the second bottom of the Stacked Bar Graph. Bar color is green
-            plt.barh('투표율', voting[1], left=voting[0], color='g')
+            plt.barh('실제 득표율', voting[1], left=voting[0], color='g')
             # At the third bottom of the Stacked Bar Graph. Bar color is red.
-            plt.barh('투표율', voting[2], left=sum(voting[:2]), color='r')
+            plt.barh('실제 득표율', voting[2], left=sum(voting[:2]), color='r')
             # At the fourth bottom of the Stacked Bar Graph. Bar color is cyan.
-            plt.barh('투표율', voting[3], left=sum(voting[:3]), color='c')
+            plt.barh('실제 득표율', voting[3], left=sum(voting[:3]), color='c')
             # At the fifth bottom of the Stacked Bar Graph. Bar color is magenta.
-            plt.barh('투표율', voting[4], left=sum(voting[:4]), color='m')
+            plt.barh('실제 득표율', voting[4], left=sum(voting[:4]), color='m')
+
             # Settings label
             plt.legend(president_vote.index,    # Setting label's name
                        loc='center left',       # Label's location
                        bbox_to_anchor=(1,0.5))  # Detailed location of label
-            # Set the x axis label of the stacked bar graph.
-            plt.xlabel('트윗 수')
+            title=("기간 : "+startDate+'\n'+'~'+endDate)
+            bboxtype=dict(boxstyle='square',alpha=0.7,fc='w')
+            plt.annotate(title,xy=(0,0),xytext=(107,1),size=10,bbox=bboxtype)
             # Show stacked bar graph.
             plt.show()
 
@@ -221,37 +257,40 @@ class Visualization:
         else :
             plt.figure(figsize=(9,3))
             # At the bottom of the Stacked Bar Graph. 
-            plt.barh('키워드', df['Count'][0])
+            plt.barh('', df['Count'][0])
             # At the second bottom of the Stacked Bar Graph.
-            plt.barh('키워드', df['Count'][1], left=df['Count'][0])
+            plt.barh('', df['Count'][1], left=df['Count'][0])
             # At the third bottom of the Stacked Bar Graph.
-            plt.barh('키워드', df['Count'][2], left=sum(df['Count'][:2]))
+            plt.barh('', df['Count'][2], left=sum(df['Count'][:2]))
             # At the fourth bottom of the Stacked Bar Graph.
-            plt.barh('키워드', df['Count'][3], left=sum(df['Count'][:3]))
+            plt.barh('', df['Count'][3], left=sum(df['Count'][:3]))
             # At the fifth bottom of the Stacked Bar Graph.
-            plt.barh('키워드', df['Count'][4], left=sum(df['Count'][:4]))
+            plt.barh('', df['Count'][4], left=sum(df['Count'][:4]))
             # At the top of the Stacked Bar Graph.
-            plt.barh('키워드', df['Count'][5], left=sum(df['Count'][:5]))
-            plt.barh('키워드', df['Count'][6], left=sum(df['Count'][:6]))
-            plt.barh('키워드', df['Count'][7], left=sum(df['Count'][:7]))
-            plt.barh('키워드', df['Count'][8], left=sum(df['Count'][:8]))
-            plt.barh('키워드', df['Count'][9], left=sum(df['Count'][:9]))
+            plt.barh('', df['Count'][5], left=sum(df['Count'][:5]))
+            plt.barh('', df['Count'][6], left=sum(df['Count'][:6]))
+            plt.barh('', df['Count'][7], left=sum(df['Count'][:7]))
+            plt.barh('', df['Count'][8], left=sum(df['Count'][:8]))
+            plt.barh('', df['Count'][9], left=sum(df['Count'][:9]))
 
-            # Set a titles on a Stacked Bar Graph.
-            plt.title("키워드 사용횟수")
             # Settings label
             plt.legend(df["index"],            # Setting label's name
                        loc='center left',      # Label's location
                        bbox_to_anchor=(1,0.5)) # Detailed location of label
             # Set the y axis label of the stacked bar graph.
-            plt.xlabel('트윗 수')
+            plt.ylabel("기간 : "+startDate+'~'+'\n'+endDate)
+            plt.title("기간 동안 작성된 상위 10개의 트윗량",fontsize=20, weight='bold')          
             # Show stacked bar graph. 
             plt.show()      
 
     # ----------------------------------------------------------------------------------------------
     # Pie Graph visualization using 'KEYWORD_COUNT' data.
     # ----------------------------------------------------------------------------------------------
-    def piegraph(self, tweetData, base_analysis):
+    def piegraph(self, tweetData, base_analysis, startDate, endDate):
+        startDate=datetime.strptime(startDate, '%Y%m%d%H%M%S')
+        startDate=startDate.strftime('%Y-%m-%d')
+        endDate=datetime.strptime(endDate, '%Y%m%d%H%M%S')
+        endDate=endDate.strftime('%Y-%m-%d')
         # Create data frame using 'keyword_count'
         df=pd.DataFrame(list(tweetData.values()),list(tweetData.keys()), columns=['Count'])
         # Sort data frames in descending order by 'Count' value
@@ -270,19 +309,6 @@ class Visualization:
         # Index resets.
         df=df.reset_index()
 
-        # Total sum of 'Count'
-        count_sum=int(df["Count"].sum())
-        # List containing the percentage of each 'Count'
-        countPer=[]
-        # Append the percentage of each 'Count' to countPer
-        for i in range(len(df)):
-            countPer.append("%.1f%%" % float(df['Count'][i]/count_sum*100))      
-
-        # List containing each 'Count' value and its percentage.
-        result=[]
-        # Store each 'Count' value and its percentage.
-        for i in range(len(df)):
-            result.append(str(df['Count'][i])+'\n'+countPer[i])
 
 
         # Analysis Pie Graph
@@ -305,28 +331,36 @@ class Visualization:
             # Set 'Tweet Count' column to 'data'.
             data = df2["Tweet Count"]
 
+            vote_rate=[]
+            for i in range(len(df2)):
+                vote_rate.append(int(round(df2["Tweet Count"][i]/count_sum2*100)))
+            rate_result=pd.DataFrame(vote_rate, df2['index'],columns=['트윗 비율'])      
+            data=rate_result['트윗 비율']
 
             # List containing the percentage of each 'countlist'
             countPer2=[]
             # Append the percentage of each 'countlist' to countPer2
             for i in range(len(df2)):
-                countPer2.append("%.1f%%" % float(df2["Tweet Count"][i]/count_sum2*100))      
+                countPer2.append("%f%%" % float(df2["Tweet Count"][i]/count_sum2*100))      
+
 
             # List containing each 'countlist' value and its percentage.
             result2=[]
             # Store each 'countlist' value and its percentage.
             for i in range(len(df2)):
-                result2.append(str(df2["Tweet Count"][i])+'\n'+countPer2[i])
+                result2.append(str(rate_result["트윗 비율"][i])+'\n'+countPer2[i])
+
 
 
             # Settings subplots.
             fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(6, 3),                   # Subplots's size
                                    subplot_kw=dict(aspect="equal"))  # Automatically set x, y for SubPlots
             # Settings pie graph.
-            wedges, texts = ax[0].pie(data,                             # The wedge sizes.
+            wedges, texts = ax[0].pie(data,  explode=[0.01,0.01,0.01,0.01,0.01],                           # The wedge sizes.
                                    wedgeprops=dict(width=0.5),       # Setting width
-                                   startangle=120,                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.
-                                   counterclock=False) 
+                                   startangle=90,                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.
+                                   counterclock=False,
+                                   shadow=True) 
             # Setting the box style
             bbox_props = dict(boxstyle="square", # Box style.
                               fc="w",            # Box's color
@@ -360,17 +394,18 @@ class Visualization:
                             xytext=(1.35*np.sign(x), 1.4*y),          # The position (x,y) to place the text at.
                             horizontalalignment=horizontalalignment,  # Return the horizontal alignment as string.
                             **kw)                                     # Apply to text, arrow, box's data
+
                 # Set a titles on a Pie Graph.
-                ax[0].set_title("후보자들 트위터 언급 횟수")
+                ax[0].set_title("후보자들 트위터 언급 비율", fontsize=20, weight='bold')
 
             # Settings label
-            plt.legend(df2["index"],             # Setting label's name
-                       loc='center left',        # Label's location
-                       bbox_to_anchor=(1.3,0.7)) # Detailed location of label
+ #           plt.legend(df2["index"],             # Setting label's name
+   #                    loc='upper center',        # Label's location
+    #                   bbox_to_anchor=(0,0)) # Detailed location of label
 
 
-            df3=pd.DataFrame(voting, president_vote.index,columns=['투표율'])
-            df3=df3.sort_values(['투표율'], ascending=False)
+            df3=pd.DataFrame(voting, president_vote.index,columns=['득표율'])
+            df3=df3.sort_values(['득표율'], ascending=False)
             # Index resets.
             df3=df3.reset_index()
             # Index Setting.
@@ -378,17 +413,18 @@ class Visualization:
             # Index resets.
             df3=df3.reset_index()
             # Set 'Tweet Count' column to 'data'.
-            data = df3["투표율"]
+            data = df3["득표율"]
 
             # Candidates for comparative data.
             candidate = president_vote.index
             # Vote rate of comparison data.
             data = voting
             # Settings pie graph.
-            wedges, texts = ax[1].pie(data,                             # The wedge sizes.
+            wedges, texts = ax[1].pie(data,   explode=[0.01,0.01,0.01,0.01,0.01],                           # The wedge sizes.
                                    wedgeprops=dict(width=0.5),       # Setting width
-                                   startangle=120,                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.
-                                   counterclock=False)         
+                                   startangle=90,                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.
+                                   counterclock=False,
+                                   shadow=True)         
             # Setting the box style
             bbox_props = dict(boxstyle="square", # Box style.
                               fc="w",            # Box's color
@@ -409,7 +445,7 @@ class Visualization:
             countPer3=[]
             # Append the percentage of each 'voting' to countPer3
             for i in range(len(df2)):
-                countPer3.append("%.1f%%" % float(voting[i]/count_sum3*100))          
+                countPer3.append("%f%%" % float(voting[i]/count_sum3*100))          
             # List containing each 'voting' value and its percentage.
             result3=[]
             # Store each 'voting' value and its percentage.
@@ -431,33 +467,52 @@ class Visualization:
                 # Apply angle and style of arrow
                 kw["arrowprops"].update({"connectionstyle": connectionstyle})
                 # Create pie Graph
-                ax[1].annotate(result3[i],                               # The text of the annotation.
+                ax[1].annotate(result3[i],                            # The text of the annotation.
                             xy=(x, y),                                # The point (x,y) to annotate.
                             xytext=(1.35*np.sign(x), 1.4*y),          # The position (x,y) to place the text at.
                             horizontalalignment=horizontalalignment,  # Return the horizontal alignment as string.
                             **kw)                                     # Apply to text, arrow, box's data
                 # Set a titles on a Pie Graph.
-                ax[1].set_title("19대 대선 투표율")
+                ax[1].set_title("19대 대선 득표율", fontsize=20, weight='bold')
 
             # Settings label
-            plt.legend(candidate,                # Setting label's name
+            plt.legend(df2['index'],                # Setting label's name
                        loc='center left',        # Label's location
-                       bbox_to_anchor=(1.3,0.7)) # Detailed location of label
+                       bbox_to_anchor=(1.0,1.0)) # Detailed location of label
+            title=("기간 : "+startDate+'~'+endDate)
+            bboxtype=dict(boxstyle='square',alpha=0.7,fc='w')
+            plt.annotate(title,xy=(0,0),xytext=(-2.7,-1.5),size=13,bbox=bboxtype)
+
             # Show pie graph.
             plt.show()
 
         # Base Pie Graph
         else:
+            # Total sum of 'Count'
+            count_sum=int(df["Count"].sum())
+            # List containing the percentage of each 'Count'
+            countPer=[]
+            # Append the percentage of each 'Count' to countPer
+            for i in range(len(df)):
+                countPer.append("%f%%" % float(df['Count'][i]/count_sum*100))      
+  
+            # List containing each 'Count' value and its percentage.
+            result=[]
+            # Store each 'Count' value and its percentage.
+            for i in range(len(df)):
+                result.append(str(df['Count'][i])+'\n'+countPer[i])
+
             # Settings to subplots.
             fig, ax = plt.subplots(figsize=(6, 3),                   # Subplots's size
                                    subplot_kw=dict(aspect="equal"))  # Automatically set x, y for SubPlots
             # Tweet Counts for data.
             data=df["Count"]
             # Settings pie graph.
-            wedges, texts = ax.pie(data,                             # The wedge sizes.
+            wedges, texts = ax.pie(data, explode=[0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01],                            # The wedge sizes.
                                    wedgeprops=dict(width=0.5),       # Setting width
-                                   startangle=-40)                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.   
-
+                                   startangle=90,                   # rotates the start of the pie chart by angle degrees counterclockwise from the x-axis.   
+                                   counterclock=False,
+                                   shadow=True)
             bbox_props = dict(boxstyle="square", # Box style.
                               fc="w",            # Box's color
                               ec="k",            # Box edge's color
@@ -491,10 +546,14 @@ class Visualization:
                             horizontalalignment=horizontalalignment,  # Return the horizontal alignment as string.
                             **kw)                                     # Apply to text, arrow, box's data
                 # Set a titles on a Pie Graph.
-                ax.set_title("상위 10위 키워드")
+                ax.set_title("상위 10위 키워드",fontsize=20, weight='bold')
             # Settings label
             plt.legend(df["index"],              # Setting label's name
                        loc='center left',        # Label's location
                        bbox_to_anchor=(1.3,0.7)) # Detailed location of label
+            title=("기간 : "+startDate+'~'+endDate)
+            bboxtype=dict(boxstyle='square',alpha=0.7,fc='w')
+            plt.annotate(title,xy=(0,0),xytext=(-2.7,-1.5),size=13,bbox=bboxtype)
+
             # Show pie graph.
             plt.show()
