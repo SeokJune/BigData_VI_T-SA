@@ -9,7 +9,7 @@ import base64   # Using by 'encodeKey'
 ## Module sending HTTP request
 import requests # Using by 'getAuthResponse'
 # --------------------------------------------------------------------------------------------------
-#  Class Name: TwitterAPI:
+#  Class Name: TwitterAPI
 # Method list: Generator
 #            : encodeKey, getAuthResponse
 #            : searchTweet, searchTimeline
