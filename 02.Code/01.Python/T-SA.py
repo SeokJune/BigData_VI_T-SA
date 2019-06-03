@@ -194,6 +194,14 @@ while True:
         # ------------------------------------------------------------------------------------------
         sJsonData = db.dbSelect("date_format(create_at,'%Y-%m-%d') create_at, count(*)",'S_JSON',"group by date_format(create_at, '%Y-%m-%d')")
         # ------------------------------------------------------------------------------------------
+        # '"문재인" OR "홍준표" OR "안철수" OR "유승민" OR "심상정"'
+        sJsonData = [];
+        sJsonData.append(db.dbSelect("date_format(create_at,'%Y-%m-%d') create_at, count(*)",'S_JSON',"WHERE TEXT like '%문재인%' group by date_format(create_at, '%Y-%m-%d')"))
+        sJsonData.append(db.dbSelect("date_format(create_at,'%Y-%m-%d') create_at, count(*)",'S_JSON',"WHERE TEXT like '%홍준표%' group by date_format(create_at, '%Y-%m-%d')"))
+        sJsonData.append(db.dbSelect("date_format(create_at,'%Y-%m-%d') create_at, count(*)",'S_JSON',"WHERE TEXT like '%안철수%' group by date_format(create_at, '%Y-%m-%d')"))
+        sJsonData.append(db.dbSelect("date_format(create_at,'%Y-%m-%d') create_at, count(*)",'S_JSON',"WHERE TEXT like '%유승민%' group by date_format(create_at, '%Y-%m-%d')"))
+        sJsonData.append(db.dbSelect("date_format(create_at,'%Y-%m-%d') create_at, count(*)",'S_JSON',"WHERE TEXT like '%심상정%' group by date_format(create_at, '%Y-%m-%d')"))
+        # ------------------------------------------------------------------------------------------
         print("Success: DataBase - Select(S_JSON)")
         # ------------------------------------------------------------------------------------------
         tJsonData = db.dbSelect("date_format(create_at,'%Y-%m-%d') create_at, count(*)",'T_JSON',"group by date_format(create_at, '%Y-%m-%d')")
@@ -400,7 +408,7 @@ while True:
     # ----------------------------------------------------------------------------------------------
     elif cNum == '41':
         # ------------------------------------------------------------------------------------------
-        
+        visual.line(sJsonData)
         # ------------------------------------------------------------------------------------------
         print("Success: Visualization(Base) - Line Graph")
         # ------------------------------------------------------------------------------------------
