@@ -77,9 +77,10 @@ class Analysis_Visual:
         # Graph Output
         plt.show()
     # ----------------------------------------------------------------------------------------------
-    # Word Cloud with 
+    # Line Graph with sJsonData(TWITTER - S_JSON
     # ----------------------------------------------------------------------------------------------
-    
+    def line(self, sJsonData):
+        print(sJsonData)
 # --------------------------------------------------------------------------------------------------
 # test
 # https://zzsza.github.io/development/2018/08/24/data-visualization-in-python/
