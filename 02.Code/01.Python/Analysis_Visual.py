@@ -16,9 +16,6 @@ from wordcloud import WordCloud
 ## pip3 install matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import font_manager, rc
-# Graph drawing Module
-## pip3 install pyecharts
-import pyecharts
 ## sudo apt-get install fonts-nanum*
 # --------------------------------------------------------------------------------------------------
 #  Class Name: Analysis_Visual
@@ -62,6 +59,8 @@ class Analysis_Visual:
                             left_on = ['KEYWORD'], right_index = True)
             data = data.rename(columns = {0 : 'COUNT_'})
             data['COUNT_'] = data['COUNT_'].replace(',', '', regex = True).astype('int')
+            data['PP(3)'] = round(data['COUNT'] / data['COUNT'].sum() * 100, 3)
+            data['PP(3)_'] = round(data['COUNT_'] / data['COUNT_'].sum() * 100, 3)
         return data
     # ----------------------------------------------------------------------------------------------
     # Set matplotlib Param
@@ -93,10 +92,10 @@ class Analysis_Visual:
         for rect in rects:
             height = rect.get_height()
             ax.annotate('{}'.format(height),
-                         xy = (rect.get_x() + rect.get_width() / 2, height),
-                         xytext = (offset[xpos] * 3, 3),
-                         textcoords = "offset points",
-                         ha = ha[xpos], va = 'bottom')
+                        xy = (rect.get_x() + rect.get_width() / 2, height),
+                        xytext = (offset[xpos] * 3, 3),
+                        textcoords = "offset points",
+                        ha = ha[xpos], va = 'bottom')
     # ----------------------------------------------------------------------------------------------
     # Word Cloud with kCountData(TWITTER - KEYWORD_COUNT)
     # ----------------------------------------------------------------------------------------------
@@ -144,7 +143,7 @@ class Analysis_Visual:
         plt.get_current_fig_manager().full_screen_toggle()
         plt.show()
     # ----------------------------------------------------------------------------------------------
-    # Bar Graph with sJsonData(TWITTER - KEYWORD_COUNT)
+    # Bar Graph with kCountData(TWITTER - KEYWORD_COUNT)
     # ----------------------------------------------------------------------------------------------
     def bar(self, kCountData, stat = 0):
         # Preprocessing
@@ -174,12 +173,48 @@ class Analysis_Visual:
             ax.set_xticks(ind)
             ax.set_xticklabels(data['KEYWORD'])
             ax.legend()
-            self.autoLabel(ax, p1, 'left')
-            self.autoLabel(ax, p2, 'right')
+            self.autoLabel(ax, p1, 'center')
+            self.autoLabel(ax, p2, 'center')
             # add layout
             fig.tight_layout()
             # title
-            self.setPlt('후보 TOP5 트윗 언급횟수(%) 및 실제 득표수(%)')
+            self.setPlt('후보 TOP5 트윗 언급률(%) 및 실제 득표율(%)')
         #Graph Output
         plt.get_current_fig_manager().full_screen_toggle()
         plt.show()
+    # ----------------------------------------------------------------------------------------------
+    # Stacked Bar Graph with kCountData(TWITTER - KEYWORD_COUNT)
+    # ----------------------------------------------------------------------------------------------
+    def stackedBar(self, kCountData):
+        # Preprocessing
+        data = self.preprocessData(kCountData)
+        dataList = data[['PP(3)', 'PP(3)_']].values.tolist()
+        # the x locations for the groups
+        ind = np.arange(2)
+        # the width of the bars: can also be len(x) sequence
+        width = 0.35
+        # bar
+        fig, ax = plt.subplots()
+        p1 = ax.bar(ind, dataList[0], width)
+        p2 = ax.bar(ind, dataList[1], width, bottom = dataList[0])
+        p3 = ax.bar(ind, dataList[2], width, bottom = [a + b for a, b in zip(dataList[0], dataList[1])])
+        p4 = ax.bar(ind, dataList[3], width, bottom = [a + b + c for a, b, c in zip(dataList[0], dataList[1], dataList[2])])
+        p5 = ax.bar(ind, dataList[4], width, bottom = [a + b + c + d for a, b, c, d in zip(dataList[0], dataList[1], dataList[2], dataList[3])])
+        # label
+        ax.set_xlabel('Keyword', fontsize = 20)
+        ax.set_ylabel('Count(%)', fontsize = 20)
+        ax.set_xticks(ind)
+        ax.set_xticklabels(('트윗 언급', '실제 득표'))
+        ax.set_yticks(np.arange(0, 110, 5))
+        ax.legend((p1[0], p2[0], p3[0], p4[0], p5[0]), data['KEYWORD'])
+        # add layout
+        fig.tight_layout()
+        # Set title
+        self.setPlt('후보 TOP5 트윗 언급률(%) 및 실제 득표율(%)')
+        #Graph Output
+        plt.get_current_fig_manager().full_screen_toggle()
+        plt.show()
+# --------------------------------------------------------------------------------------------------
+# test
+# https://zzsza.github.io/development/2018/08/24/data-visualization-in-python/
+# --------------------------------------------------------------------------------------------------
