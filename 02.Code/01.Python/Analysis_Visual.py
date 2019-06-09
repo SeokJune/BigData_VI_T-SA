@@ -214,6 +214,25 @@ class Analysis_Visual:
         #Graph Output
         plt.get_current_fig_manager().full_screen_toggle()
         plt.show()
+    # ----------------------------------------------------------------------------------------------
+    # Pie Graph with kCountData(TWITTER - KEYWORD_COUNT)
+    # ----------------------------------------------------------------------------------------------
+    def pie(self, kCountData):
+        # Preprocessing
+        data = self.preprocessData(kCountData)
+        # pie
+        fig, (ax1, ax2) = plt.subplots(nrows = 1, ncols = 2, figsize = (5, 5))
+        ax1.pie(data['COUNT'], explode = (0.01, 0.01, 0.01, 0.01, 0.01), labels = data['KEYWORD'], autopct = '%1.3f%%', startangle = -360 * data['PP(3)'].head(1).values[0] / 100 + 90 )
+        ax1.set_title('트윗 언급', fontsize = 30)
+        ax2.pie(data['COUNT_'], explode = (0.01, 0.01, 0.01, 0.01, 0.01), labels = data['KEYWORD'], autopct = '%1.3f%%', startangle = -360 * data['PP(3)_'].head(1).values[0] / 100 + 90 )
+        ax2.set_title('실제 득표', fontsize = 30)
+        # add layout
+        fig.tight_layout()
+        # Set title
+        self.setPlt('후보 TOP5 트윗 언급률(%) 및 실제 득표율(%)')
+        #Graph Output
+        plt.get_current_fig_manager().full_screen_toggle()
+        plt.show()
 # --------------------------------------------------------------------------------------------------
 # test
 # https://zzsza.github.io/development/2018/08/24/data-visualization-in-python/
