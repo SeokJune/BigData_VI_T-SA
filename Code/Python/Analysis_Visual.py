@@ -20,7 +20,7 @@ from matplotlib import font_manager, rc
 # --------------------------------------------------------------------------------------------------
 #  Class Name: Analysis_Visual
 # Method list: Generator
-#            : preprocessData, setPlt, setLabel, autoLabel
+#            : preprocessData, setPlt, setLabel, autoLabel, setTextList
 #            : wordCloud
 #            : line, bar, stackedBar, pie
 # --------------------------------------------------------------------------------------------------
@@ -97,6 +97,14 @@ class Analysis_Visual:
                         textcoords = "offset points",
                         ha = ha[xpos], va = 'bottom')
     # ----------------------------------------------------------------------------------------------
+    # Set Text list(fontsize, weight)
+    # ----------------------------------------------------------------------------------------------
+    def setTextList(self, tList, fs = 10, w = 'bold'):
+        for i in range(0, len(tList)):
+            tList[i].set_fontsize(fs)
+            if w != '':
+                tList[i].set_weight(w)
+    # ----------------------------------------------------------------------------------------------
     # Word Cloud with kCountData(TWITTER - KEYWORD_COUNT)
     # ----------------------------------------------------------------------------------------------
     def wordCloud(self, kCountData):
@@ -135,7 +143,7 @@ class Analysis_Visual:
         plt.plot(data['DATE'], data['안철수'], lw = 2, marker = 'o')
         plt.plot(data['DATE'], data['유승민'], lw = 2, marker = 'o')
         plt.plot(data['DATE'], data['심상정'], lw = 2, marker = 'o')
-        plt.legend(('문재인', '홍준표', '안철수', '유승민', '심상정'), loc = 'upper right')
+        plt.legend(('문재인', '홍준표', '안철수', '유승민', '심상정'), loc = 'upper right', fontsize = 'xx-large')
         plt.grid()
         # Set Label
         self.setLabel('Date', 'Count')
@@ -167,12 +175,12 @@ class Analysis_Visual:
             # title
             ax.set_title('\n\n\n\n', fontsize = 5)
             # label
-            ax.set_xlabel('Keyword', fontsize = 20)
+            ax.set_xlabel('Candidate', fontsize = 20)
             ax.set_ylabel('Count(%)', fontsize = 20)
             # x axis
             ax.set_xticks(ind)
             ax.set_xticklabels(data['KEYWORD'])
-            ax.legend()
+            ax.legend(fontsize = 'xx-large')
             self.autoLabel(ax, p1, 'center')
             self.autoLabel(ax, p2, 'center')
             # add layout
@@ -200,13 +208,14 @@ class Analysis_Visual:
         p3 = ax.bar(ind, dataList[2], width, bottom = [a + b for a, b in zip(dataList[0], dataList[1])])
         p4 = ax.bar(ind, dataList[3], width, bottom = [a + b + c for a, b, c in zip(dataList[0], dataList[1], dataList[2])])
         p5 = ax.bar(ind, dataList[4], width, bottom = [a + b + c + d for a, b, c, d in zip(dataList[0], dataList[1], dataList[2], dataList[3])])
+        # title
+        ax.set_title('\n\n\n\n', fontsize = 5)
         # label
-        ax.set_xlabel('Keyword', fontsize = 20)
         ax.set_ylabel('Count(%)', fontsize = 20)
         ax.set_xticks(ind)
         ax.set_xticklabels(('트윗 언급', '실제 득표'))
         ax.set_yticks(np.arange(0, 110, 5))
-        ax.legend((p1[0], p2[0], p3[0], p4[0], p5[0]), data['KEYWORD'])
+        ax.legend((p5[0], p4[0], p3[0], p2[0], p1[0]), data['KEYWORD'].sort_values(ascending = [False]), fontsize = 'xx-large')
         # add layout
         fig.tight_layout()
         # Set title
@@ -221,11 +230,15 @@ class Analysis_Visual:
         # Preprocessing
         data = self.preprocessData(kCountData)
         # pie
-        fig, (ax1, ax2) = plt.subplots(nrows = 1, ncols = 2, figsize = (5, 5))
-        ax1.pie(data['COUNT'], explode = (0.01, 0.01, 0.01, 0.01, 0.01), labels = data['KEYWORD'], autopct = '%1.3f%%', startangle = -360 * data['PP(3)'].head(1).values[0] / 100 + 90 )
+        fig, (ax1, ax2) = plt.subplots(nrows = 1, ncols = 2, figsize = (9, 9))
         ax1.set_title('트윗 언급', fontsize = 30)
-        ax2.pie(data['COUNT_'], explode = (0.01, 0.01, 0.01, 0.01, 0.01), labels = data['KEYWORD'], autopct = '%1.3f%%', startangle = -360 * data['PP(3)_'].head(1).values[0] / 100 + 90 )
+        patches, texts, autotexts = ax1.pie(data['COUNT'], explode = (0.01, 0.01, 0.01, 0.01, 0.01), labels = data['KEYWORD'], autopct = '%1.3f%%', startangle = -360 * data['PP(3)'].head(1).values[0] / 100 + 90)
+        self.setTextList(texts, 20, '')
+        self.setTextList(autotexts, 15)
         ax2.set_title('실제 득표', fontsize = 30)
+        patches, texts, autotexts = ax2.pie(data['COUNT_'], explode = (0.01, 0.01, 0.01, 0.01, 0.01), labels = data['KEYWORD'], autopct = '%1.3f%%', startangle = -360 * data['PP(3)_'].head(1).values[0] / 100 + 90)
+        self.setTextList(texts, 20, '')
+        self.setTextList(autotexts, 15)
         # add layout
         fig.tight_layout()
         # Set title
